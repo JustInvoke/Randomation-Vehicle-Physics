@@ -1,0 +1,130 @@
+fileFormatVersion: 2
+guid: 5bfe09224e072b14f915c4850d2e32a7
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: car_001
+    100002: //RootNode
+    100004: rim_001
+    100006: tire_001
+    100008: body
+    100010: colliderfront
+    100012: collidermid
+    100014: colliderunder
+    100016: rim
+    100018: tire
+    100020: tirenice
+    100022: axle
+    100024: spring
+    100026: rod
+    400000: car_001
+    400002: //RootNode
+    400004: rim_001
+    400006: tire_001
+    400008: body
+    400010: colliderfront
+    400012: collidermid
+    400014: colliderunder
+    400016: rim
+    400018: tire
+    400020: tirenice
+    400022: axle
+    400024: spring
+    400026: rod
+    2300000: car_001
+    2300002: rim_001
+    2300004: tire_001
+    2300006: body
+    2300008: colliderfront
+    2300010: collidermid
+    2300012: colliderunder
+    2300014: rim
+    2300016: tire
+    2300018: tirenice
+    2300020: axle
+    2300022: spring
+    2300024: rod
+    3300000: car_001
+    3300002: rim_001
+    3300004: tire_001
+    3300006: body
+    3300008: colliderfront
+    3300010: collidermid
+    3300012: colliderunder
+    3300014: rim
+    3300016: tire
+    3300018: tirenice
+    3300020: axle
+    3300022: spring
+    3300024: rod
+    4300000: car_001
+    4300002: rim_001
+    4300004: tire_001
+    4300006: colliderfront
+    4300008: collidermid
+    4300010: body
+    4300012: colliderunder
+    4300014: rim
+    4300016: tire
+    4300018: tirenice
+    4300020: axle
+    4300022: spring
+    4300024: rod
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 50
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
