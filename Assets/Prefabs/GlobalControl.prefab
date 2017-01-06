@@ -1,0 +1,205 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &121460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 428504}
+  - component: {fileID: 11405504}
+  - component: {fileID: 11469076}
+  - component: {fileID: 11430476}
+  m_Layer: 0
+  m_Name: GlobalControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &428504
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &11405504
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae7345b3e32a5414c8841c266e581ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quickRestart: 1
+  wheelCastMask:
+    serializedVersion: 2
+    m_Bits: 4294965961
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
+  damageMask:
+    serializedVersion: 2
+    m_Bits: 1793
+  frictionlessMat: {fileID: 13400000, guid: d7b4b54ae22f5244998b245005d1d2ac, type: 2}
+  tireMarkLength: 100
+  tireMarkGap: 0.1
+  tireMarkHeight: 0.02
+  tireFadeTime: 10
+--- !u!114 &11430476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68c3d3f5f633ad94b80fe3716e627bfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  driftScoreRate: 0.01
+  driftConnectDelay: 30
+  driftBoostAdd: 0.1
+  jumpScoreRate: 0.01
+  jumpBoostAdd: 0.1
+  stunts:
+  - name: Front Flip
+    rotationAxis: {x: 1, y: 0, z: 0}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+  - name: Back Flip
+    rotationAxis: {x: -1, y: 0, z: 0}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+  - name: Barrel Roll Left
+    rotationAxis: {x: 0, y: 0, z: 1}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+  - name: Barrel Roll Right
+    rotationAxis: {x: 0, y: 0, z: -1}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+  - name: Spin Right
+    rotationAxis: {x: 0, y: 1, z: 0}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+  - name: Spin Left
+    rotationAxis: {x: 0, y: -1, z: 0}
+    precision: 0.8
+    scoreRate: 1
+    multiplier: 1
+    angleThreshold: 300
+    boostAdd: 0.1
+--- !u!114 &11469076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635668a11dc567f40b1ff37f41e54796, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceTypes:
+  - name: Defualt
+    useColliderFriction: 0
+    friction: 1
+    alwaysScrape: 0
+    leaveSparks: 1
+    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
+    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
+  - name: Mud
+    useColliderFriction: 0
+    friction: 0.5
+    alwaysScrape: 1
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+    rimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+  - name: Dirt
+    useColliderFriction: 0
+    friction: 0.8
+    alwaysScrape: 1
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+    rimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+  - name: Ice
+    useColliderFriction: 0
+    friction: 0.2
+    alwaysScrape: 0
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: c1a7cd2fe64977c40bedaee5dc6a0aee, type: 3}
+    rimSnd: {fileID: 8300000, guid: e2a3cbfed9c05754f8d5c08a18079807, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 44823a766a5530d45a27cd2d7d833e32, type: 3}
+  - name: Wall
+    useColliderFriction: 0
+    friction: 0
+    alwaysScrape: 0
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
+    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: damageMask.m_Bits
+      value: 1793
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: surfaceTypes.Array.data[0].name
+      value: Defualt
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: surfaceTypes.Array.data[1].name
+      value: Mud
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: surfaceTypes.Array.data[2].name
+      value: Dirt
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: surfaceTypes.Array.data[3].name
+      value: Ice
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: surfaceTypes.Array.data[4].name
+      value: Wall
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 121460}
+  m_IsPrefabParent: 1

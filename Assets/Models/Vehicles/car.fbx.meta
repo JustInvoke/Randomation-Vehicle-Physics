@@ -1,0 +1,160 @@
+fileFormatVersion: 2
+guid: ab3d18e7f8353fd41aa491cf6d48aef6
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: car
+    100004: collidermid
+    100006: colliderrear
+    100008: frontcollider
+    100010: rim
+    100012: tire
+    100014: undertraycollider
+    100016: colliderfront
+    100018: colliderunder
+    100020: controlarm
+    100022: driveaxle
+    100024: hubfront
+    100026: hubrear
+    100028: spring
+    100030: steerarm
+    100032: hubfrontL
+    100034: hubfrontR
+    100036: hubrearL
+    100038: hubrearR
+    400000: //RootNode
+    400002: car
+    400004: collidermid
+    400006: colliderrear
+    400008: frontcollider
+    400010: rim
+    400012: tire
+    400014: undertraycollider
+    400016: colliderfront
+    400018: colliderunder
+    400020: controlarm
+    400022: driveaxle
+    400024: hubfront
+    400026: hubrear
+    400028: spring
+    400030: steerarm
+    400032: hubfrontL
+    400034: hubfrontR
+    400036: hubrearL
+    400038: hubrearR
+    2300000: car
+    2300002: collidermid
+    2300004: colliderrear
+    2300006: frontcollider
+    2300008: rim
+    2300010: tire
+    2300012: undertraycollider
+    2300014: colliderfront
+    2300016: colliderunder
+    2300018: controlarm
+    2300020: driveaxle
+    2300022: hubfront
+    2300024: hubrear
+    2300026: spring
+    2300028: steerarm
+    2300030: hubfrontL
+    2300032: hubfrontR
+    2300034: hubrearL
+    2300036: hubrearR
+    3300000: car
+    3300002: collidermid
+    3300004: colliderrear
+    3300006: frontcollider
+    3300008: rim
+    3300010: tire
+    3300012: undertraycollider
+    3300014: colliderfront
+    3300016: colliderunder
+    3300018: controlarm
+    3300020: driveaxle
+    3300022: hubfront
+    3300024: hubrear
+    3300026: spring
+    3300028: steerarm
+    3300030: hubfrontL
+    3300032: hubfrontR
+    3300034: hubrearL
+    3300036: hubrearR
+    4300000: colliderrear
+    4300002: frontcollider
+    4300004: undertraycollider
+    4300006: collidermid
+    4300008: tire
+    4300010: car
+    4300012: rim
+    4300014: colliderfront
+    4300016: colliderunder
+    4300018: controlarm
+    4300020: driveaxle
+    4300022: hubfront
+    4300024: hubrear
+    4300026: spring
+    4300028: steerarm
+    4300030: hubrearL
+    4300032: hubfrontL
+    4300034: hubfrontR
+    4300036: hubrearR
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 50
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
