@@ -1,17 +1,15 @@
 # Randomation-Vehicle-Physics
-Vehicle physics system for the Unity engine. Tested with Unity 5.5.
-(Still in progress of uploading/configuring.)
+This is a vehicle physics system for the Unity engine, tested with Unity 5.5.
 
 Code is licensed under MIT License.
 
 All models and textures are public domain, created for this asset.
 
+**Font:**
 
-Font:
 Roboto under the Apache license
 http://www.google.com/fonts/specimen/Roboto
 http://www.apache.org/licenses/LICENSE-2.0.html
-
 
 Sounds are from freesound.org, some of which are public domain, others are under either the Creative Commons Attribution license or the Creative Commons Sampling Plus license.
 
@@ -19,8 +17,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 http://creativecommons.org/licenses/by/3.0/
 http://creativecommons.org/licenses/sampling+/1.0/
 
-
-Sound links:
+**Sound links:**
 
 Engine: http://www.freesound.org/people/cr4sht3st/sounds/157144/
 
