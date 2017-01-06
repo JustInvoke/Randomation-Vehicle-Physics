@@ -6,9 +6,12 @@ Code is licensed under MIT License.
 
 All models and textures are public domain, created for this asset.
 
-Font: Roboto under the Apache license
+
+Font:
+Roboto under the Apache license
 http://www.google.com/fonts/specimen/Roboto
 http://www.apache.org/licenses/LICENSE-2.0.html
+
 
 Sounds are from freesound.org, some of which are public domain, others are under either the Creative Commons Attribution license or the Creative Commons Sampling Plus license.
 
