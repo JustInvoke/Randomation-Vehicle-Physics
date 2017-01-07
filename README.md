@@ -1,5 +1,5 @@
 # Randomation-Vehicle-Physics
-This is a vehicle physics system for the Unity engine, tested with Unity 5.5. It aims to achieve semi-realistic, general-purpose driving mechanics.
+This is a vehicle physics system for the Unity engine, tested with Unity 5.5. It aims to achieve semi-realistic, general-purpose driving mechanics. This is my first project using source control and GitHub in general, so I am open to suggestions for better managing it.
 
 Code is licensed under MIT License.
 
