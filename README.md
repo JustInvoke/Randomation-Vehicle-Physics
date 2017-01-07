@@ -1,9 +1,9 @@
 # Randomation-Vehicle-Physics
-This is a vehicle physics system for the Unity engine, tested with Unity 5.5.
+This is a vehicle physics system for the Unity engine, tested with Unity 5.5. It aims to achieve semi-realistic, general-purpose driving mechanics.
 
 Code is licensed under MIT License.
 
-All models and textures are public domain, created for this asset.
+All models and textures are public domain and were created for this package.
 
 **Font:**
 
