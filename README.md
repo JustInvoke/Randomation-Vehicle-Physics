@@ -5,6 +5,8 @@ If you add new properties/variables when contributing, make sure their default v
 
 Documentation can be found in Assets/RVP_Manual.pdf.
 
+# License Info
+
 Code is licensed under MIT License.
 
 All models and textures are public domain and were created for this package.
