@@ -36,6 +36,8 @@ public class TireMarkCreate : MonoBehaviour
 	[Tooltip("How much the tire must slip before marks are created")]
 	public float slipThreshold;
 	float alwaysScrape;
+
+    public bool calculateTangents = true;
 	
 	[Tooltip("Materials in array correspond to indices in surface types in GroundSurfaceMaster")]
 	public Material[] tireMarkMaterials;
@@ -273,6 +275,12 @@ public class TireMarkCreate : MonoBehaviour
 			mesh.vertices = verts;
 			mesh.RecalculateBounds();
 		}
+
+        if (calculateTangents)
+        {
+		    mesh.RecalculateNormals();
+		    MeshUtil.CalculateMeshTangents(mesh);
+        }
 	}
 
 	void EndMark()
