@@ -3,7 +3,7 @@ This is a vehicle physics system for the Unity engine, tested with Unity 5.5. It
 
 If you add new properties/variables when contributing, make sure their default values do not change the behavior of the included prefabs.
 
-Documentation can be found in Assets/RVP_Manual.pdf.
+Documentation can be found in [the manual](Assets/RVP_Manual.pdf).
 
 # License Info
 
