@@ -2,39 +2,44 @@
 using UnityEngine;
 using System.Collections;
 using UnityEditor;
-[CustomEditor(typeof(GroundSurfaceInstance))]
-[CanEditMultipleObjects]
+using RVP;
 
-public class GroundSurfaceInstanceEditor : Editor
+namespace RVP
 {
-	public override void OnInspectorGUI()
-	{
-		GroundSurfaceMaster surfaceMaster = FindObjectOfType<GroundSurfaceMaster>();
-		GroundSurfaceInstance targetScript = (GroundSurfaceInstance)target;
-		GroundSurfaceInstance[] allTargets = new GroundSurfaceInstance[targets.Length];
+    [CustomEditor(typeof(GroundSurfaceInstance))]
+    [CanEditMultipleObjects]
 
-		for (int i = 0; i < targets.Length; i++)
-		{
-			Undo.RecordObject(targets[i], "Ground Surface Change");
-			allTargets[i] = targets[i] as GroundSurfaceInstance;
-		}
+    public class GroundSurfaceInstanceEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            GroundSurfaceMaster surfaceMaster = FindObjectOfType<GroundSurfaceMaster>();
+            GroundSurfaceInstance targetScript = (GroundSurfaceInstance)target;
+            GroundSurfaceInstance[] allTargets = new GroundSurfaceInstance[targets.Length];
 
-		string[] surfaceNames = new string[surfaceMaster.surfaceTypes.Length];
-		
-		for (int i = 0; i < surfaceNames.Length; i++)
-		{
-			surfaceNames[i] = surfaceMaster.surfaceTypes[i].name;
-		}
+            for (int i = 0; i < targets.Length; i++)
+            {
+                Undo.RecordObject(targets[i], "Ground Surface Change");
+                allTargets[i] = targets[i] as GroundSurfaceInstance;
+            }
 
-		foreach (GroundSurfaceInstance curTarget in allTargets)
-		{
-			curTarget.surfaceType = EditorGUILayout.Popup("Surface Type", curTarget.surfaceType, surfaceNames);
-		}
+            string[] surfaceNames = new string[surfaceMaster.surfaceTypes.Length];
 
-		if (GUI.changed)
-		{
-			EditorUtility.SetDirty(targetScript);
-		}
-	}
+            for (int i = 0; i < surfaceNames.Length; i++)
+            {
+                surfaceNames[i] = surfaceMaster.surfaceTypes[i].name;
+            }
+
+            foreach (GroundSurfaceInstance curTarget in allTargets)
+            {
+                curTarget.surfaceType = EditorGUILayout.Popup("Surface Type", curTarget.surfaceType, surfaceNames);
+            }
+
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(targetScript);
+            }
+        }
+    }
 }
 #endif

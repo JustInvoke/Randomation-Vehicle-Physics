@@ -1,74 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
-[AddComponentMenu("RVP/Suspension/Suspension Property Setter", 3)]
+using RVP;
 
-//Class for cycling through suspension properties
-public class PropertyToggleSetter : MonoBehaviour
+namespace RVP
 {
-	[Tooltip("Steering Controller")]
-	public SteeringControl steerer;
-	public Transmission transmission;
+    [AddComponentMenu("RVP/Suspension/Suspension Property Setter", 3)]
 
-	[Tooltip("Suspensions with properties to be toggled")]
-	public SuspensionPropertyToggle[] suspensionProperties;
-	public PropertyTogglePreset[] presets;
-	public int currentPreset;
+    //Class for cycling through suspension properties
+    public class PropertyToggleSetter : MonoBehaviour
+    {
+        [Tooltip("Steering Controller")]
+        public SteeringControl steerer;
+        public Transmission transmission;
 
-	[Tooltip("Input manager button which increments the preset")]
-	public string changeButton;
+        [Tooltip("Suspensions with properties to be toggled")]
+        public SuspensionPropertyToggle[] suspensionProperties;
+        public PropertyTogglePreset[] presets;
+        public int currentPreset;
 
-	void Update()
-	{
-		if (!string.IsNullOrEmpty(changeButton))
-		{
-			if (Input.GetButtonDown(changeButton))
-			{
-				ChangePreset(currentPreset + 1);
-			}
-		}
-	}
+        [Tooltip("Input manager button which increments the preset")]
+        public string changeButton;
 
-	//Change the current preset
-	public void ChangePreset(int preset)
-	{
-		currentPreset = preset % (presets.Length);
+        void Update()
+        {
+            if (!string.IsNullOrEmpty(changeButton))
+            {
+                if (Input.GetButtonDown(changeButton))
+                {
+                    ChangePreset(currentPreset + 1);
+                }
+            }
+        }
 
-		if (steerer)
-		{
-			steerer.limitSteer = presets[currentPreset].limitSteer;
-		}
+        //Change the current preset
+        public void ChangePreset(int preset)
+        {
+            currentPreset = preset % (presets.Length);
 
-		if (transmission)
-		{
-			transmission.skidSteerDrive = presets[currentPreset].skidSteerTransmission;
-		}
+            if (steerer)
+            {
+                steerer.limitSteer = presets[currentPreset].limitSteer;
+            }
 
-		for (int i = 0; i < suspensionProperties.Length; i++)
-		{
-			for (int j = 0; j < suspensionProperties[i].properties.Length; j++)
-			{
-				suspensionProperties[i].SetProperty(j, presets[currentPreset].wheels[i].preset[j]);
-			}
-		}
-	}
-}
+            if (transmission)
+            {
+                transmission.skidSteerDrive = presets[currentPreset].skidSteerTransmission;
+            }
 
-//Preset class
-[System.Serializable]
-public class PropertyTogglePreset
-{
-	[Tooltip("Limit the steering range of wheels based on SteeringControl's curve?")]
-	public bool limitSteer = true;
-	[Tooltip("Transmission is adjusted for skid steering?")]
-	public bool skidSteerTransmission;
-	[Tooltip("Must be equal to the number of wheels")]
-	public IndividualPreset[] wheels;
-}
+            for (int i = 0; i < suspensionProperties.Length; i++)
+            {
+                for (int j = 0; j < suspensionProperties[i].properties.Length; j++)
+                {
+                    suspensionProperties[i].SetProperty(j, presets[currentPreset].wheels[i].preset[j]);
+                }
+            }
+        }
+    }
 
-//Class for toggling the properties of SuspensionPropertyToggle instances
-[System.Serializable]
-public class IndividualPreset
-{
-	[Tooltip("Must be equal to the SuspensionPropertyToggle properties array length")]
-	public bool[] preset;
+    //Preset class
+    [System.Serializable]
+    public class PropertyTogglePreset
+    {
+        [Tooltip("Limit the steering range of wheels based on SteeringControl's curve?")]
+        public bool limitSteer = true;
+        [Tooltip("Transmission is adjusted for skid steering?")]
+        public bool skidSteerTransmission;
+        [Tooltip("Must be equal to the number of wheels")]
+        public IndividualPreset[] wheels;
+    }
+
+    //Class for toggling the properties of SuspensionPropertyToggle instances
+    [System.Serializable]
+    public class IndividualPreset
+    {
+        [Tooltip("Must be equal to the SuspensionPropertyToggle properties array length")]
+        public bool[] preset;
+    }
 }
