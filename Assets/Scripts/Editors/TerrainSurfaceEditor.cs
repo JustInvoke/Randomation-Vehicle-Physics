@@ -2,58 +2,63 @@
 using UnityEngine;
 using System.Collections;
 using UnityEditor;
-[CustomEditor(typeof(TerrainSurface))]
+using RVP;
 
-public class TerrainSurfaceEditor : Editor
+namespace RVP
 {
-	TerrainData terDat;
-	TerrainSurface targetScript;
-	string[] surfaceNames;
+    [CustomEditor(typeof(TerrainSurface))]
 
-	public override void OnInspectorGUI()
-	{
-		GroundSurfaceMaster surfaceMaster = FindObjectOfType<GroundSurfaceMaster>();
-		targetScript = (TerrainSurface)target;
-		Undo.RecordObject(targetScript, "Terrain Surface Change");
+    public class TerrainSurfaceEditor : Editor
+    {
+        TerrainData terDat;
+        TerrainSurface targetScript;
+        string[] surfaceNames;
 
-		if (targetScript.GetComponent<Terrain>().terrainData)
-		{
-			terDat = targetScript.GetComponent<Terrain>().terrainData;
-		}
+        public override void OnInspectorGUI()
+        {
+            GroundSurfaceMaster surfaceMaster = FindObjectOfType<GroundSurfaceMaster>();
+            targetScript = (TerrainSurface)target;
+            Undo.RecordObject(targetScript, "Terrain Surface Change");
 
-		EditorGUILayout.LabelField("Textures and Surface Types:", EditorStyles.boldLabel);
+            if (targetScript.GetComponent<Terrain>().terrainData)
+            {
+                terDat = targetScript.GetComponent<Terrain>().terrainData;
+            }
 
-		surfaceNames = new string[surfaceMaster.surfaceTypes.Length];
+            EditorGUILayout.LabelField("Textures and Surface Types:", EditorStyles.boldLabel);
 
-		for (int i = 0; i < surfaceNames.Length; i++)
-		{
-			surfaceNames[i] = surfaceMaster.surfaceTypes[i].name;
-		}
+            surfaceNames = new string[surfaceMaster.surfaceTypes.Length];
 
-		if (targetScript.surfaceTypes.Length > 0)
-		{
-			for (int j = 0; j < targetScript.surfaceTypes.Length; j++)
-			{
-				DrawTerrainInfo(terDat, j);
-			}
-		}
-		else
-		{
-			EditorGUI.indentLevel ++;
-			EditorGUILayout.LabelField("<No terrain textures found>");
-		}
+            for (int i = 0; i < surfaceNames.Length; i++)
+            {
+                surfaceNames[i] = surfaceMaster.surfaceTypes[i].name;
+            }
 
-		if (GUI.changed)
-		{
-			EditorUtility.SetDirty(targetScript);
-		}
-	}
+            if (targetScript.surfaceTypes.Length > 0)
+            {
+                for (int j = 0; j < targetScript.surfaceTypes.Length; j++)
+                {
+                    DrawTerrainInfo(terDat, j);
+                }
+            }
+            else
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("<No terrain textures found>");
+            }
 
-	void DrawTerrainInfo(TerrainData ter, int index)
-	{
-		EditorGUI.indentLevel = 1;
-		targetScript.surfaceTypes[index] = EditorGUILayout.Popup(terDat.splatPrototypes[index].texture.name, targetScript.surfaceTypes[index], surfaceNames);
-		EditorGUI.indentLevel ++;
-	}
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(targetScript);
+            }
+        }
+
+        void DrawTerrainInfo(TerrainData ter, int index)
+        {
+            EditorGUI.indentLevel = 1;
+            targetScript.surfaceTypes[index] = EditorGUILayout.Popup(terDat.splatPrototypes[index].texture.name, targetScript.surfaceTypes[index], surfaceNames);
+            EditorGUI.indentLevel++;
+        }
+    }
 }
 #endif

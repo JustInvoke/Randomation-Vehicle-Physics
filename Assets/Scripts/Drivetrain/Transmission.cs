@@ -1,71 +1,76 @@
 ﻿using UnityEngine;
 using System.Collections;
-[RequireComponent(typeof(DriveForce))]
+using RVP;
 
-//Class for transmissions
-public abstract class Transmission : MonoBehaviour
+namespace RVP
 {
-	[Range(0, 1)]
-	public float strength = 1;
-	[System.NonSerialized]
-	public float health = 1;
-	protected VehicleParent vp;
-	protected DriveForce targetDrive;
-	protected DriveForce newDrive;
-	public bool automatic;
+    [RequireComponent(typeof(DriveForce))]
 
-	[Tooltip("Apply special drive to wheels for skid steering")]
-	public bool skidSteerDrive;
+    //Class for transmissions
+    public abstract class Transmission : MonoBehaviour
+    {
+        [Range(0, 1)]
+        public float strength = 1;
+        [System.NonSerialized]
+        public float health = 1;
+        protected VehicleParent vp;
+        protected DriveForce targetDrive;
+        protected DriveForce newDrive;
+        public bool automatic;
 
-	public DriveForce[] outputDrives;
+        [Tooltip("Apply special drive to wheels for skid steering")]
+        public bool skidSteerDrive;
 
-	[Tooltip("Exponent for torque output on each wheel")]
-	public float driveDividePower = 3;
+        public DriveForce[] outputDrives;
 
-	[System.NonSerialized]
-	public float maxRPM = -1;
-	
-	public virtual void Start()
-	{
-		vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(transform);
-		targetDrive = GetComponent<DriveForce>();
-		newDrive = gameObject.AddComponent<DriveForce>();
-	}
+        [Tooltip("Exponent for torque output on each wheel")]
+        public float driveDividePower = 3;
 
-	protected void SetOutputDrives(float ratio)
-	{
-		//Distribute drive to wheels
-		if (outputDrives.Length > 0)
-		{
-			int enabledDrives = 0;
+        [System.NonSerialized]
+        public float maxRPM = -1;
 
-			//Check for which outputs are enabled
-			foreach (DriveForce curOutput in outputDrives)
-			{
-				if (curOutput.active)
-				{
-					enabledDrives ++;
-				}
-			}
+        public virtual void Start()
+        {
+            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(transform);
+            targetDrive = GetComponent<DriveForce>();
+            newDrive = gameObject.AddComponent<DriveForce>();
+        }
 
-			float torqueFactor = Mathf.Pow(1f / enabledDrives, driveDividePower);
-			float tempRPM = 0;
+        protected void SetOutputDrives(float ratio)
+        {
+            //Distribute drive to wheels
+            if (outputDrives.Length > 0)
+            {
+                int enabledDrives = 0;
 
-			foreach (DriveForce curOutput in outputDrives)
-			{
-				if (curOutput.active)
-				{
-					tempRPM += skidSteerDrive ? Mathf.Abs(curOutput.feedbackRPM) : curOutput.feedbackRPM;
-					curOutput.SetDrive(newDrive, torqueFactor);
-				}
-			}
+                //Check for which outputs are enabled
+                foreach (DriveForce curOutput in outputDrives)
+                {
+                    if (curOutput.active)
+                    {
+                        enabledDrives++;
+                    }
+                }
 
-			targetDrive.feedbackRPM = (tempRPM / enabledDrives) * ratio;
-		}
-	}
+                float torqueFactor = Mathf.Pow(1f / enabledDrives, driveDividePower);
+                float tempRPM = 0;
 
-	public void ResetMaxRPM()
-	{
-		maxRPM = -1;//Setting this to -1 triggers subclasses to recalculate things
-	}
+                foreach (DriveForce curOutput in outputDrives)
+                {
+                    if (curOutput.active)
+                    {
+                        tempRPM += skidSteerDrive ? Mathf.Abs(curOutput.feedbackRPM) : curOutput.feedbackRPM;
+                        curOutput.SetDrive(newDrive, torqueFactor);
+                    }
+                }
+
+                targetDrive.feedbackRPM = (tempRPM / enabledDrives) * ratio;
+            }
+        }
+
+        public void ResetMaxRPM()
+        {
+            maxRPM = -1;//Setting this to -1 triggers subclasses to recalculate things
+        }
+    }
 }

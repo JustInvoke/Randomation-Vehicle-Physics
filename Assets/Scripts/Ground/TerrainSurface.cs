@@ -1,123 +1,128 @@
 ﻿using UnityEngine;
 using System.Collections;
-[RequireComponent(typeof(Terrain))]
-[ExecuteInEditMode]
-[DisallowMultipleComponent]
-[AddComponentMenu("RVP/Ground Surface/Terrain Surface", 2)]
+using RVP;
 
-//Class for associating terrain textures with ground surface types
-public class TerrainSurface : MonoBehaviour
+namespace RVP
 {
-	Transform tr;
-	TerrainData terDat;
-	float[,,] terrainAlphamap;
-	public int[] surfaceTypes = new int[0];
-	[System.NonSerialized]
-	public float[] frictions;
+    [RequireComponent(typeof(Terrain))]
+    [ExecuteInEditMode]
+    [DisallowMultipleComponent]
+    [AddComponentMenu("RVP/Ground Surface/Terrain Surface", 2)]
 
-	void Start()
-	{
-		tr = transform;
-		if (GetComponent<Terrain>().terrainData)
-		{
-			terDat = GetComponent<Terrain>().terrainData;
+    //Class for associating terrain textures with ground surface types
+    public class TerrainSurface : MonoBehaviour
+    {
+        Transform tr;
+        TerrainData terDat;
+        float[,,] terrainAlphamap;
+        public int[] surfaceTypes = new int[0];
+        [System.NonSerialized]
+        public float[] frictions;
 
-			//Set frictions for each surface type
-			if (Application.isPlaying)
-			{
-				UpdateAlphamaps();
-				frictions = new float[surfaceTypes.Length];
+        void Start()
+        {
+            tr = transform;
+            if (GetComponent<Terrain>().terrainData)
+            {
+                terDat = GetComponent<Terrain>().terrainData;
 
-				for (int i = 0; i < frictions.Length; i++)
-				{
-					if (GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].useColliderFriction)
-					{
-						frictions[i] = GetComponent<Collider>().material.dynamicFriction * 2;
-					}
-					else
-					{
-						frictions[i] = GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].friction;
-					}
-				}
-			}
-		}
-	}
+                //Set frictions for each surface type
+                if (Application.isPlaying)
+                {
+                    UpdateAlphamaps();
+                    frictions = new float[surfaceTypes.Length];
 
-	void Update()
-	{
-		if (!Application.isPlaying)
-		{
-			if (terDat)
-			{
-				if (surfaceTypes.Length != terDat.alphamapLayers)
-				{
-					ChangeSurfaceTypesLength();
-				}
-			}
-		}
-	}
+                    for (int i = 0; i < frictions.Length; i++)
+                    {
+                        if (GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].useColliderFriction)
+                        {
+                            frictions[i] = GetComponent<Collider>().material.dynamicFriction * 2;
+                        }
+                        else
+                        {
+                            frictions[i] = GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].friction;
+                        }
+                    }
+                }
+            }
+        }
 
-	public void UpdateAlphamaps()
-	{
-		terrainAlphamap = terDat.GetAlphamaps(0, 0, terDat.alphamapWidth, terDat.alphamapHeight);
-	}
+        void Update()
+        {
+            if (!Application.isPlaying)
+            {
+                if (terDat)
+                {
+                    if (surfaceTypes.Length != terDat.alphamapLayers)
+                    {
+                        ChangeSurfaceTypesLength();
+                    }
+                }
+            }
+        }
 
-	void ChangeSurfaceTypesLength()
-	{
-		int[] tempVals = surfaceTypes;
+        public void UpdateAlphamaps()
+        {
+            terrainAlphamap = terDat.GetAlphamaps(0, 0, terDat.alphamapWidth, terDat.alphamapHeight);
+        }
 
-		surfaceTypes = new int[terDat.alphamapLayers];
+        void ChangeSurfaceTypesLength()
+        {
+            int[] tempVals = surfaceTypes;
 
-		for (int i = 0; i < surfaceTypes.Length; i++)
-		{
-			if (i >= tempVals.Length)
-			{
-				break;
-			}
-			else
-			{
-				surfaceTypes[i] = tempVals[i];
-			}
-		}
-	}
+            surfaceTypes = new int[terDat.alphamapLayers];
 
-	//Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
-	public int GetDominantSurfaceTypeAtPoint(Vector3 pos)
-	{
-		Vector2 coord = new Vector2(Mathf.Clamp01((pos.z - tr.position.z) / terDat.size.z), Mathf.Clamp01((pos.x - tr.position.x) / terDat.size.x));
+            for (int i = 0; i < surfaceTypes.Length; i++)
+            {
+                if (i >= tempVals.Length)
+                {
+                    break;
+                }
+                else
+                {
+                    surfaceTypes[i] = tempVals[i];
+                }
+            }
+        }
 
-		float maxVal = 0;
-		int maxIndex = 0;
-		float curVal = 0;
+        //Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
+        public int GetDominantSurfaceTypeAtPoint(Vector3 pos)
+        {
+            Vector2 coord = new Vector2(Mathf.Clamp01((pos.z - tr.position.z) / terDat.size.z), Mathf.Clamp01((pos.x - tr.position.x) / terDat.size.x));
 
-		for (int i = 0; i < terrainAlphamap.GetLength(2); i++)
-		{
-			curVal = terrainAlphamap[Mathf.FloorToInt(coord.x * (terDat.alphamapWidth - 1)), Mathf.FloorToInt(coord.y * (terDat.alphamapHeight - 1)), i];
+            float maxVal = 0;
+            int maxIndex = 0;
+            float curVal = 0;
 
-			if (curVal > maxVal)
-			{
-				maxVal = curVal;
-				maxIndex = i;
-			}
-		}
+            for (int i = 0; i < terrainAlphamap.GetLength(2); i++)
+            {
+                curVal = terrainAlphamap[Mathf.FloorToInt(coord.x * (terDat.alphamapWidth - 1)), Mathf.FloorToInt(coord.y * (terDat.alphamapHeight - 1)), i];
 
-		return surfaceTypes[maxIndex];
-	}
+                if (curVal > maxVal)
+                {
+                    maxVal = curVal;
+                    maxIndex = i;
+                }
+            }
 
-	//Gets the friction of the indicated surface type
-	public float GetFriction(int sType)
-	{
-		float returnedFriction = 1;
-		
-		for (int i = 0; i < surfaceTypes.Length; i++)
-		{
-			if (sType == surfaceTypes[i])
-			{
-				returnedFriction = frictions[i];
-				break;
-			}
-		}
-		
-		return returnedFriction;
-	}
+            return surfaceTypes[maxIndex];
+        }
+
+        //Gets the friction of the indicated surface type
+        public float GetFriction(int sType)
+        {
+            float returnedFriction = 1;
+
+            for (int i = 0; i < surfaceTypes.Length; i++)
+            {
+                if (sType == surfaceTypes[i])
+                {
+                    returnedFriction = frictions[i];
+                    break;
+                }
+            }
+
+            return returnedFriction;
+        }
+    }
 }

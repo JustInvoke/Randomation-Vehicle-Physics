@@ -1,82 +1,87 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-[DisallowMultipleComponent]
-[AddComponentMenu("RVP/Scene Controllers/Global Control", 0)]
+using RVP;
 
-//Global controller class
-public class GlobalControl : MonoBehaviour
+namespace RVP
 {
-	[Tooltip("Reload the scene with the 'Restart' button in the input manager")]
-	public bool quickRestart = true;
-	float initialFixedTime;
+    [DisallowMultipleComponent]
+    [AddComponentMenu("RVP/Scene Controllers/Global Control", 0)]
 
-	[Tooltip("Mask for what the wheels collide with")]
-	public LayerMask wheelCastMask;
-	public static LayerMask wheelCastMaskStatic;
+    //Global controller class
+    public class GlobalControl : MonoBehaviour
+    {
+        [Tooltip("Reload the scene with the 'Restart' button in the input manager")]
+        public bool quickRestart = true;
+        float initialFixedTime;
 
-	[Tooltip("Mask for objects which vehicles check against if they are rolled over")]
-	public LayerMask groundMask;
-	public static LayerMask groundMaskStatic;
+        [Tooltip("Mask for what the wheels collide with")]
+        public LayerMask wheelCastMask;
+        public static LayerMask wheelCastMaskStatic;
 
-	[Tooltip("Mask for objects that cause damage to vehicles")]
-	public LayerMask damageMask;
-	public static LayerMask damageMaskStatic;
+        [Tooltip("Mask for objects which vehicles check against if they are rolled over")]
+        public LayerMask groundMask;
+        public static LayerMask groundMaskStatic;
 
-	public static int ignoreWheelCastLayer;
+        [Tooltip("Mask for objects that cause damage to vehicles")]
+        public LayerMask damageMask;
+        public static LayerMask damageMaskStatic;
 
-	[Tooltip("Frictionless physic material")]
-	public PhysicMaterial frictionlessMat;
-	public static PhysicMaterial frictionlessMatStatic;
+        public static int ignoreWheelCastLayer;
 
-	public static Vector3 worldUpDir;//Global up direction, opposite of normalized gravity direction
+        [Tooltip("Frictionless physic material")]
+        public PhysicMaterial frictionlessMat;
+        public static PhysicMaterial frictionlessMatStatic;
 
-	[Tooltip("Maximum segments per tire mark")]
-	public int tireMarkLength;
-	public static int tireMarkLengthStatic;
+        public static Vector3 worldUpDir;//Global up direction, opposite of normalized gravity direction
 
-	[Tooltip("Gap between tire mark segments")]
-	public float tireMarkGap;
-	public static float tireMarkGapStatic;
+        [Tooltip("Maximum segments per tire mark")]
+        public int tireMarkLength;
+        public static int tireMarkLengthStatic;
 
-	[Tooltip("Tire mark height above ground")]
-	public float tireMarkHeight;
-	public static float tireMarkHeightStatic;
+        [Tooltip("Gap between tire mark segments")]
+        public float tireMarkGap;
+        public static float tireMarkGapStatic;
 
-	[Tooltip("Lifetime of tire marks")]
-	public float tireFadeTime;
-	public static float tireFadeTimeStatic;
+        [Tooltip("Tire mark height above ground")]
+        public float tireMarkHeight;
+        public static float tireMarkHeightStatic;
 
-	void Start()
-	{
-		initialFixedTime = Time.fixedDeltaTime;
-		//Set static variables
-		wheelCastMaskStatic = wheelCastMask;
-		groundMaskStatic = groundMask;
-		damageMaskStatic = damageMask;
-		ignoreWheelCastLayer = LayerMask.NameToLayer("Ignore Wheel Cast");
-		frictionlessMatStatic = frictionlessMat;
-		tireMarkLengthStatic = Mathf.Max(tireMarkLength, 2);
-		tireMarkGapStatic = tireMarkGap;
-		tireMarkHeightStatic = tireMarkHeight;
-		tireFadeTimeStatic = tireFadeTime;
-	}
+        [Tooltip("Lifetime of tire marks")]
+        public float tireFadeTime;
+        public static float tireFadeTimeStatic;
 
-	void Update()
-	{
-		if (quickRestart)
-		{
-			if (Input.GetButtonDown("Restart"))
-			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-				Time.timeScale = 1;
-				Time.fixedDeltaTime = initialFixedTime;
-			}
-		}
-	}
+        void Start()
+        {
+            initialFixedTime = Time.fixedDeltaTime;
+            //Set static variables
+            wheelCastMaskStatic = wheelCastMask;
+            groundMaskStatic = groundMask;
+            damageMaskStatic = damageMask;
+            ignoreWheelCastLayer = LayerMask.NameToLayer("Ignore Wheel Cast");
+            frictionlessMatStatic = frictionlessMat;
+            tireMarkLengthStatic = Mathf.Max(tireMarkLength, 2);
+            tireMarkGapStatic = tireMarkGap;
+            tireMarkHeightStatic = tireMarkHeight;
+            tireFadeTimeStatic = tireFadeTime;
+        }
 
-	void FixedUpdate()
-	{
-		worldUpDir = Physics.gravity.sqrMagnitude == 0 ? Vector3.up : -Physics.gravity.normalized;
-	}
+        void Update()
+        {
+            if (quickRestart)
+            {
+                if (Input.GetButtonDown("Restart"))
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    Time.timeScale = 1;
+                    Time.fixedDeltaTime = initialFixedTime;
+                }
+            }
+        }
+
+        void FixedUpdate()
+        {
+            worldUpDir = Physics.gravity.sqrMagnitude == 0 ? Vector3.up : -Physics.gravity.normalized;
+        }
+    }
 }
