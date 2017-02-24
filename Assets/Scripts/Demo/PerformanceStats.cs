@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using RVP;
 
 namespace RVP
 {

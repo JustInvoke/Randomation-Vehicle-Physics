@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using UnityEditor;
-using RVP;
 
 namespace RVP
 {
