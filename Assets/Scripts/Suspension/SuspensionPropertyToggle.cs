@@ -1,61 +1,65 @@
 ﻿using UnityEngine;
 using System.Collections;
-[RequireComponent(typeof(Suspension))]
-[DisallowMultipleComponent]
-[AddComponentMenu("RVP/Suspension/Suspension Property", 2)]
 
-//Class for changing the properties of the suspension
-public class SuspensionPropertyToggle : MonoBehaviour
+namespace RVP
 {
-	public SuspensionToggledProperty[] properties;
-	Suspension sus;
+    [RequireComponent(typeof(Suspension))]
+    [DisallowMultipleComponent]
+    [AddComponentMenu("RVP/Suspension/Suspension Property", 2)]
 
-	void Start()
-	{
-		sus = GetComponent<Suspension>();
-	}
+    //Class for changing the properties of the suspension
+    public class SuspensionPropertyToggle : MonoBehaviour
+    {
+        public SuspensionToggledProperty[] properties;
+        Suspension sus;
 
-	//Toggle a property in the properties array at index
-	public void ToggleProperty(int index)
-	{
-		if (properties.Length - 1 >= index)
-		{
-			properties[index].toggled = !properties[index].toggled;
+        void Start()
+        {
+            sus = GetComponent<Suspension>();
+        }
 
-			if (sus)
-			{
-				sus.UpdateProperties();
-			}
-		}
-	}
+        //Toggle a property in the properties array at index
+        public void ToggleProperty(int index)
+        {
+            if (properties.Length - 1 >= index)
+            {
+                properties[index].toggled = !properties[index].toggled;
 
-	//Set a property in the properties array at index to the value
-	public void SetProperty(int index, bool value)
-	{
-		if (properties.Length - 1 >= index)
-		{
-			properties[index].toggled = value;
+                if (sus)
+                {
+                    sus.UpdateProperties();
+                }
+            }
+        }
 
-			if (sus)
-			{
-				sus.UpdateProperties();
-			}
-		}
-	}
-}
+        //Set a property in the properties array at index to the value
+        public void SetProperty(int index, bool value)
+        {
+            if (properties.Length - 1 >= index)
+            {
+                properties[index].toggled = value;
 
-//Class for a single property
-[System.Serializable]
-public class SuspensionToggledProperty
-{
-	public enum Properties {steerEnable, steerInvert, driveEnable, driveInvert, ebrakeEnable, skidSteerBrake}//The type of property
-	//steerEnable = enable steering
-	//steerInvert = invert steering
-	//driveEnable = enable driving
-	//driveInvert = invert drive
-	//ebrakeEnable = can ebrake
-	//skidSteerBrake = brake is specially adjusted for skid steering
+                if (sus)
+                {
+                    sus.UpdateProperties();
+                }
+            }
+        }
+    }
 
-	public Properties property;//The property
-	public bool toggled;//Is it enabled?
+    //Class for a single property
+    [System.Serializable]
+    public class SuspensionToggledProperty
+    {
+        public enum Properties { steerEnable, steerInvert, driveEnable, driveInvert, ebrakeEnable, skidSteerBrake }//The type of property
+        //steerEnable = enable steering
+        //steerInvert = invert steering
+        //driveEnable = enable driving
+        //driveInvert = invert drive
+        //ebrakeEnable = can ebrake
+        //skidSteerBrake = brake is specially adjusted for skid steering
+
+        public Properties property;//The property
+        public bool toggled;//Is it enabled?
+    }
 }

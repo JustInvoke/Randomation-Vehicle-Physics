@@ -1,40 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//Static class with extra functions
-public static class F
+namespace RVP
 {
-    //Returns the number with the greatest absolute value
-	public static float MaxAbs(params float[] nums)
-	{
-		float result = 0;
 
-		for (int i = 0; i < nums.Length; i++)
-		{
-			if (Mathf.Abs(nums[i]) > Mathf.Abs(result))
-			{
-				result = nums[i];
-			}
-		}
+    //Static class with extra functions
+    public static class F
+    {
+        //Returns the number with the greatest absolute value
+        public static float MaxAbs(params float[] nums)
+        {
+            float result = 0;
 
-		return result;
-	}
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (Mathf.Abs(nums[i]) > Mathf.Abs(result))
+                {
+                    result = nums[i];
+                }
+            }
 
-	//Returns the topmost parent with a certain component
-	public static Component GetTopmostParentComponent<T>(Transform tr) where T : Component
-	{
-		Component getting = null;
+            return result;
+        }
 
-		while (tr.parent != null)
-		{
-			if (tr.parent.GetComponent<T>() != null)
-			{
-				getting = tr.parent.GetComponent<T>();
-			}
+        //Returns the topmost parent with a certain component
+        public static Component GetTopmostParentComponent<T>(Transform tr) where T : Component
+        {
+            Component getting = null;
 
-			tr = tr.parent;
-		}
+            while (tr.parent != null)
+            {
+                if (tr.parent.GetComponent<T>() != null)
+                {
+                    getting = tr.parent.GetComponent<T>();
+                }
 
-		return getting;
-	}
+                tr = tr.parent;
+            }
+
+            return getting;
+        }
+    }
 }
