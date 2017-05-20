@@ -101,6 +101,9 @@ namespace RVP
         public bool suspensionCenterOfMass;
         public Vector3 centerOfMassOffset;
 
+        public ForceMode wheelForceMode = ForceMode.Acceleration;
+        public ForceMode suspensionForceMode = ForceMode.Acceleration;
+
         [Tooltip("Tow vehicle to instantiate")]
         public GameObject towVehicle;
         GameObject newTow;

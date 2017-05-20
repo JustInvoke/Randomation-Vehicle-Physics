@@ -183,13 +183,13 @@ namespace RVP
 
                 rb.AddForceAtPosition(upDir * floatForce * (Mathf.Pow(floatForceCurve.Evaluate(1 - compression), Mathf.Max(1, floatExponent)) - floatDampening * Mathf.Clamp(travelVel, -1, 1))
                     , tr.position
-                    , ForceMode.Acceleration);
+                    , vp.suspensionForceMode);
 
                 if (contactPoint.distance < bufferDistance)
                 {
                     rb.AddForceAtPosition(-upDir * bufferFloatForce * floatForceCurve.Evaluate(contactPoint.distance / bufferDistance) * Mathf.Clamp(travelVel, -1, 0)
                         , tr.position
-                        , ForceMode.Acceleration);
+                        , vp.suspensionForceMode);
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace RVP
                     0,
                     -steerRate * steerFactor * flippedSideFactor - contactPoint.relativeVelocity.z * sideFriction) * (1 - compression),
                 tr.position,
-                ForceMode.Acceleration);
+                vp.wheelForceMode);
         }
 
         //Tilt the visual wheel

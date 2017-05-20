@@ -74,6 +74,10 @@ namespace RVP
         [Tooltip("Adjusts how much friction the wheel has based on the normal of the ground surface. X-axis = normal dot product, y-axis = friction multiplier")]
         public AnimationCurve normalFrictionCurve = AnimationCurve.Linear(0, 1, 1, 1);
 
+        [Tooltip("How much the suspension compression affects the wheel friction")]
+        [Range(0, 1)]
+        public float compressionFrictionFactor = 0.5f;
+
         [Header("Size")]
 
         public float tireRadius;
@@ -361,7 +365,7 @@ namespace RVP
                 //Burnout spinning
                 if (vp.burnout > 0 && targetDrive.rpm != 0 && actualEbrake * vp.ebrakeInput == 0 && connected && grounded)
                 {
-                    rb.AddForceAtPosition(suspensionParent.forwardDir * -suspensionParent.flippedSideFactor * (vp.steerInput * vp.burnoutSpin * currentRPM * Mathf.Min(0.1f, targetDrive.torque) * 0.001f) * vp.burnout * (popped ? 0.5f : 1) * contactPoint.surfaceFriction, suspensionParent.tr.position, ForceMode.Acceleration);
+                    rb.AddForceAtPosition(suspensionParent.forwardDir * -suspensionParent.flippedSideFactor * (vp.steerInput * vp.burnoutSpin * currentRPM * Mathf.Min(0.1f, targetDrive.torque) * 0.001f) * vp.burnout * (popped ? 0.5f : 1) * contactPoint.surfaceFriction, suspensionParent.tr.position, vp.wheelForceMode);
                 }
 
                 //Popping logic
@@ -577,15 +581,15 @@ namespace RVP
                             forwardFrictionCurve.Evaluate(Mathf.Abs(forwardSlipFactor)) * -System.Math.Sign(forwardSlip) * (popped ? forwardRimFriction : forwardFriction) * forwardSlipDependenceFactor * -suspensionParent.flippedSideFactor
                             , 0
                             , sidewaysFrictionCurve.Evaluate(Mathf.Abs(sidewaysSlipFactor)) * -System.Math.Sign(sidewaysSlip) * (popped ? sidewaysRimFriction : sidewaysFriction) * sidewaysSlipDependenceFactor * normalFrictionCurve.Evaluate(Mathf.Clamp01(Vector3.Dot(contactPoint.normal, GlobalControl.worldUpDir))) * (vp.burnout > 0 && Mathf.Abs(targetDrive.rpm) != 0 && actualEbrake * vp.ebrakeInput == 0 && grounded ? (1 - vp.burnout) * (1 - Mathf.Abs(vp.accelInput)) : 1))
-                        * (0.5f + (1 - suspensionParent.compression) * 0.5f * Mathf.Clamp01(Mathf.Abs(suspensionParent.tr.InverseTransformDirection(localVel).z) * 10)) * contactPoint.surfaceFriction
+                        * ((1 - compressionFrictionFactor) + (1 - suspensionParent.compression) * compressionFrictionFactor * Mathf.Clamp01(Mathf.Abs(suspensionParent.tr.InverseTransformDirection(localVel).z) * 10)) * contactPoint.surfaceFriction
                     , 1 - frictionSmoothness);
 
-                rb.AddForceAtPosition(frictionForce, forceApplicationPoint, ForceMode.Acceleration);
+                rb.AddForceAtPosition(frictionForce, forceApplicationPoint, vp.wheelForceMode);
 
                 //If resting on a rigidbody, apply opposing force to it
                 if (contactPoint.col.attachedRigidbody)
                 {
-                    contactPoint.col.attachedRigidbody.AddForceAtPosition(-frictionForce, contactPoint.point, ForceMode.Acceleration);
+                    contactPoint.col.attachedRigidbody.AddForceAtPosition(-frictionForce, contactPoint.point, vp.wheelForceMode);
                 }
             }
         }
