@@ -289,7 +289,7 @@ namespace RVP
                     rb.AddForceAtPosition(
                         appliedSuspensionForce
                         , applyForceAtGroundContact ? wheel.contactPoint.point : wheel.tr.position
-                        , ForceMode.Acceleration);
+                        , vp.suspensionForceMode);
 
                     //If wheel is resting on a rigidbody, apply opposing force to it
                     if (wheel.contactPoint.col.attachedRigidbody)
@@ -297,7 +297,7 @@ namespace RVP
                         wheel.contactPoint.col.attachedRigidbody.AddForceAtPosition(
                             -appliedSuspensionForce
                             , wheel.contactPoint.point
-                            , ForceMode.Acceleration);
+                            , vp.suspensionForceMode);
                     }
                 }
 
@@ -307,7 +307,7 @@ namespace RVP
                     rb.AddForceAtPosition(
                         -vp.norm.TransformDirection(0, 0, Mathf.Clamp(travelVel, -hardContactSensitivity * TimeMaster.fixedTimeFactor, 0) + penetration) * hardContactForce * Mathf.Clamp01(TimeMaster.fixedTimeFactor)
                         , applyForceAtGroundContact ? wheel.contactPoint.point : wheel.tr.position
-                        , ForceMode.Acceleration);
+                        , vp.suspensionForceMode);
                 }
             }
         }
