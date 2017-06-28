@@ -662,7 +662,7 @@ namespace RVP
 
             if (Application.isPlaying && generateHardCollider && connected)
             {
-                //sphereColTr.position = rim.position;
+                sphereColTr.position = rim.position;
             }
         }
 
