@@ -7,7 +7,7 @@ Documentation can be found in [the manual](Assets/RVP_Manual.pdf).
 
 # License Info
 
-Code is licensed under MIT License.
+Code is licensed under the MIT License. You can sell projects that use code from this repository as long as the MIT License is included with indications that it applies to the original code here. Valid commercial projects include compiled applications and/or "assets" containing uncompiled source code. As long as the code from this repository is not being sold by itself, whatever you are selling is most likely permissable. It must include substantial modifications and/or additions.
 
 All models and textures are public domain and were created for this package.
 
