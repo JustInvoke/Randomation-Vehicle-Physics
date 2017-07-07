@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8149152}
   - component: {fileID: 11410548}
   - component: {fileID: 11497068}
+  - component: {fileID: 114962899351624938}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -64,6 +65,8 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -88,7 +91,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177336}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e217891e04d34f04e8f2efd7958d8bb5, type: 3}
   m_Name: 
@@ -106,7 +109,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177336}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e817ea94e2545248b19d1b57c494c93, type: 3}
   m_Name: 
@@ -131,3 +134,27 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 177336}
   m_IsPrefabParent: 1
+--- !u!114 &114962899351624938
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68fb73f323e949449f2a9582e85c1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 499516}
+  target: {fileID: 0}
+  mouseAxisXInput: Mouse X
+  mouseAxisYInput: Mouse Y
+  mouseScrollWheelInput: Mouse ScrollWheel
+  clickToMoveCamera: 1
+  distance: 50
+  xSpeed: 3000
+  ySpeed: 3000
+  yMinLimit: -20
+  yMaxLimit: 80
+  distanceMin: 0.5
+  distanceMax: 50
