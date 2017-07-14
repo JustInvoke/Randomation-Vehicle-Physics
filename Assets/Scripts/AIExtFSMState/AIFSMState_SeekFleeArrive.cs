@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace RVP
 {
+    //FSM state for testing the seek, flee, and arrive behavior
     public class AIFSMState_SeekFleeArrive : MonoBehaviour, AIFSMState
     {
         public int method = 0;
@@ -20,17 +21,17 @@ namespace RVP
 
             if (method == 0)
             {
-                Debug.Log("Seek");
+                //Debug.Log("Seek");
                 aiAgent.Seek(GameObject.Find("Target").transform.position);
             }
             else if(method == 1)
             {
-                Debug.Log("Flee");
+                //Debug.Log("Flee");
                 aiAgent.Flee(GameObject.Find("Target").transform.position);
             }
             else if(method == 2)
             {
-                Debug.Log("Arrive");
+                //Debug.Log("Arrive");
                 aiAgent.Arrive(GameObject.Find("Target").transform.position);
             }
         }

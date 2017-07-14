@@ -4,16 +4,13 @@ using UnityEngine;
 
 namespace RVP
 {
-    /***
-     * AIAgent
-     * 
-     * This class is a base class of the agent
-     * 
-     * ***/
+    //AIAgent
+    //This class is a base class of the agent
     public abstract class AIAgent : MonoBehaviour
     {
         protected Rigidbody m_Rigidbody;
 
+        //The rigidbody mass
         public float mass
         {
             get
@@ -26,6 +23,7 @@ namespace RVP
             }
         }
 
+        //The current position
         public Vector3 position
         {
             get
@@ -34,6 +32,7 @@ namespace RVP
             }
         }
 
+        //The velocity
         public Vector3 velocity
         {
             get
@@ -46,6 +45,7 @@ namespace RVP
             }
         }
 
+        //The Speed
         public float speed
         {
             get
@@ -54,6 +54,7 @@ namespace RVP
             }
         }
 
+        //The heading
         public Vector3 heading
         {
             get
@@ -62,6 +63,7 @@ namespace RVP
             }
         }
 
+        //The side
         public Vector3 side
         {
             get

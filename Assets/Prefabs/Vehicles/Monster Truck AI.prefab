@@ -3113,7 +3113,7 @@ MonoBehaviour:
   ebrakeForce: 0
   steerRangeMin: -40
   steerRangeMax: 40
-  steerFactor: 1
+  steerFactor: 2
   steerAngle: 0
   ackermannFactor: 0.1
   camberCurve:
@@ -3714,7 +3714,7 @@ MonoBehaviour:
   ebrakeForce: 0
   steerRangeMin: -40
   steerRangeMax: 40
-  steerFactor: 1
+  steerFactor: 2
   steerAngle: 0
   ackermannFactor: 0.1
   camberCurve:
@@ -4103,7 +4103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AIFSMStateGameObject: {fileID: 1227591974106072}
   initialFSMState: RVP.AIFSMState_SeekFleeArrive
-  direction: 2
+  direction: 3
   behavior: 0
   maxSpeed: 100
   wanderJitter: 80
@@ -4114,14 +4114,15 @@ MonoBehaviour:
   arriveStoppingDistance: 1
   fleeStoppingDistance: 10
   noneStoppingDistance: 10
-  globalFleeDistance: 20
+  fleeDistance: 10
   seekTarget: {x: 0, y: 0, z: 0}
   fleeTarget: {x: 0, y: 0, z: 0}
   arriveTarget: {x: 0, y: 0, z: 0}
   pursuitTarget: {fileID: 0}
   evadeTarget: {fileID: 0}
-  actuatorForwardMaxAngleToBrake: 2
-  actuatorBackwardMaxAngleToBrake: 30
+  forwardMinAngleToBrake: 10
+  backwardMinAngleToBrake: 10
+  minAngleToFlip: 45
 --- !u!114 &114908679260757520
 MonoBehaviour:
   m_ObjectHideFlags: 1

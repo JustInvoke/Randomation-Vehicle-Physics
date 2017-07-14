@@ -4,13 +4,9 @@ using UnityEngine;
 
 namespace RVP
 {
-    /***
-     * AIActuator
-     * 
-     * This class converts the desired velocity to the physical transform limitation such as steer right and left
-     * and move forward and backwards
-     *  
-     * ***/
+    //AIActuator
+    //This class converts the desired velocity to the physical transform within its limitation such as steer right and left
+    //and move forward and backwards
     public class AIActuator
     {
         private AIAgentAutonomous m_AIAgent;
@@ -29,32 +25,41 @@ namespace RVP
 
             if (m_AIAgent.direction == AIAgentAutonomous.Direction.Forward)
             {
-                UpdateActuatorForward();
+                UpdateActuatorForward(m_AIAgent.desiredVelocity);
             }
             else if (m_AIAgent.direction == AIAgentAutonomous.Direction.Backward)
             {
-                UpdateActuatorBackward();
+                UpdateActuatorBackward(m_AIAgent.desiredVelocity);
             }
             else if (m_AIAgent.direction == AIAgentAutonomous.Direction.Auto)
             {
-                UpdateActuatorAuto();
+                UpdateActuatorAuto(m_AIAgent.desiredVelocity);
             }
             else if (m_AIAgent.direction == AIAgentAutonomous.Direction.AutoFlip)
             {
-                UpdateActuatorAutoFlip();
+                UpdateActuatorAutoFlip(m_AIAgent.desiredVelocity);
             }
         }
 
-        void UpdateActuatorForward()
+        //Forward only actuator
+        void UpdateActuatorForward(Vector3 desired)
         {
-            Vector3 desired = m_AIAgent.desiredVelocity;
             m_AIAgent.vehicleRoot.brakeIsReverse = true;
             if (m_AIAgent.transmission)
             {
                 m_AIAgent.transmission.automatic = true;
+
+                if (m_AIAgent.transmission is GearboxTransmission)
+                {
+                    GearboxTransmission trg = m_AIAgent.transmission as GearboxTransmission;
+                    if (trg.currentGear < 2)
+                    {
+                        trg.ShiftToGear(2);
+                    }
+                }
             }
             m_AIAgent.vehicleRoot.SetAccel(desired.normalized.magnitude);
-
+            
             float angle = 0f;
             if (desired.magnitude == 0f)
             {
@@ -67,16 +72,15 @@ namespace RVP
 
             m_AIAgent.vehicleRoot.SetSteer(angle / 180f);
 
-            if (Mathf.Abs(angle) > m_AIAgent.actuatorForwardMaxAngleToBrake && desired.magnitude != 0f)
+            if (Mathf.Abs(angle) > m_AIAgent.forwardMinAngleToBrake && desired.magnitude != 0f)
             {
-                m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.actuatorForwardMaxAngleToBrake) / (180f - m_AIAgent.actuatorForwardMaxAngleToBrake));
+                m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.forwardMinAngleToBrake) / (180f - m_AIAgent.forwardMinAngleToBrake));
             }
         }
 
-        void UpdateActuatorBackward()
+        //Backward only actuator
+        void UpdateActuatorBackward(Vector3 desired)
         {
-            Vector3 desired = m_AIAgent.desiredVelocity;
-            //Debug.Log(desired.normalized.magnitude);
             m_AIAgent.vehicleRoot.brakeIsReverse = false;
             if (m_AIAgent.transmission)
             {
@@ -108,15 +112,15 @@ namespace RVP
 
             m_AIAgent.vehicleRoot.SetSteer(-angle / 180f);
 
-            if (Mathf.Abs(angle) > m_AIAgent.actuatorBackwardMaxAngleToBrake && desired.magnitude != 0f)
+            if (Mathf.Abs(angle) > m_AIAgent.backwardMinAngleToBrake && desired.magnitude != 0f)
             {
-                m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.actuatorBackwardMaxAngleToBrake) / (180f - m_AIAgent.actuatorBackwardMaxAngleToBrake));
+                m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.backwardMinAngleToBrake) / (180f - m_AIAgent.backwardMinAngleToBrake));
             }
         }
 
-        void UpdateActuatorAuto()
+        //Auto backward/forward actuator
+        void UpdateActuatorAuto(Vector3 desired)
         {
-            Vector3 desired = m_AIAgent.desiredVelocity;
             bool movingForward = false;
 
             float angle = 0f;
@@ -130,7 +134,7 @@ namespace RVP
             }
 
             float absAngle = Mathf.Abs(angle);
-            if (absAngle <= m_AIAgent.actuatorForwardMaxAngleToBrake)
+            if (absAngle <= m_AIAgent.forwardMinAngleToBrake)
             {
                 m_AIAgent.vehicleRoot.brakeIsReverse = true;
                 if (m_AIAgent.transmission)
@@ -152,8 +156,8 @@ namespace RVP
                 movingForward = true;
             }
             else if (
-                absAngle > m_AIAgent.actuatorForwardMaxAngleToBrake
-                && absAngle < 180f - m_AIAgent.actuatorBackwardMaxAngleToBrake
+                absAngle > m_AIAgent.forwardMinAngleToBrake
+                && absAngle < 180f - m_AIAgent.backwardMinAngleToBrake
                 )
             {
 
@@ -177,11 +181,11 @@ namespace RVP
 
                 if (desired.magnitude != 0f)
                 {
-                    m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.actuatorForwardMaxAngleToBrake) / (180f - m_AIAgent.actuatorBackwardMaxAngleToBrake - m_AIAgent.actuatorForwardMaxAngleToBrake));
+                    m_AIAgent.vehicleRoot.SetBrake((Mathf.Abs(angle) - m_AIAgent.forwardMinAngleToBrake) / (180f - m_AIAgent.backwardMinAngleToBrake - m_AIAgent.forwardMinAngleToBrake));
                 }
                 movingForward = true;
             }
-            else if (absAngle >= 180f - m_AIAgent.actuatorBackwardMaxAngleToBrake)
+            else if (absAngle >= 180f - m_AIAgent.backwardMinAngleToBrake)
             {
                 //Debug.Log("backward");
                 m_AIAgent.vehicleRoot.brakeIsReverse = false;
@@ -221,11 +225,30 @@ namespace RVP
             }
         }
 
-        void UpdateActuatorAutoFlip()
+        //Auto flip backward/forward actuator
+        void UpdateActuatorAutoFlip(Vector3 desired)
         {
-            Debug.LogError("Auto Flip Is Not Implemented Yet!");
+            if (m_AIAgent.navMeshAgent.path.corners.Length < 2)
+                return;
+
+            float angle = FindAngleSign(m_AIAgent.heading, desired);
+            float absAngle = Mathf.Abs(angle);
+
+            if(absAngle >= m_AIAgent.minAngleToFlip)
+            {
+                //flip
+                Vector3 nextTarget = m_AIAgent.navMeshAgent.path.corners[1];
+                Vector3 tempDesired = (m_AIAgent.position - nextTarget).normalized;
+                UpdateActuatorBackward(tempDesired);
+            }
+            else
+            {
+                //move forward normally
+                UpdateActuatorForward(desired);
+            }
         }
 
+        //Find angle between vectors with sign
         float FindAngleSign(Vector3 v1, Vector3 v2)
         {
             float angle = Vector3.Angle(v1, v2);

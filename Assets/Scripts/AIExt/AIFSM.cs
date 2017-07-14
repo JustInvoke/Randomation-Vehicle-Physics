@@ -4,27 +4,26 @@ using UnityEngine;
 
 namespace RVP
 {
-    /***
-     * AIFSMState
-     * 
-     * This is an interface of fsm state, will be derived when used.
-     * 
-     * ***/
+    //AIFSMState
+    //This is an interface of fsm state, will be derived when used.
     public interface AIFSMState
     {
+        //Called when the AIFSM begins to change the FSM state
         void OnEnter(AIAgentAutonomous aiAgent);
+
+        //Called when the AIFSM is updated
         void OnExecute(AIAgentAutonomous aiAgent);
+
+        //Called before the AIFSM changes the FSM state
         void OnExit(AIAgentAutonomous aiAgent);
     }
 
-    /***
-     * AIFSM
-     * 
-     * This is a Finite State Machine class
-     * 
-     * ***/
+    //AIFSM
+    //This is a Finite State Machine class
     public class AIFSM
     {
+        //AIFSMState_Dummy
+        //Dummy class that is being used when there are no registered FSM States
         public class AIFSMState_Dummy : AIFSMState
         {
             public void OnEnter(AIAgentAutonomous aiAgent)
@@ -56,6 +55,7 @@ namespace RVP
             m_AIAgent = aiAgent;
         }
 
+        //Register an FSM state
         public void AddState(string name, AIFSMState state)
         {
             if (m_FSMStates.ContainsKey(name))
@@ -64,6 +64,7 @@ namespace RVP
             m_FSMStates.Add(name, state);
         }
 
+        //Get FSM state by its name
         public AIFSMState GetState(string name)
         {
             if (!m_FSMStates.ContainsKey(name))
@@ -71,16 +72,19 @@ namespace RVP
             return m_FSMStates[name];
         }
 
+        //Unregister an FSM state
         public void RemoveState(string name)
         {
             m_FSMStates.Remove(name);
         }
 
+        //Unregister all FSM states
         public void RemoveAllStates()
         {
             m_FSMStates.Clear();
         }
 
+        //Gets the current FSM state name
         public string GetCurrentStateName()
         {
             foreach (KeyValuePair<string, AIFSMState> state in m_FSMStates)
@@ -93,6 +97,7 @@ namespace RVP
             return null;
         }
 
+        //Gets the previous FSM state
         public string GetPreviousStateName()
         {
             foreach (KeyValuePair<string, AIFSMState> state in m_FSMStates)
@@ -105,6 +110,7 @@ namespace RVP
             return null;
         }
 
+        //Changes the current state to another one
         public void ChangeState(string name)
         {
             AIFSMState temp = GetState(name);
@@ -116,6 +122,7 @@ namespace RVP
             m_CurrentState.OnEnter(m_AIAgent);
         }
 
+        //Reload the current FSM state
         public void ReloadState()
         {
             string prevStName = GetCurrentStateName();
@@ -127,11 +134,13 @@ namespace RVP
             ChangeState(prevStName);
         }
 
+        //Change to the dummy state
         public void ChangeToDummyState()
         {
             ChangeState(m_DummyState.GetType().Name);
         }
 
+        //Change to the previous state
         public void ChangeToPreviousState()
         {
             string prevStName = GetPreviousStateName();
@@ -141,6 +150,7 @@ namespace RVP
             ChangeState(prevStName);
         }
 
+        //The FSM update method
         public void Update()
         {
             if (m_CurrentState == null)

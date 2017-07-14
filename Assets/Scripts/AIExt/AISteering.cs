@@ -4,15 +4,11 @@ using UnityEngine;
 
 namespace RVP
 {
-    /***
-     * AISteering
-     * 
-     * This is a steering behavior class.
-     * I implemented the steering behavior to calculate target point instead of steering force.
-     * So i'm not sure that it can be called as steering behavior or not.
-     * 
-     * The principle is for each behavior applied, get the correct point to be given to NavMeshAgent.destination.
-     * ***/
+    //AISteering
+    //This is a steering behavior class.
+    //I implemented the steering behavior to calculate target point instead of steering force.
+    //So i'm not sure that it can be called as steering behavior or not.
+    //The principle is for each behavior applied, get the correct point to be given to NavMeshAgent.destination.
     public class AISteering
     {
         private AIAgentAutonomous m_AIAgent;
@@ -60,54 +56,54 @@ namespace RVP
             return m_CalculatedTarget;
         }
 
+        //The AI don't wanna move to anywhere
         Vector3 None()
         {
             m_AIAgent.navMeshAgent.autoBraking = true;
             m_AIAgent.navMeshAgent.stoppingDistance = m_AIAgent.noneStoppingDistance;
-            //m_AIAgent.navMeshAgent.Stop();
             m_AIAgent.navMeshAgent.isStopped = true;
 
             return m_AIAgent.position;
         }
 
+        //The AI will go to the target, and keep moving event it reaches the target
         Vector3 Seek(Vector3 targetPos)
         {
             m_AIAgent.navMeshAgent.autoBraking = false;
             m_AIAgent.navMeshAgent.stoppingDistance = m_AIAgent.seekStoppingDistance;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
             return targetPos;
         }
 
+        //Same as Seek but stop at destination
         Vector3 Arrive(Vector3 targetPos)
         {
             m_AIAgent.navMeshAgent.autoBraking = true;
             m_AIAgent.navMeshAgent.stoppingDistance = m_AIAgent.arriveStoppingDistance;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
             return targetPos;
         }
 
+        //The AI moves away from the target
         Vector3 Flee(Vector3 targetPos)
         {
             m_AIAgent.navMeshAgent.autoBraking = false;
             m_AIAgent.navMeshAgent.stoppingDistance = m_AIAgent.fleeStoppingDistance;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
-            if ((m_AIAgent.position - targetPos).magnitude > m_AIAgent.globalFleeDistance)
+            if ((m_AIAgent.position - targetPos).magnitude > m_AIAgent.fleeDistance)
                 return m_AIAgent.position;
 
-            return m_AIAgent.position + (m_AIAgent.position - targetPos).normalized * m_AIAgent.globalFleeDistance;
+            return m_AIAgent.position + (m_AIAgent.position - targetPos).normalized * m_AIAgent.fleeDistance;
         }
 
+        //The AI will move by wandering around
         Vector3 Wander()
         {
             m_AIAgent.navMeshAgent.autoBraking = false;
             m_AIAgent.navMeshAgent.stoppingDistance = m_AIAgent.wanderStoppingDistance;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
             float jitterTime = m_AIAgent.wanderJitter * Time.deltaTime;
@@ -127,6 +123,7 @@ namespace RVP
             return m_AIAgent.transform.TransformPoint(target);
         }
 
+        //The AI will seek and chase the target (evader)
         Vector3 Pursuit(AIAgent evader)
         {
             if(!evader)
@@ -134,9 +131,6 @@ namespace RVP
                 return None();
             }
 
-            //m_AIAgent.navMeshAgent.autoBraking = false;
-            //m_AIAgent.navMeshAgent.stoppingDistance = 0;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
             Vector3 distanceVecBetweenEvaderAndAgent = evader.position - m_AIAgent.position;
@@ -153,6 +147,7 @@ namespace RVP
             return Seek(evader.position + evader.velocity * predictionTime);
         }
 
+        //The AI will run away from the target(pursuer)
         Vector3 Evade(AIAgent pursuer)
         {
             if (!pursuer)
@@ -160,14 +155,11 @@ namespace RVP
                 return None();
             }
 
-            //m_AIAgent.navMeshAgent.autoBraking = false;
-            //m_AIAgent.navMeshAgent.stoppingDistance = 0;
-            //m_AIAgent.navMeshAgent.Resume();
             m_AIAgent.navMeshAgent.isStopped = false;
 
             Vector3 distanceVecBetweenPursuerToAgent = pursuer.position - m_AIAgent.position;
 
-            if (distanceVecBetweenPursuerToAgent.sqrMagnitude > m_AIAgent.globalFleeDistance * m_AIAgent.globalFleeDistance)
+            if (distanceVecBetweenPursuerToAgent.sqrMagnitude > m_AIAgent.fleeDistance * m_AIAgent.fleeDistance)
                 return m_AIAgent.position;
 
             float predictionTime = distanceVecBetweenPursuerToAgent.magnitude / (m_AIAgent.maxSpeed + pursuer.speed);
