@@ -5,6 +5,10 @@ If you add new properties/variables when contributing, make sure their default v
 
 Documentation can be found in [the manual](Assets/RVP_Manual.pdf).
 
+# How To Use
+
+Import the repository into the top level of a blank Unity project folder to make sure everything works. After that, you can attempt to import it into your own project, but be mindful when merging the project settings. Read the section of the manual about project settings to make sure you copy the ones that are important and address potential conflicts with your own project settings.
+
 # License Info
 
 Code is licensed under the MIT License. You can sell projects that use code from this repository as long as the MIT License is included with indications that it applies to the original code here. Valid commercial projects include compiled applications and/or "assets" containing uncompiled source code. As long as the code from this repository is not being sold by itself, what is being sold is most likely permissable. Basically, it must include substantial modifications and/or additions.
