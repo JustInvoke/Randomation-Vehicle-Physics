@@ -1,7 +1,7 @@
 # Randomation Vehicle Physics
 This is a vehicle physics system for the Unity engine, tested with Unity 5.5. It aims to achieve semi-realistic, general-purpose driving mechanics. This was originally sold on the asset store as Randomation Vehicle Physics 2.0.
 
-If you add new properties/variables when contributing, make sure their default values do not change the behavior of the included prefabs.
+Contributions are encouraged and can be submitted with pull requests, which I can then review and commit or ask for changes. If you feel up to it, you can try tackling one of the issues in the issues tab above. You are free to put comments around your code giving yourself credit if you feel compelled to do so. If you add new properties/variables when contributing, make sure their default values do not change the behavior of the included prefabs. Any added code will be considered to be under the MIT License as the rest of the repository is.
 
 Documentation can be found in [the manual](Assets/RVP_Manual.pdf).
 
