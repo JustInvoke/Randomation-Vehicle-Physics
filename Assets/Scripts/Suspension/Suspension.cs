@@ -152,7 +152,7 @@ namespace RVP
         public float jamForce = Mathf.Infinity;
         [System.NonSerialized]
         public bool jammed;
-
+        float travelVel = 0f;
         void Start()
         {
             tr = transform;
@@ -278,9 +278,20 @@ namespace RVP
         {
             if (wheel.grounded && wheel.connected)
             {
+                //Variables declaration
+                float oldtravelvel;
+                float deltaTravelVelo;
+                
+                //previous travel velocity stored for damping
+                oldtravelvel = travelVel;
+                
                 //Get the local vertical velocity
-                float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
-
+                travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
+                
+                //damp high suspension force oscillation
+                deltaTravelVelo=travelVel-oldtravelvel;
+                travelVel -= deltaTravelVelo * 0.5f;   
+                
                 //Apply the suspension force
                 if (suspensionDistance > 0 && targetCompression > 0)
                 {
