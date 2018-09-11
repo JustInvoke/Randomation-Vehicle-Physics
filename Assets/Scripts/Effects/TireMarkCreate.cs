@@ -262,6 +262,7 @@ namespace RVP
                 mesh.uv = uvs;
                 mesh.colors = colors;
                 mesh.RecalculateBounds();
+                mesh.RecalculateNormals();
             }
             else
             {
@@ -281,8 +282,7 @@ namespace RVP
 
             if (calculateTangents)
             {
-                mesh.RecalculateNormals();
-                MeshUtil.CalculateMeshTangents(mesh);
+                mesh.RecalculateTangents();
             }
         }
 
@@ -307,6 +307,10 @@ namespace RVP
             {
                 EndMark();
             }
+            else if (mesh != null)
+            {
+                Destroy(mesh);
+            }
         }
     }
 
@@ -329,6 +333,7 @@ namespace RVP
             {
                 if (alpha <= 0)
                 {
+                    Destroy(mesh);
                     Destroy(gameObject);
                 }
                 else
