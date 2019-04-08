@@ -56,7 +56,7 @@ namespace RVP
 
         public virtual void Start()
         {
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(transform);
+            vp = transform.GetTopmostParentComponent<VehicleParent>();
 
             //Get engine sound
             snd = GetComponent<AudioSource>();

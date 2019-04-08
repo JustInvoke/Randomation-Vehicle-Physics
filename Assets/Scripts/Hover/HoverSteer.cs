@@ -31,7 +31,7 @@ namespace RVP
         void Start()
         {
             tr = transform;
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(tr);
+            vp = tr.GetTopmostParentComponent<VehicleParent>();
         }
 
         void FixedUpdate()

@@ -156,8 +156,8 @@ namespace RVP
         void Start()
         {
             tr = transform;
-            rb = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(tr);
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(tr);
+            rb = tr.GetTopmostParentComponent<Rigidbody>();
+            vp = tr.GetTopmostParentComponent<VehicleParent>();
             targetDrive = GetComponent<DriveForce>();
             flippedSide = Vector3.Dot(tr.forward, vp.transform.right) < 0;
             flippedSideFactor = flippedSide ? -1 : 1;

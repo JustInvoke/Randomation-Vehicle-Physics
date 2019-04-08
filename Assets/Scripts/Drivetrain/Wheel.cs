@@ -200,8 +200,8 @@ namespace RVP
         void Start()
         {
             tr = transform;
-            rb = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(tr);
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(tr);
+            rb = tr.GetTopmostParentComponent<Rigidbody>();
+            vp = tr.GetTopmostParentComponent<VehicleParent>();
             suspensionParent = tr.parent.GetComponent<Suspension>();
             travelDist = suspensionParent.targetCompression;
             canDetach = detachForce < Mathf.Infinity && Application.isPlaying;

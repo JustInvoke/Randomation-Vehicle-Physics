@@ -30,7 +30,7 @@ namespace RVP
 
         public virtual void Start()
         {
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(transform);
+            vp = transform.GetTopmostParentComponent<VehicleParent>();
             targetDrive = GetComponent<DriveForce>();
             newDrive = gameObject.AddComponent<DriveForce>();
         }

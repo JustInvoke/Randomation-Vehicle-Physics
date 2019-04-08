@@ -74,8 +74,8 @@ namespace RVP
         void Start()
         {
             tr = transform;
-            rb = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(tr);
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(tr);
+            rb = tr.GetTopmostParentComponent<Rigidbody>();
+            vp = tr.GetTopmostParentComponent<VehicleParent>();
             flippedSideFactor = Vector3.Dot(tr.forward, vp.transform.right) < 0 ? 1 : -1;
             canDetach = detachForce < Mathf.Infinity && Application.isPlaying;
             bufferDistance = Mathf.Min(hoverDistance, bufferDistance);

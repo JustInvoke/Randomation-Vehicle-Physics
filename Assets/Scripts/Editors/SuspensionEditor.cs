@@ -52,7 +52,7 @@ namespace RVP
                     {
                         foreach (Suspension curTarget in allTargets)
                         {
-                            VehicleParent vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(curTarget.transform);
+                            VehicleParent vp = curTarget.transform.GetTopmostParentComponent<VehicleParent>();
                             Suspension closestOne = null;
                             float closeDist = Mathf.Infinity;
 

@@ -58,7 +58,7 @@ namespace RVP
                     {
                         foreach (HoverMotor curTarget in allTargets)
                         {
-                            curTarget.wheels = (HoverWheel[])((Transform)F.GetTopmostParentComponent<VehicleParent>(curTarget.transform).transform).GetComponentsInChildren<HoverWheel>();
+                            curTarget.wheels = curTarget.transform.GetTopmostParentComponent<VehicleParent>().transform.GetComponentsInChildren<HoverWheel>();
                         }
                     }
                 }

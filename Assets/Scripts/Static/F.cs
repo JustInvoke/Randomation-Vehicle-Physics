@@ -23,10 +23,10 @@ namespace RVP
             return result;
         }
 
-        //Returns the topmost parent with a certain component
-        public static Component GetTopmostParentComponent<T>(Transform tr) where T : Component
+        //Returns the topmost parent of a Transform with a certain component
+        public static T GetTopmostParentComponent<T>(this Transform tr) where T : Component
         {
-            Component getting = null;
+            T getting = null;
 
             while (tr.parent != null)
             {
