@@ -45,7 +45,7 @@ namespace RVP
                 initialLocalRot = tr.localRotation;
             }
 
-            parentBody = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(tr);
+            parentBody = tr.GetTopmostParentComponent<Rigidbody>();
             initialPos = tr.localPosition;
         }
 

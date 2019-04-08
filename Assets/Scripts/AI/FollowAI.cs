@@ -181,7 +181,7 @@ namespace RVP
             if (target)
             {
                 //if target is a vehicle
-                targetBody = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(target);
+                targetBody = target.GetTopmostParentComponent<Rigidbody>();
 
                 //if target is a waypoint
                 targetWaypoint = target.GetComponent<VehicleWaypoint>();

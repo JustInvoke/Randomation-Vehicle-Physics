@@ -19,7 +19,7 @@ namespace RVP
         void Start()
         {
             snd = GetComponent<AudioSource>();
-            vp = (VehicleParent)F.GetTopmostParentComponent<VehicleParent>(transform);
+            vp = transform.GetTopmostParentComponent<VehicleParent>();
             wheels = new Wheel[vp.wheels.Length];
 
             //Get wheels and average slip threshold

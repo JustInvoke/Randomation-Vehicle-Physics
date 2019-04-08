@@ -174,7 +174,7 @@ namespace RVP
             bool cantCalc = false;
             if (!Application.isPlaying)
             {
-                GasMotor engine = F.GetTopmostParentComponent<VehicleParent>(transform).GetComponentInChildren<GasMotor>();
+                GasMotor engine = transform.GetTopmostParentComponent<VehicleParent>().GetComponentInChildren<GasMotor>();
 
                 if (engine)
                 {
