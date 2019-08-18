@@ -1,5 +1,5 @@
 # Randomation Vehicle Physics
-This is a vehicle physics system for the Unity engine, tested with Unity 5.6 and not 2017.x or 2018.x. It aims to achieve semi-realistic, general-purpose driving mechanics. This was originally sold on the asset store as Randomation Vehicle Physics 2.0.
+This is a vehicle physics system for the Unity engine, tested with Unity 5.6 but may work with newer versions. It aims to achieve semi-realistic, general-purpose driving mechanics. This was originally sold on the asset store as Randomation Vehicle Physics 2.0.
 
 # Contributing
 Contributions are encouraged and can be submitted with pull requests, which I can then review and commit or ask for changes. Pull requests should be submitted to the Push-Pull branch. After a pull request is approved, it can be merged into the master branch.
