@@ -19,7 +19,7 @@ namespace RVP
             boldFoldout.fontStyle = FontStyle.Bold;
             PropertyToggleSetter targetScript = (PropertyToggleSetter)target;
             PropertyToggleSetter[] allTargets = new PropertyToggleSetter[targets.Length];
-            isPrefab = PrefabUtility.GetPrefabType(targetScript) == PrefabType.Prefab;
+            isPrefab = F.IsPrefab(targetScript);
 
             for (int i = 0; i < targets.Length; i++)
             {

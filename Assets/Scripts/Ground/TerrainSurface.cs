@@ -52,7 +52,7 @@ namespace RVP
             {
                 if (terDat)
                 {
-                    if (surfaceTypes.Length != terDat.alphamapLayers)
+                    if (surfaceTypes.Length != terDat.terrainLayers.Length)
                     {
                         ChangeSurfaceTypesLength();
                     }
@@ -69,7 +69,7 @@ namespace RVP
         {
             int[] tempVals = surfaceTypes;
 
-            surfaceTypes = new int[terDat.alphamapLayers];
+            surfaceTypes = new int[terDat.terrainLayers.Length];
 
             for (int i = 0; i < surfaceTypes.Length; i++)
             {
@@ -87,6 +87,8 @@ namespace RVP
         //Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
         public int GetDominantSurfaceTypeAtPoint(Vector3 pos)
         {
+            if (surfaceTypes.Length == 0) { return 0; }
+
             Vector2 coord = new Vector2(Mathf.Clamp01((pos.z - tr.position.z) / terDat.size.z), Mathf.Clamp01((pos.x - tr.position.x) / terDat.size.x));
 
             float maxVal = 0;

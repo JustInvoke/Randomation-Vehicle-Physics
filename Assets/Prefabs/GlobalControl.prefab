@@ -3,9 +3,10 @@
 --- !u!1 &121460
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 428504}
   - component: {fileID: 11405504}
@@ -20,9 +21,10 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &428504
 Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121460}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,9 +35,10 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11405504
 MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121460}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -57,11 +60,65 @@ MonoBehaviour:
   tireMarkGap: 0.1
   tireMarkHeight: 0.02
   tireFadeTime: 10
+--- !u!114 &11469076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635668a11dc567f40b1ff37f41e54796, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceTypes:
+  - name: Default
+    useColliderFriction: 0
+    friction: 1
+    alwaysScrape: 0
+    leaveSparks: 1
+    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
+    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
+  - name: Mud
+    useColliderFriction: 0
+    friction: 0.5
+    alwaysScrape: 1
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+    rimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
+  - name: Dirt
+    useColliderFriction: 0
+    friction: 0.8
+    alwaysScrape: 1
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+    rimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
+  - name: Ice
+    useColliderFriction: 0
+    friction: 0.2
+    alwaysScrape: 0
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: c1a7cd2fe64977c40bedaee5dc6a0aee, type: 3}
+    rimSnd: {fileID: 8300000, guid: e2a3cbfed9c05754f8d5c08a18079807, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 44823a766a5530d45a27cd2d7d833e32, type: 3}
+  - name: Wall
+    useColliderFriction: 0
+    friction: 0
+    alwaysScrape: 0
+    leaveSparks: 0
+    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
+    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
+    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
 --- !u!114 &11430476
 MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121460}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -116,90 +173,3 @@ MonoBehaviour:
     multiplier: 1
     angleThreshold: 300
     boostAdd: 0.1
---- !u!114 &11469076
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 121460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 635668a11dc567f40b1ff37f41e54796, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  surfaceTypes:
-  - name: Defualt
-    useColliderFriction: 0
-    friction: 1
-    alwaysScrape: 0
-    leaveSparks: 1
-    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
-    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
-    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
-  - name: Mud
-    useColliderFriction: 0
-    friction: 0.5
-    alwaysScrape: 1
-    leaveSparks: 0
-    tireSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
-    rimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
-    tireRimSnd: {fileID: 8300000, guid: 31d07849cf81bdc40b958347a8bc3d55, type: 3}
-  - name: Dirt
-    useColliderFriction: 0
-    friction: 0.8
-    alwaysScrape: 1
-    leaveSparks: 0
-    tireSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
-    rimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
-    tireRimSnd: {fileID: 8300000, guid: 4bb9e24bfe112de4a85ee3ffb091fe0f, type: 3}
-  - name: Ice
-    useColliderFriction: 0
-    friction: 0.2
-    alwaysScrape: 0
-    leaveSparks: 0
-    tireSnd: {fileID: 8300000, guid: c1a7cd2fe64977c40bedaee5dc6a0aee, type: 3}
-    rimSnd: {fileID: 8300000, guid: e2a3cbfed9c05754f8d5c08a18079807, type: 3}
-    tireRimSnd: {fileID: 8300000, guid: 44823a766a5530d45a27cd2d7d833e32, type: 3}
-  - name: Wall
-    useColliderFriction: 0
-    friction: 0
-    alwaysScrape: 0
-    leaveSparks: 0
-    tireSnd: {fileID: 8300000, guid: 0debe53a9c4cef54f95b55f393937edf, type: 3}
-    rimSnd: {fileID: 8300000, guid: ed5fa181564244d48b0e4b4f6a897c21, type: 3}
-    tireRimSnd: {fileID: 8300000, guid: 30020ec91f100f7468b59064ef91e3dd, type: 3}
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: damageMask.m_Bits
-      value: 1793
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: surfaceTypes.Array.data[0].name
-      value: Defualt
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: surfaceTypes.Array.data[1].name
-      value: Mud
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: surfaceTypes.Array.data[2].name
-      value: Dirt
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: surfaceTypes.Array.data[3].name
-      value: Ice
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: surfaceTypes.Array.data[4].name
-      value: Wall
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 121460}
-  m_IsPrefabParent: 1
