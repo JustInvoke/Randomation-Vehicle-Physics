@@ -21,7 +21,7 @@ namespace RVP
             boldFoldout.fontStyle = FontStyle.Bold;
             Wheel targetScript = (Wheel)target;
             Wheel[] allTargets = new Wheel[targets.Length];
-            isPrefab = PrefabUtility.GetPrefabType(targetScript) == PrefabType.Prefab;
+            isPrefab = F.IsPrefab(targetScript);
 
             for (int i = 0; i < targets.Length; i++)
             {

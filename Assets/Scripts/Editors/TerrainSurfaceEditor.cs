@@ -55,7 +55,7 @@ namespace RVP
         void DrawTerrainInfo(TerrainData ter, int index)
         {
             EditorGUI.indentLevel = 1;
-            targetScript.surfaceTypes[index] = EditorGUILayout.Popup(terDat.splatPrototypes[index].texture.name, targetScript.surfaceTypes[index], surfaceNames);
+            targetScript.surfaceTypes[index] = EditorGUILayout.Popup(terDat.terrainLayers[index].diffuseTexture.name, targetScript.surfaceTypes[index], surfaceNames);
             EditorGUI.indentLevel++;
         }
     }

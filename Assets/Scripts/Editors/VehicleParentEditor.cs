@@ -20,7 +20,7 @@ namespace RVP
             boldFoldout.fontStyle = FontStyle.Bold;
             VehicleParent targetScript = (VehicleParent)target;
             VehicleParent[] allTargets = new VehicleParent[targets.Length];
-            isPrefab = PrefabUtility.GetPrefabType(targetScript) == PrefabType.Prefab;
+            isPrefab = F.IsPrefab(targetScript);
 
             for (int i = 0; i < targets.Length; i++)
             {

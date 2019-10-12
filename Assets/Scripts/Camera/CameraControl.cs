@@ -76,6 +76,10 @@ namespace RVP
                 {
                     targetForward = stayFlat ? new Vector3(vp.norm.up.x, 0, vp.norm.up.z) : vp.norm.up;
                 }
+                /*else
+                {
+                    targetForward = targetBody.velocity.normalized;
+                }*/
 
                 targetUp = stayFlat ? GlobalControl.worldUpDir : vp.norm.forward;
                 lookDir = Vector3.Slerp(lookDir, (xInput == 0 && yInput == 0 ? Vector3.forward : new Vector3(xInput, 0, yInput).normalized), 0.1f * TimeMaster.inverseFixedTimeFactor);
