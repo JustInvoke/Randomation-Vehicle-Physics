@@ -140,11 +140,66 @@ namespace RVP
                     speedLimit = 1;
                 }
 
-                //Set vehicle inputs
-                vp.SetAccel(!close && (lookDot > 0 || vp.localVelocity.z < 5) && vp.groundedWheels > 0 && reverseTime == 0 ? speed * speedLimit : 0);
-                vp.SetBrake(reverseTime == 0 && brakeTime == 0 && !(close && vp.localVelocity.z > 0.1f) ? (lookDot < 0.5f && lookDot > 0 && vp.localVelocity.z > 10 ? 0.5f - lookDot : 0) : (reverseTime > 0 ? 1 : (brakeTime > 0 ? brakeTime * 0.2f : 1 - Mathf.Clamp01(Vector3.Distance(tr.position, target.position) / Mathf.Max(0.01f, followDistance)))));
-                vp.SetSteer(reverseTime == 0 ? Mathf.Abs(Mathf.Pow(steerDot, (tr.position - target.position).sqrMagnitude > 20 ? 1 : 2)) * Mathf.Sign(steerDot) : -Mathf.Sign(steerDot) * (close ? 0 : 1));
-                vp.SetEbrake((close && vp.localVelocity.z <= 0.1f) || (lookDot <= 0 && vp.velMag > 20) ? 1 : 0);
+                //Set accel input
+                if (!close && (lookDot > 0 || vp.localVelocity.z < 5) && vp.groundedWheels > 0 && reverseTime == 0)
+                {
+                    vp.SetAccel(speed * speedLimit);
+                }
+                else
+                {
+                    vp.SetAccel(0);
+                }
+
+                //Set brake input
+                if (reverseTime == 0 && brakeTime == 0 && !(close && vp.localVelocity.z > 0.1f))
+                {
+                    if (lookDot < 0.5f && lookDot > 0 && vp.localVelocity.z > 10)
+                    {
+                        vp.SetBrake(0.5f - lookDot);
+                    }
+                    else
+                    {
+                        vp.SetBrake(0);
+                    }
+                }
+                else
+                {
+                    if (reverseTime > 0)
+                    {
+                        vp.SetBrake(1);
+                    }
+                    else
+                    {
+                        if (brakeTime > 0)
+                        {
+                            vp.SetBrake(brakeTime * 0.2f);
+                        }
+                        else
+                        {
+                            vp.SetBrake(1 - Mathf.Clamp01(Vector3.Distance(tr.position, target.position) / Mathf.Max(0.01f, followDistance)));
+                        }
+                    }
+                }
+
+                //Set steer input
+                if (reverseTime == 0)
+                {
+                    vp.SetSteer(Mathf.Abs(Mathf.Pow(steerDot, (tr.position - target.position).sqrMagnitude > 20 ? 1 : 2)) * Mathf.Sign(steerDot));
+                }
+                else
+                {
+                    vp.SetSteer(-Mathf.Sign(steerDot) * (close ? 0 : 1));
+                }
+
+                //Set ebrake input
+                if ((close && vp.localVelocity.z <= 0.1f) || (lookDot <= 0 && vp.velMag > 20))
+                {
+                    vp.SetEbrake(1);
+                }
+                else
+                {
+                    vp.SetEbrake(0);
+                }
             }
 
             rolledOverTime = va.rolledOver ? rolledOverTime + Time.fixedDeltaTime : 0;
