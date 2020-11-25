@@ -4,14 +4,14 @@ This is a vehicle physics system for the Unity engine, originally developed with
 # Contributing
 You may contribute by first pulling the repository into your own fork where you can add commits, then creating a pull request to merge your changes. After a pull request is approved, it can be merged into the master branch.
 
+If you feel up to it, you can try tackling one of the issues in the issues tab above. You are free to put comments around your code giving yourself credit if you feel compelled to do so. If you add new properties/variables when contributing, make sure their default values do not change the behavior of the included prefabs. Any added code will be considered to be under the MIT License as the rest of the repository is.
+
 # Which Branch?
 You will want to pull from the master branch, not Master-Old. This is because back when I initially created the repository I was learning how to use Git and the repository started out with a messy commit history, so later on I chose to rebase the older commits into a single initial commit. The old history is still present in Master-Old while master is cleaner. However this means that the two branches have incompatible histories, so if you originally pulled from Master-Old you may not be able to fetch newer changes in the master branch. For the forseeable future, master is the official branch and the only one that new changes will be pushed to.
 
-If you feel up to it, you can try tackling one of the issues in the issues tab above. You are free to put comments around your code giving yourself credit if you feel compelled to do so. If you add new properties/variables when contributing, make sure their default values do not change the behavior of the included prefabs. Any added code will be considered to be under the MIT License as the rest of the repository is.
+# How To Use
 
 Documentation can be found in [the manual](Assets/RVP_Manual.pdf).
-
-# How To Use
 
 Import the repository into the top level of a blank Unity project folder to make sure everything works. After that, you can attempt to import it into your own project, but be mindful when merging the project settings. Read the section of the manual about project settings to make sure you copy the ones that are important and address potential conflicts with your own project settings.
 
