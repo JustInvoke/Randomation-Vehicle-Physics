@@ -295,8 +295,8 @@ namespace RVP
                 {
                     for (int j = 0; j < meshVertices[i].verts.Length; j++)
                     {
-                        vertDist = Vector3.Distance(meshVertices[i].verts[j], localPos);
-                        distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
+                        vertDist = (meshVertices[i].verts[j] - localPos).sqrMagnitude;
+                        distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag * 0.5f);
 
                         if (distClamp > 0.001f)
                         {
@@ -329,8 +329,8 @@ namespace RVP
                 {
                     for (int j = 0; j < colVertices[i].verts.Length; j++)
                     {
-                        vertDist = Vector3.Distance(colVertices[i].verts[j], localPos);
-                        distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
+                        vertDist = (colVertices[i].verts[j] - localPos).sqrMagnitude;
+                        distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag * 0.5f);
 
                         if (distClamp > 0.001f)
                         {
@@ -351,8 +351,8 @@ namespace RVP
 
                 if (translation.sqrMagnitude > 0 && strength < 1)
                 {
-                    vertDist = Vector3.Distance(curDisplacePart.position, damagePoint);
-                    distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
+                    vertDist = (curDisplacePart.position - damagePoint).sqrMagnitude;
+                    distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag * 0.5f);
 
                     if (distClamp > 0.001f)
                     {
