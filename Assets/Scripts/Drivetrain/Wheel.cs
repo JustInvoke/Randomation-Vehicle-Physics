@@ -422,6 +422,7 @@ namespace RVP
             }
             else
             {
+                //Update tire and rim materials
                 if (deformAmount > 0 && tireMat && connected)
                 {
                     if (tireMat.HasProperty("_DeformNormal"))
@@ -446,6 +447,7 @@ namespace RVP
             }
         }
 
+        //Use raycasting to find the current contact point for the wheel
         void GetWheelContact()
         {
             float castDist = Mathf.Max(suspensionParent.suspensionDistance * Mathf.Max(0.001f, suspensionParent.targetCompression) + actualRadius, 0.001f);
@@ -541,6 +543,7 @@ namespace RVP
             }
         }
 
+        //Calculate what the RPM of the wheel would be based purely on its velocity
         void GetRawRPM()
         {
             if (grounded)
@@ -553,6 +556,7 @@ namespace RVP
             }
         }
 
+        //Calculate the current slip amount
         void GetSlip()
         {
             if (grounded)
@@ -567,6 +571,7 @@ namespace RVP
             }
         }
 
+        //Apply actual forces to rigidbody based on wheel simulation
         void ApplyFriction()
         {
             if (grounded)
@@ -576,14 +581,14 @@ namespace RVP
                 float forwardSlipDependenceFactor = Mathf.Clamp01(forwardSlipDependence - Mathf.Clamp01(Mathf.Abs(sidewaysSlip)));
                 float sidewaysSlipDependenceFactor = Mathf.Clamp01(sidewaysSlipDependence - Mathf.Clamp01(Mathf.Abs(forwardSlip)));
 
-                frictionForce = Vector3.Lerp(frictionForce,
-                        tr.TransformDirection(
-                            forwardFrictionCurve.Evaluate(Mathf.Abs(forwardSlipFactor)) * -System.Math.Sign(forwardSlip) * (popped ? forwardRimFriction : forwardFriction) * forwardSlipDependenceFactor * -suspensionParent.flippedSideFactor
-                            , 0
-                            , sidewaysFrictionCurve.Evaluate(Mathf.Abs(sidewaysSlipFactor)) * -System.Math.Sign(sidewaysSlip) * (popped ? sidewaysRimFriction : sidewaysFriction) * sidewaysSlipDependenceFactor * normalFrictionCurve.Evaluate(Mathf.Clamp01(Vector3.Dot(contactPoint.normal, GlobalControl.worldUpDir))) * (vp.burnout > 0 && Mathf.Abs(targetDrive.rpm) != 0 && actualEbrake * vp.ebrakeInput == 0 && grounded ? (1 - vp.burnout) * (1 - Mathf.Abs(vp.accelInput)) : 1))
-                        * ((1 - compressionFrictionFactor) + (1 - suspensionParent.compression) * compressionFrictionFactor * Mathf.Clamp01(Mathf.Abs(suspensionParent.tr.InverseTransformDirection(localVel).z) * 10)) * contactPoint.surfaceFriction
-                    , 1 - frictionSmoothness);
-
+                float targetForceX = forwardFrictionCurve.Evaluate(Mathf.Abs(forwardSlipFactor)) * -System.Math.Sign(forwardSlip) * (popped ? forwardRimFriction : forwardFriction) * forwardSlipDependenceFactor * -suspensionParent.flippedSideFactor;
+                float targetForceZ = sidewaysFrictionCurve.Evaluate(Mathf.Abs(sidewaysSlipFactor)) * -System.Math.Sign(sidewaysSlip) * (popped ? sidewaysRimFriction : sidewaysFriction) * sidewaysSlipDependenceFactor *
+                    normalFrictionCurve.Evaluate(Mathf.Clamp01(Vector3.Dot(contactPoint.normal, GlobalControl.worldUpDir))) *
+                    (vp.burnout > 0 && Mathf.Abs(targetDrive.rpm) != 0 && actualEbrake * vp.ebrakeInput == 0 && grounded ? (1 - vp.burnout) * (1 - Mathf.Abs(vp.accelInput)) : 1);
+                
+                Vector3 targetForce = tr.TransformDirection(targetForceX, 0, targetForceZ);
+                float targetForceMultiplier = ((1 - compressionFrictionFactor) + (1 - suspensionParent.compression) * compressionFrictionFactor * Mathf.Clamp01(Mathf.Abs(suspensionParent.tr.InverseTransformDirection(localVel).z) * 10)) * contactPoint.surfaceFriction;
+                frictionForce = Vector3.Lerp(frictionForce, targetForce * targetForceMultiplier, 1 - frictionSmoothness);
                 rb.AddForceAtPosition(frictionForce, forceApplicationPoint, vp.wheelForceMode);
 
                 //If resting on a rigidbody, apply opposing force to it
@@ -594,6 +599,7 @@ namespace RVP
             }
         }
 
+        //Do torque and RPM calculations/simulation
         void ApplyDrive()
         {
             float brakeForce = 0;
@@ -630,9 +636,9 @@ namespace RVP
 
                 currentRPM = Mathf.Lerp(rawRPM,
                     Mathf.Lerp(
-                    Mathf.Lerp(rawRPM, actualTargetRPM, validTorque ? EvaluateTorque(actualTorque) : actualTorque)
-                    , 0, Mathf.Max(brakeForce, actualEbrake * vp.ebrakeInput))
-                , validTorque ? EvaluateTorque(actualTorque + brakeForce + actualEbrake * vp.ebrakeInput) : actualTorque + brakeForce + actualEbrake * vp.ebrakeInput);
+                    Mathf.Lerp(rawRPM, actualTargetRPM, validTorque ? EvaluateTorque(actualTorque) : actualTorque),
+                    0, Mathf.Max(brakeForce, actualEbrake * vp.ebrakeInput)),
+                validTorque ? EvaluateTorque(actualTorque + brakeForce + actualEbrake * vp.ebrakeInput) : actualTorque + brakeForce + actualEbrake * vp.ebrakeInput);
 
                 targetDrive.feedbackRPM = Mathf.Lerp(currentRPM, rawRPM, feedbackRpmBias);
             }
@@ -650,6 +656,7 @@ namespace RVP
             return torque;
         }
 
+        //Visual wheel positioning
         void PositionWheel()
         {
             if (suspensionParent)
@@ -666,12 +673,16 @@ namespace RVP
             }
         }
 
+        //Visual wheel rotation
         void RotateWheel()
         {
             if (tr && suspensionParent)
             {
                 float ackermannVal = Mathf.Sign(suspensionParent.steerAngle) == suspensionParent.flippedSideFactor ? 1 + suspensionParent.ackermannFactor : 1 - suspensionParent.ackermannFactor;
-                tr.localEulerAngles = new Vector3(suspensionParent.camberAngle + suspensionParent.casterAngle * suspensionParent.steerAngle * suspensionParent.flippedSideFactor, -suspensionParent.toeAngle * suspensionParent.flippedSideFactor + suspensionParent.steerDegrees * ackermannVal, 0);
+                tr.localEulerAngles = new Vector3(
+                    suspensionParent.camberAngle + suspensionParent.casterAngle * suspensionParent.steerAngle * suspensionParent.flippedSideFactor,
+                    -suspensionParent.toeAngle * suspensionParent.flippedSideFactor + suspensionParent.steerDegrees * ackermannVal,
+                    0);
             }
 
             if (Application.isPlaying)
@@ -680,7 +691,10 @@ namespace RVP
 
                 if (damage > 0)
                 {
-                    rim.localEulerAngles = new Vector3(Mathf.Sin(-rim.localEulerAngles.z * Mathf.Deg2Rad) * Mathf.Clamp(damage, 0, 10), Mathf.Cos(-rim.localEulerAngles.z * Mathf.Deg2Rad) * Mathf.Clamp(damage, 0, 10), rim.localEulerAngles.z);
+                    rim.localEulerAngles = new Vector3(
+                        Mathf.Sin(-rim.localEulerAngles.z * Mathf.Deg2Rad) * Mathf.Clamp(damage, 0, 10),
+                        Mathf.Cos(-rim.localEulerAngles.z * Mathf.Deg2Rad) * Mathf.Clamp(damage, 0, 10),
+                        rim.localEulerAngles.z);
                 }
                 else if (rim.localEulerAngles.x != 0 || rim.localEulerAngles.y != 0)
                 {
@@ -689,6 +703,7 @@ namespace RVP
             }
         }
 
+        //Begin deflating the tire/leaking air
         public void Deflate()
         {
             airLeakTime = 0;
@@ -707,6 +722,7 @@ namespace RVP
             airLeakTime = -1;
         }
 
+        //Detach the wheel from the vehicle
         public void Detach()
         {
             if (connected && canDetach)
@@ -821,6 +837,7 @@ namespace RVP
             }
         }
 
+        //Attach the wheel back onto its vehicle if detached
         public void Reattach()
         {
             if (!connected)
@@ -844,8 +861,10 @@ namespace RVP
 
             if (tr.childCount > 0)
             {
+                //Rim is the first child of this object
                 rim = tr.GetChild(0);
 
+                //Tire mesh should be first child of rim
                 if (rim.childCount > 0)
                 {
                     tire = rim.GetChild(0);
