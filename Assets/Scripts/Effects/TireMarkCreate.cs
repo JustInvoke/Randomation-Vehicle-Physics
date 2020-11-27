@@ -176,6 +176,7 @@ namespace RVP
             }
         }
 
+        //Start creating a mark
         void StartMark()
         {
             creatingMark = true;
@@ -227,11 +228,15 @@ namespace RVP
             gapDelay = GlobalControl.tireMarkGapStatic;
         }
 
+        //Update mark currently being generated
         void UpdateMark()
         {
             if (gapDelay == 0)
             {
-                float alpha = (curEdge < GlobalControl.tireMarkLengthStatic - 2 && curEdge > 5 ? 1 : 0) * Random.Range(Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold) * 0.9f, Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold));
+                float alpha = (curEdge < GlobalControl.tireMarkLengthStatic - 2 && curEdge > 5 ? 1 : 0) *
+                    Random.Range(
+                        Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold) * 0.9f,
+                        Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold));
                 gapDelay = GlobalControl.tireMarkGapStatic;
                 curEdge += 2;
 
@@ -286,6 +291,7 @@ namespace RVP
             }
         }
 
+        //Stop making mark
         void EndMark()
         {
             creatingMark = false;
@@ -301,6 +307,7 @@ namespace RVP
             mesh = null;
         }
 
+        //Clean up mark if destroyed while creating
         void OnDestroy()
         {
             if (creatingMark && curMark)
