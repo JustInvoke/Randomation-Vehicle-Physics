@@ -114,6 +114,7 @@ namespace RVP
             }
         }
 
+        //Set if lights are on or off based on the first condition, and half on based on the second condition (see halfOn tooltip in VehicleLight)
         void SetLights(VehicleLight[] lights, bool condition, bool halfCondition)
         {
             foreach (VehicleLight curLight in lights)
