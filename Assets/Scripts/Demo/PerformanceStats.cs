@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace RVP
 {
-    [AddComponentMenu("RVP/Demo Scripts/Performance Stats", 1)]
+    [AddComponentMenu("RVP/Demo Scripts/Performance Stats", 2)]
 
     //Class for displaying the framerate
     public class PerformanceStats : MonoBehaviour
