@@ -60,11 +60,13 @@ namespace RVP
             }
         }
 
+        //Updates the terrain alphamaps
         public void UpdateAlphamaps()
         {
             terrainAlphamap = terDat.GetAlphamaps(0, 0, terDat.alphamapWidth, terDat.alphamapHeight);
         }
 
+        //Calculate the number of surface types based on the terrain layers
         void ChangeSurfaceTypesLength()
         {
             int[] tempVals = surfaceTypes;
