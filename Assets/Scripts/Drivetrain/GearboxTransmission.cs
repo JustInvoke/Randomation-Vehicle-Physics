@@ -73,12 +73,12 @@ namespace RVP
             int upGearOffset = 1;
             int downGearOffset = 1;
 
-            while ((skipNeutral || automatic) && gears[Mathf.Clamp(currentGear + upGearOffset, 0, gears.Length - 1)].ratio == 0 && currentGear + upGearOffset != 0 && currentGear + upGearOffset != gears.Length - 1)
+            while ((skipNeutral || automatic) && gears[Mathf.Clamp(currentGear + upGearOffset, 0, gears.Length - 1)].ratio == 0 && currentGear + upGearOffset != 0 && currentGear + upGearOffset < gears.Length - 1)
             {
                 upGearOffset++;
             }
 
-            while ((skipNeutral || automatic) && gears[Mathf.Clamp(currentGear - downGearOffset, 0, gears.Length - 1)].ratio == 0 && currentGear - downGearOffset != 0 && currentGear - downGearOffset != 0)
+            while ((skipNeutral || automatic) && gears[Mathf.Clamp(currentGear - downGearOffset, 0, gears.Length - 1)].ratio == 0 && currentGear - downGearOffset != 0 && currentGear - downGearOffset > 0)
             {
                 downGearOffset++;
             }
@@ -121,11 +121,17 @@ namespace RVP
                 {
                     if (Mathf.Abs(vp.localVelocity.z) > 1 || vp.accelInput > 0 || (vp.brakeInput > 0 && vp.brakeIsReverse))
                     {
-                        if (currentGear < gears.Length - 1 && (upperGear.minRPM + upshiftDifference * (curGearRatio < 0 ? Mathf.Min(1, shiftThreshold) : shiftThreshold) - actualFeedbackRPM <= 0 || (curGearRatio <= 0 && upperGear.ratio > 0 && (!vp.reversing || (vp.accelInput > 0 && vp.localVelocity.z > curGearRatio * 10)))) && !(vp.brakeInput > 0 && vp.brakeIsReverse && upperGear.ratio >= 0) && !(vp.localVelocity.z < 0 && vp.accelInput == 0))
+                        if (currentGear < gears.Length - 1
+                            && (upperGear.minRPM + upshiftDifference * (curGearRatio < 0 ? Mathf.Min(1, shiftThreshold) : shiftThreshold) - actualFeedbackRPM <= 0 || (curGearRatio <= 0 && upperGear.ratio > 0 && (!vp.reversing || (vp.accelInput > 0 && vp.localVelocity.z > curGearRatio * 10))))
+                            && !(vp.brakeInput > 0 && vp.brakeIsReverse && upperGear.ratio >= 0)
+                            && !(vp.localVelocity.z < 0 && vp.accelInput == 0))
                         {
                             Shift(1);
                         }
-                        else if (currentGear > 0 && (actualFeedbackRPM - (lowerGear.maxRPM - downshiftDifference * shiftThreshold) <= 0 || (curGearRatio >= 0 && lowerGear.ratio < 0 && (vp.reversing || ((vp.accelInput < 0 || (vp.brakeInput > 0 && vp.brakeIsReverse)) && vp.localVelocity.z < curGearRatio * 10)))) && !(vp.accelInput > 0 && lowerGear.ratio <= 0) && (lowerGear.ratio > 0 || vp.localVelocity.z < 1))
+                        else if (currentGear > 0
+                            && (actualFeedbackRPM - (lowerGear.maxRPM - downshiftDifference * shiftThreshold) <= 0 || (curGearRatio >= 0 && lowerGear.ratio < 0 && (vp.reversing || ((vp.accelInput < 0 || (vp.brakeInput > 0 && vp.brakeIsReverse)) && vp.localVelocity.z < curGearRatio * 10))))
+                            && !(vp.accelInput > 0 && lowerGear.ratio <= 0)
+                            && (lowerGear.ratio > 0 || vp.localVelocity.z < 1))
                         {
                             Shift(-1);
                         }
@@ -236,6 +242,7 @@ namespace RVP
             }
         }
 
+        //Returns the first gear (first gear above neutral)
         public void GetFirstGear()
         {
             for (int i = 0; i < gears.Length; i++)

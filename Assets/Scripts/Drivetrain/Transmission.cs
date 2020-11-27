@@ -69,7 +69,7 @@ namespace RVP
 
         public void ResetMaxRPM()
         {
-            maxRPM = -1;//Setting this to -1 triggers subclasses to recalculate things
+            maxRPM = -1;//Setting this to -1 triggers derived classes to recalculate things
         }
     }
 }
