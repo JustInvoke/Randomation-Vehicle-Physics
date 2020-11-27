@@ -174,6 +174,7 @@ namespace RVP
                 }
             }
 
+            //Adjusting smoke particles based on damage
             if (smoke)
             {
                 ParticleSystem.EmissionModule em = smoke.emission;

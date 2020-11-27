@@ -121,13 +121,18 @@ namespace RVP
             if (snd && ignition)
             {
                 airPitch = vp.groundedWheels > 0 || actualAccel != 0 ? 1 : Mathf.Lerp(airPitch, 0, 0.5f * Time.deltaTime);
-                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ? (pitchIncreaseBetweenShift ? Mathf.Sin((transmission.shiftTime / transmission.shiftDelay) * Mathf.PI) : Mathf.Min(transmission.shiftDelay, Mathf.Pow(transmission.shiftTime, 2)) / transmission.shiftDelay) : 1) * airPitch;
+                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ? 
+                    (pitchIncreaseBetweenShift ?
+                        Mathf.Sin((transmission.shiftTime / transmission.shiftDelay) * Mathf.PI) :
+                        Mathf.Min(transmission.shiftDelay, Mathf.Pow(transmission.shiftTime, 2)) / transmission.shiftDelay) :
+                    1) * airPitch;
                 targetPitch = Mathf.Abs((targetDrive.feedbackRPM * 0.001f) / maxRPM) * pitchFactor;
             }
 
             base.Update();
         }
 
+        //Calculates the max RPM and propagates its effects
         public void GetMaxRPM()
         {
             maxRPM = torqueCurve.keys[torqueCurve.length - 1].time;
