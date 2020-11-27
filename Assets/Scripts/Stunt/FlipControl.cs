@@ -71,6 +71,7 @@ namespace RVP
             }
         }
 
+        //Apply flip forces
         void ApplyFlip()
         {
             Vector3 flipTorque;
@@ -95,6 +96,7 @@ namespace RVP
             rb.AddRelativeTorque(flipTorque, ForceMode.Acceleration);
         }
 
+        //Counteract flipping with forces
         void ApplyStopFlip()
         {
             Vector3 stopFlipFactor = Vector3.zero;
@@ -106,6 +108,7 @@ namespace RVP
             rb.AddRelativeTorque(new Vector3(-vp.localAngularVel.x * stopFlipFactor.x, -vp.localAngularVel.y * stopFlipFactor.y, -vp.localAngularVel.z * stopFlipFactor.z), ForceMode.Acceleration);
         }
 
+        //Apply forces to align vehicle with normal of ground surface that it will land on
         void ApplyRotationCorrection()
         {
             float actualForwardDot = vp.forwardDot;
@@ -134,6 +137,7 @@ namespace RVP
                 ), ForceMode.Acceleration);
         }
 
+        //Apply diving force
         void Dive()
         {
             rb.AddTorque(velDir * Vector3.left * Mathf.Clamp01(vp.velMag * 0.01f) * Mathf.Clamp01(vp.upDot) * diveFactor, ForceMode.Acceleration);

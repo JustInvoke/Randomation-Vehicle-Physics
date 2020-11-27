@@ -136,7 +136,10 @@ namespace RVP
                         wheelConnect1 = wheel1.rim.TransformPoint(0, 0, -wheel1.suspensionParent.pivotOffset);
                         wheelConnect2 = wheel2.rim.TransformPoint(0, 0, -wheel2.suspensionParent.pivotOffset);
                         tr.rotation = Quaternion.LookRotation((((wheelConnect1 + wheelConnect2) * 0.5f) - tr.position).normalized, parentUpDir);
-                        tr.localEulerAngles = new Vector3(tr.localEulerAngles.x, tr.localEulerAngles.y, Vector3.Angle((wheelConnect1 - wheelConnect2).normalized, tr.parent.right) * Mathf.Sign(Vector3.Dot((wheelConnect1 - wheelConnect2).normalized, parentUpDir)) * Mathf.Sign(tr.localPosition.z) * (invertRotation ? -1 : 1));
+                        tr.localEulerAngles = new Vector3(
+                            tr.localEulerAngles.x,
+                            tr.localEulerAngles.y,
+                            Vector3.Angle((wheelConnect1 - wheelConnect2).normalized, tr.parent.right) * Mathf.Sign(Vector3.Dot((wheelConnect1 - wheelConnect2).normalized, parentUpDir)) * Mathf.Sign(tr.localPosition.z) * (invertRotation ? -1 : 1));
                     }
                 }
             }

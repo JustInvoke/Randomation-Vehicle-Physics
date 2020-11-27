@@ -109,6 +109,7 @@ namespace RVP
         {
             upDir = tr.up;
 
+            //Get the contact point
             if (getContact)
             {
                 GetWheelContact();
@@ -120,6 +121,7 @@ namespace RVP
 
             compression = Mathf.Clamp01(contactPoint.distance / (hoverDistance));
 
+            //Apply float and driving forces
             if (grounded && doFloat && connected)
             {
                 ApplyFloat();
@@ -181,15 +183,15 @@ namespace RVP
                 //Get the vertical speed of the wheel
                 float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
 
-                rb.AddForceAtPosition(upDir * floatForce * (Mathf.Pow(floatForceCurve.Evaluate(1 - compression), Mathf.Max(1, floatExponent)) - floatDampening * Mathf.Clamp(travelVel, -1, 1))
-                    , tr.position
-                    , vp.suspensionForceMode);
+                rb.AddForceAtPosition(upDir * floatForce * (Mathf.Pow(floatForceCurve.Evaluate(1 - compression), Mathf.Max(1, floatExponent)) - floatDampening * Mathf.Clamp(travelVel, -1, 1)),
+                    tr.position,
+                    vp.suspensionForceMode);
 
                 if (contactPoint.distance < bufferDistance)
                 {
-                    rb.AddForceAtPosition(-upDir * bufferFloatForce * floatForceCurve.Evaluate(contactPoint.distance / bufferDistance) * Mathf.Clamp(travelVel, -1, 0)
-                        , tr.position
-                        , vp.suspensionForceMode);
+                    rb.AddForceAtPosition(-upDir * bufferFloatForce * floatForceCurve.Evaluate(contactPoint.distance / bufferDistance) * Mathf.Clamp(travelVel, -1, 0),
+                        tr.position,
+                        vp.suspensionForceMode);
                 }
             }
         }
@@ -216,9 +218,12 @@ namespace RVP
             float actualBrake = (vp.localVelocity.z > 0 ? vp.brakeInput : Mathf.Clamp01(vp.accelInput)) * brakeForce + vp.ebrakeInput * ebrakeForce;
             float forwardTilt = Mathf.Clamp((Mathf.Clamp(targetSpeed, -1, 1) * targetForce - actualBrake * Mathf.Clamp(contactPoint.relativeVelocity.x * 0.1f, -1, 1) * flippedSideFactor) * flippedSideFactor, -1, 1);
 
-            visualWheel.localRotation = Quaternion.Lerp(visualWheel.localRotation, Quaternion.LookRotation(new Vector3(-forwardTilt * visualTiltAmount, -1 + Mathf.Abs(F.MaxAbs(sideTilt, forwardTilt)) * visualTiltAmount, -sideTilt * visualTiltAmount).normalized, Vector3.forward), visualTiltRate * Time.deltaTime);
+            visualWheel.localRotation = Quaternion.Lerp(visualWheel.localRotation,
+                Quaternion.LookRotation(new Vector3(-forwardTilt * visualTiltAmount, -1 + Mathf.Abs(F.MaxAbs(sideTilt, forwardTilt)) * visualTiltAmount, -sideTilt * visualTiltAmount).normalized, Vector3.forward),
+                visualTiltRate * Time.deltaTime);
         }
 
+        //Detach the wheel from the vehicle
         public void Detach()
         {
             if (connected && canDetach)
@@ -238,6 +243,7 @@ namespace RVP
             }
         }
 
+        //Reattach the wheel to the vehicle if detached
         public void Reattach()
         {
             if (!connected)

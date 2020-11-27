@@ -40,6 +40,7 @@ namespace RVP
 
                 if (useAccelerometer)
                 {
+                    //Accelerometer input
                     vp.SetSteer((Input.acceleration.x + accelerationDelta.x * deltaFactor) * steerFactor);
                     vp.SetYaw(Input.acceleration.x * flipFactor);
                     vp.SetPitch(-Input.acceleration.z * flipFactor);

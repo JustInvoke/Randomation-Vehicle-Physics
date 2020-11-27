@@ -28,6 +28,7 @@ namespace RVP
             }
         }
 
+        //This waits for the next fixed update before resetting the rotation of the vehicle
         IEnumerator ResetRotation()
         {
             if (GetComponent<VehicleDamage>())
@@ -42,6 +43,7 @@ namespace RVP
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         }
 
+        //This waits for the next fixed update before resetting the position of the vehicle
         IEnumerator ResetPosition()
         {
             if (GetComponent<VehicleDamage>())

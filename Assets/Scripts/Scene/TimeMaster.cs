@@ -42,7 +42,7 @@ namespace RVP
             //Set the fixed update rate based on time scale
             Time.fixedDeltaTime = Time.timeScale * initialFixedTime;
             fixedTimeFactor = 0.01f / initialFixedTime;
-            inverseFixedTimeFactor = 1 / fixedTimeFactor;
+            inverseFixedTimeFactor = 1.0f / fixedTimeFactor;
         }
     }
 }

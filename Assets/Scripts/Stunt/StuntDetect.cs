@@ -88,6 +88,7 @@ namespace RVP
             stuntString = vp.crashing ? "Crashed" : driftString + jumpString + (string.IsNullOrEmpty(flipString) || string.IsNullOrEmpty(jumpString) ? "" : " + ") + flipString;
         }
 
+        //Logic for detecting and tracking drift
         void DetectDrift()
         {
             endDriftTime = vp.groundedWheels > 0 ? (Mathf.Abs(vp.localVelocity.x) > 5 ? StuntManager.driftConnectDelayStatic : Mathf.Max(0, endDriftTime - Time.timeScale * TimeMaster.inverseFixedTimeFactor)) : 0;
@@ -113,6 +114,7 @@ namespace RVP
             }
         }
 
+        //Logic for detecting and tracking jumps
         void DetectJump()
         {
             if (vp.groundedWheels == 0)
@@ -142,6 +144,7 @@ namespace RVP
             }
         }
 
+        //Logic for detecting and tracking flips
         void DetectFlips()
         {
             if (vp.groundedWheels == 0)

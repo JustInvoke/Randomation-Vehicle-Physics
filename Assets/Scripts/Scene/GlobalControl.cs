@@ -67,6 +67,7 @@ namespace RVP
 
         void Update()
         {
+            //Quickly restart scene with a button press
             if (quickRestart)
             {
                 if (Input.GetButtonDown("Restart"))
@@ -80,6 +81,7 @@ namespace RVP
 
         void FixedUpdate()
         {
+            //Set global up direction
             worldUpDir = Physics.gravity.sqrMagnitude == 0 ? Vector3.up : -Physics.gravity.normalized;
         }
     }

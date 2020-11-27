@@ -49,6 +49,7 @@ namespace RVP
 
         void Update()
         {
+            //Set visual rotation
             if (rotate)
             {
                 steerRot = Mathf.Lerp(steerRot, steerAmount * maxDegreesRotation + rotationOffset, steerRate * 0.1f * Time.timeScale);

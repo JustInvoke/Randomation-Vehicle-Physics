@@ -261,22 +261,26 @@ namespace RVP
             }
         }
 
+        //Set accel input
         public void SetAccel(float f)
         {
             f = Mathf.Clamp(f, -1, 1);
             accelInput = f;
         }
 
+        //Set brake input
         public void SetBrake(float f)
         {
             brakeInput = accelAxisIsBrake ? -Mathf.Clamp(accelInput, -1, 0) : Mathf.Clamp(f, -1, 1);
         }
 
+        //Set steer input
         public void SetSteer(float f)
         {
             steerInput = Mathf.Clamp(f, -1, 1);
         }
 
+        //Set ebrake input
         public void SetEbrake(float f)
         {
             if ((f > 0 || ebrakeInput > 0) && holdEbrakePark && velMag < 1 && accelInput == 0 && (brakeInput == 0 || !brakeIsReverse))
@@ -289,46 +293,55 @@ namespace RVP
             }
         }
 
+        //Set boost input
         public void SetBoost(bool b)
         {
             boostButton = b;
         }
 
+        //Set pitch rotate input
         public void SetPitch(float f)
         {
             pitchInput = Mathf.Clamp(f, -1, 1);
         }
 
+        //Set yaw rotate input
         public void SetYaw(float f)
         {
             yawInput = Mathf.Clamp(f, -1, 1);
         }
 
+        //Set roll rotate input
         public void SetRoll(float f)
         {
             rollInput = Mathf.Clamp(f, -1, 1);
         }
 
+        //Do upshift input
         public void PressUpshift()
         {
             upshiftPressed = true;
         }
 
+        //Do downshift input
         public void PressDownshift()
         {
             downshiftPressed = true;
         }
 
+        //Set held upshift input
         public void SetUpshift(float f)
         {
             upshiftHold = f;
         }
 
+        //Set held downshift input
         public void SetDownshift(float f)
         {
             downshiftHold = f;
         }
 
+        //Copy input from other vehicle
         void InheritInput()
         {
             accelInput = inputInherit.accelInput;
@@ -340,12 +353,14 @@ namespace RVP
             rollInput = inputInherit.rollInput;
         }
 
+        //Copy single-frame input from other vehicle
         void InheritInputOneShot()
         {
             upshiftPressed = inputInherit.upshiftPressed;
             downshiftPressed = inputInherit.downshiftPressed;
         }
 
+        //Change the center of mass of the vehicle
         void SetCenterOfMass()
         {
             float susAverage = 0;
@@ -374,6 +389,7 @@ namespace RVP
             rb.inertiaTensor = rb.inertiaTensor;//This is required due to decoupling of inertia tensor from center of mass in Unity 5.3
         }
 
+        //Get the number of grounded wheels and the normals and velocities of surfaces they're sitting on
         void GetGroundedWheels()
         {
             groundedWheels = 0;
@@ -452,6 +468,7 @@ namespace RVP
             }
         }
 
+        //Continuous collision checking
         void OnCollisionStay(Collision col)
         {
             if (col.contacts.Length > 0 && groundedWheels == 0)
