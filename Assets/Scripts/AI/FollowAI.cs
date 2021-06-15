@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/AI/Follow AI", 0)]
 
-    //Class for following AI
+    // Class for following AI
     public class FollowAI : MonoBehaviour
     {
         Transform tr;
@@ -36,9 +36,9 @@ namespace RVP
 
         [Tooltip("Mask for which objects can block the view of the target")]
         public LayerMask viewBlockMask;
-        Vector3 dirToTarget;//Normalized direction to target
-        float lookDot;//Dot product of forward direction and dirToTarget
-        float steerDot;//Dot product of right direction and dirToTarget
+        Vector3 dirToTarget; // Normalized direction to target
+        float lookDot; // Dot product of forward direction and dirToTarget
+        float steerDot; // Dot product of right direction and dirToTarget
 
         float stoppedTime;
         float reverseTime;
@@ -75,9 +75,9 @@ namespace RVP
 
                 targetPrev = target;
 
-                //Is the target a waypoint?
+                // Is the target a waypoint?
                 targetIsWaypoint = target.GetComponent<VehicleWaypoint>();
-                //Can I see the target?
+                // Can I see the target?
                 targetVisible = !Physics.Linecast(tr.position, target.position, viewBlockMask);
 
                 if (targetVisible || targetIsWaypoint) {
@@ -85,7 +85,7 @@ namespace RVP
                 }
 
                 if (targetIsWaypoint) {
-                    //if vehicle is close enough to target waypoint, switch to the next one
+                    // if vehicle is close enough to target waypoint, switch to the next one
                     if ((tr.position - target.position).sqrMagnitude <= targetWaypoint.radius * targetWaypoint.radius) {
                         target = targetWaypoint.nextPoint.transform;
                         targetWaypoint = targetWaypoint.nextPoint;
@@ -100,13 +100,13 @@ namespace RVP
                 }
 
                 brakeTime = Mathf.Max(0, brakeTime - Time.fixedDeltaTime);
-                //Is the distance to the target less than the follow distance?
+                // Is the distance to the target less than the follow distance?
                 close = (tr.position - target.position).sqrMagnitude <= Mathf.Pow(followDistance, 2) && !targetIsWaypoint;
                 dirToTarget = (targetPoint - tr.position).normalized;
                 lookDot = Vector3.Dot(vp.forwardDir, dirToTarget);
                 steerDot = Vector3.Dot(vp.rightDir, dirToTarget);
 
-                //Attempt to reverse if vehicle is stuck
+                // Attempt to reverse if vehicle is stuck
                 stoppedTime = Mathf.Abs(vp.localVelocity.z) < 1 && !close && vp.groundedWheels > 0 ? stoppedTime + Time.fixedDeltaTime : 0;
 
                 if (stoppedTime > stopTimeReverse && reverseTime == 0) {
@@ -114,7 +114,7 @@ namespace RVP
                     reverseAttempts++;
                 }
 
-                //Reset if reversed too many times
+                // Reset if reversed too many times
                 if (reverseAttempts > resetReverseCount && resetReverseCount >= 0) {
                     StartCoroutine(ReverseReset());
                 }
@@ -128,7 +128,7 @@ namespace RVP
                     speedLimit = 1;
                 }
 
-                //Set accel input
+                // Set accel input
                 if (!close && (lookDot > 0 || vp.localVelocity.z < 5) && vp.groundedWheels > 0 && reverseTime == 0) {
                     vp.SetAccel(speed * speedLimit);
                 }
@@ -136,7 +136,7 @@ namespace RVP
                     vp.SetAccel(0);
                 }
 
-                //Set brake input
+                // Set brake input
                 if (reverseTime == 0 && brakeTime == 0 && !(close && vp.localVelocity.z > 0.1f)) {
                     if (lookDot < 0.5f && lookDot > 0 && vp.localVelocity.z > 10) {
                         vp.SetBrake(0.5f - lookDot);
@@ -159,7 +159,7 @@ namespace RVP
                     }
                 }
 
-                //Set steer input
+                // Set steer input
                 if (reverseTime == 0) {
                     vp.SetSteer(Mathf.Abs(Mathf.Pow(steerDot, (tr.position - target.position).sqrMagnitude > 20 ? 1 : 2)) * Mathf.Sign(steerDot));
                 }
@@ -167,7 +167,7 @@ namespace RVP
                     vp.SetSteer(-Mathf.Sign(steerDot) * (close ? 0 : 1));
                 }
 
-                //Set ebrake input
+                // Set ebrake input
                 if ((close && vp.localVelocity.z <= 0.1f) || (lookDot <= 0 && vp.velMag > 20)) {
                     vp.SetEbrake(1);
                 }
@@ -178,7 +178,7 @@ namespace RVP
 
             rolledOverTime = va.rolledOver ? rolledOverTime + Time.fixedDeltaTime : 0;
 
-            //Reset if stuck rolled over
+            // Reset if stuck rolled over
             if (rolledOverTime > rollResetTime && rollResetTime >= 0) {
                 StartCoroutine(ResetRotation());
             }
@@ -204,10 +204,10 @@ namespace RVP
 
         public void InitializeTarget() {
             if (target) {
-                //if target is a vehicle
+                // if target is a vehicle
                 targetBody = target.GetTopmostParentComponent<Rigidbody>();
 
-                //if target is a waypoint
+                // if target is a waypoint
                 targetWaypoint = target.GetComponent<VehicleWaypoint>();
                 if (targetWaypoint) {
                     prevSpeed = targetWaypoint.speed;

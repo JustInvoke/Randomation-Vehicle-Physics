@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Damage/Vehicle Damage", 0)]
 
-    //Class for damaging vehicles
+    // Class for damaging vehicles
     public class VehicleDamage : MonoBehaviour
     {
         Transform tr;
@@ -68,11 +68,11 @@ namespace RVP
             rb = GetComponent<Rigidbody>();
             vp = GetComponent<VehicleParent>();
 
-            //Tell VehicleParent not to play crashing sounds because this script takes care of it
+            // Tell VehicleParent not to play crashing sounds because this script takes care of it
             vp.playCrashSounds = false;
             vp.playCrashSparks = false;
 
-            //Set up mesh data
+            // Set up mesh data
             tempMeshes = new Mesh[deformMeshes.Length];
             damagedMeshes = new bool[deformMeshes.Length];
             meshVertices = new meshVerts[deformMeshes.Length];
@@ -84,7 +84,7 @@ namespace RVP
                 damagedMeshes[i] = false;
             }
 
-            //Set up mesh collider data
+            // Set up mesh collider data
             tempCols = new Mesh[deformColliders.Length];
             damagedCols = new bool[deformColliders.Length];
             colVertices = new meshVerts[deformColliders.Length];
@@ -96,7 +96,7 @@ namespace RVP
                 damagedCols[i] = false;
             }
 
-            //Set initial positions for displaced parts
+            // Set initial positions for displaced parts
             initialPartPositions = new Vector3[displaceParts.Length];
             for (int i = 0; i < displaceParts.Length; i++) {
                 initialPartPositions[i] = displaceParts[i].localPosition;
@@ -104,13 +104,13 @@ namespace RVP
         }
 
         void FixedUpdate() {
-            //Decrease timer for collisionTimeGap
+            // Decrease timer for collisionTimeGap
             hitTime = Mathf.Max(0, hitTime - Time.fixedDeltaTime);
-            //Make sure damageFactor is not negative
+            // Make sure damageFactor is not negative
             damageFactor = Mathf.Max(0, damageFactor);
         }
 
-        //Apply damage on collision
+        // Apply damage on collision
         void OnCollisionEnter(Collision col) {
             if (hitTime == 0 && col.relativeVelocity.sqrMagnitude * damageFactor > 1 && strength < 1) {
                 Vector3 normalizedVel = col.relativeVelocity.normalized;
@@ -123,13 +123,13 @@ namespace RVP
                     if (tr.InverseTransformPoint(curCol.point).y > collisionIgnoreHeight && GlobalControl.damageMaskStatic == (GlobalControl.damageMaskStatic | (1 << curCol.otherCollider.gameObject.layer))) {
                         colsChecked++;
 
-                        //Play crash sound
+                        // Play crash sound
                         if (vp.crashSnd && vp.crashClips.Length > 0 && !soundPlayed) {
                             vp.crashSnd.PlayOneShot(vp.crashClips[Random.Range(0, vp.crashClips.Length)], Mathf.Clamp01(col.relativeVelocity.magnitude * 0.1f));
                             soundPlayed = true;
                         }
 
-                        //Play crash sparks
+                        // Play crash sparks
                         if (vp.sparks && !sparkPlayed) {
                             vp.sparks.transform.position = curCol.point;
                             vp.sparks.transform.rotation = Quaternion.LookRotation(normalizedVel, curCol.normal);
@@ -140,7 +140,7 @@ namespace RVP
                         DamageApplication(curCol.point, col.relativeVelocity, maxCollisionMagnitude, curCol.normal, curCol, true);
                     }
 
-                    //Stop checking collision points when limit reached
+                    // Stop checking collision points when limit reached
                     if (colsChecked >= maxCollisionPoints) {
                         break;
                     }
@@ -150,31 +150,31 @@ namespace RVP
             }
         }
 
-        //Damage application from collision contact point
+        // Damage application from collision contact point
         public void ApplyDamage(ContactPoint colPoint, Vector3 colVel) {
             DamageApplication(colPoint.point, colVel, Mathf.Infinity, colPoint.normal, colPoint, true);
             FinalizeDamage();
         }
 
-        //Same as above, but with extra float for clamping collision force
+        // Same as above, but with extra float for clamping collision force
         public void ApplyDamage(ContactPoint colPoint, Vector3 colVel, float damageForceLimit) {
             DamageApplication(colPoint.point, colVel, damageForceLimit, colPoint.normal, colPoint, true);
             FinalizeDamage();
         }
 
-        //Damage application from source other than collisions, e.g., an explosion
+        // Damage application from source other than collisions, e.g., an explosion
         public void ApplyDamage(Vector3 damagePoint, Vector3 damageForce) {
             DamageApplication(damagePoint, damageForce, Mathf.Infinity, damageForce.normalized, nullContact, false);
             FinalizeDamage();
         }
 
-        //Same as above, but with extra float for clamping damage force
+        // Same as above, but with extra float for clamping damage force
         public void ApplyDamage(Vector3 damagePoint, Vector3 damageForce, float damageForceLimit) {
             DamageApplication(damagePoint, damageForce, damageForceLimit, damageForce.normalized, nullContact, false);
             FinalizeDamage();
         }
 
-        //Damage application from array of points
+        // Damage application from array of points
         public void ApplyDamage(Vector3[] damagePoints, Vector3 damageForce) {
             foreach (Vector3 curDamagePoint in damagePoints) {
                 DamageApplication(curDamagePoint, damageForce, Mathf.Infinity, damageForce.normalized, nullContact, false);
@@ -183,7 +183,7 @@ namespace RVP
             FinalizeDamage();
         }
 
-        //Damage application from array of points, but with extra float for clamping damage force
+        // Damage application from array of points, but with extra float for clamping damage force
         public void ApplyDamage(Vector3[] damagePoints, Vector3 damageForce, float damageForceLimit) {
             foreach (Vector3 curDamagePoint in damagePoints) {
                 DamageApplication(curDamagePoint, damageForce, damageForceLimit, damageForce.normalized, nullContact, false);
@@ -192,19 +192,19 @@ namespace RVP
             FinalizeDamage();
         }
 
-        //Where the damage is actually applied
+        // Where the damage is actually applied
         void DamageApplication(Vector3 damagePoint, Vector3 damageForce, float damageForceLimit, Vector3 surfaceNormal, ContactPoint colPoint, bool useContactPoint) {
-            float colMag = Mathf.Min(damageForce.magnitude, maxCollisionMagnitude) * (1 - strength) * damageFactor;//Magnitude of collision
-            float clampedColMag = Mathf.Pow(Mathf.Sqrt(colMag) * 0.5f, 1.5f);//Clamped magnitude of collision
-            Vector3 clampedVel = Vector3.ClampMagnitude(damageForce, damageForceLimit);//Clamped velocity of collision
+            float colMag = Mathf.Min(damageForce.magnitude, maxCollisionMagnitude) * (1 - strength) * damageFactor; // Magnitude of collision
+            float clampedColMag = Mathf.Pow(Mathf.Sqrt(colMag) * 0.5f, 1.5f); // Clamped magnitude of collision
+            Vector3 clampedVel = Vector3.ClampMagnitude(damageForce, damageForceLimit); // Clamped velocity of collision
             Vector3 normalizedVel = damageForce.normalized;
-            float surfaceDot;//Dot production of collision velocity and surface normal
-            float massFactor = 1;//Multiplier for damage based on mass of other rigidbody
+            float surfaceDot; // Dot production of collision velocity and surface normal
+            float massFactor = 1; // Multiplier for damage based on mass of other rigidbody
             Transform curDamagePart;
             float damagePartFactor;
             MeshFilter curDamageMesh;
             Transform curDisplacePart;
-            Transform seamKeeper = null;//Transform for maintaining seams on shattered parts
+            Transform seamKeeper = null; // Transform for maintaining seams on shattered parts
             Vector3 seamLocalPoint;
             Vector3 vertProjection;
             Vector3 translation;
@@ -215,7 +215,7 @@ namespace RVP
             DetachablePart detachedPart;
             Suspension damagedSus;
 
-            //Get mass factor for multiplying damage
+            // Get mass factor for multiplying damage
             if (useContactPoint) {
                 damagePoint = colPoint.point;
                 surfaceNormal = colPoint.normal;
@@ -227,32 +227,32 @@ namespace RVP
 
             surfaceDot = Mathf.Clamp01(Vector3.Dot(surfaceNormal, normalizedVel)) * (Vector3.Dot((tr.position - damagePoint).normalized, normalizedVel) + 1) * 0.5f;
 
-            //Damage damageable parts
+            // Damage damageable parts
             for (int i = 0; i < damageParts.Length; i++) {
                 curDamagePart = damageParts[i];
                 damagePartFactor = colMag * surfaceDot * massFactor * Mathf.Min(clampedColMag * 0.01f, (clampedColMag * 0.001f) / Mathf.Pow(Vector3.Distance(curDamagePart.position, damagePoint), clampedColMag));
 
-                //Damage motors
+                // Damage motors
                 Motor damagedMotor = curDamagePart.GetComponent<Motor>();
                 if (damagedMotor) {
                     damagedMotor.health -= damagePartFactor * (1 - damagedMotor.strength);
                 }
 
-                //Damage transmissions
+                // Damage transmissions
                 Transmission damagedTransmission = curDamagePart.GetComponent<Transmission>();
                 if (damagedTransmission) {
                     damagedTransmission.health -= damagePartFactor * (1 - damagedTransmission.strength);
                 }
             }
 
-            //Deform meshes
+            // Deform meshes
             for (int i = 0; i < deformMeshes.Length; i++) {
                 curDamageMesh = deformMeshes[i];
                 localPos = curDamageMesh.transform.InverseTransformPoint(damagePoint);
                 translation = curDamageMesh.transform.InverseTransformDirection(clampedVel);
                 clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
 
-                //Shatter parts that can shatter
+                // Shatter parts that can shatter
                 ShatterPart shattered = curDamageMesh.GetComponent<ShatterPart>();
                 if (shattered) {
                     seamKeeper = shattered.seamKeeper;
@@ -261,7 +261,7 @@ namespace RVP
                     }
                 }
 
-                //Actual deformation
+                // Actual deformation
                 if (translation.sqrMagnitude > 0 && strength < 1) {
                     for (int j = 0; j < meshVertices[i].verts.Length; j++) {
                         vertDist = (meshVertices[i].verts[j] - localPos).sqrMagnitude;
@@ -284,7 +284,7 @@ namespace RVP
 
             seamKeeper = null;
 
-            //Deform mesh colliders
+            // Deform mesh colliders
             for (int i = 0; i < deformColliders.Length; i++) {
                 localPos = deformColliders[i].transform.InverseTransformPoint(damagePoint);
                 translation = deformColliders[i].transform.InverseTransformDirection(clampedVel);
@@ -304,7 +304,7 @@ namespace RVP
             }
 
 
-            //Displace parts
+            // Displace parts
             for (int i = 0; i < displaceParts.Length; i++) {
                 curDisplacePart = displaceParts[i];
                 translation = clampedVel;
@@ -317,7 +317,7 @@ namespace RVP
                     if (distClamp > 0.001f) {
                         curDisplacePart.position += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
 
-                        //Detach detachable parts
+                        // Detach detachable parts
                         if (curDisplacePart.GetComponent<DetachablePart>()) {
                             detachedPart = curDisplacePart.GetComponent<DetachablePart>();
 
@@ -329,7 +329,7 @@ namespace RVP
                                 detachedPart.Detach(false);
                             }
                         }
-                        //Maybe the parent of this part is what actually detaches, useful for displacing compound colliders that represent single detachable objects
+                        // Maybe the parent of this part is what actually detaches, useful for displacing compound colliders that represent single detachable objects
                         else if (curDisplacePart.parent.GetComponent<DetachablePart>()) {
                             detachedPart = curDisplacePart.parent.GetComponent<DetachablePart>();
 
@@ -347,7 +347,7 @@ namespace RVP
                             }
                         }
 
-                        //Damage suspensions and wheels
+                        // Damage suspensions and wheels
                         damagedSus = curDisplacePart.GetComponent<Suspension>();
                         if (damagedSus) {
                             if ((!damagedSus.wheel.grounded && ignoreGroundedWheels) || !ignoreGroundedWheels) {
@@ -373,7 +373,7 @@ namespace RVP
                             }
                         }
 
-                        //Damage hover wheels
+                        // Damage hover wheels
                         HoverWheel damagedHoverWheel = curDisplacePart.GetComponent<HoverWheel>();
                         if (damagedHoverWheel) {
                             if ((!damagedHoverWheel.grounded && ignoreGroundedWheels) || !ignoreGroundedWheels) {
@@ -387,9 +387,9 @@ namespace RVP
             }
         }
 
-        //Apply damage to meshes
+        // Apply damage to meshes
         void FinalizeDamage() {
-            //Apply vertices to actual meshes
+            // Apply vertices to actual meshes
             for (int i = 0; i < deformMeshes.Length; i++) {
                 if (damagedMeshes[i]) {
                     tempMeshes[i].vertices = meshVertices[i].verts;
@@ -404,7 +404,7 @@ namespace RVP
                 damagedMeshes[i] = false;
             }
 
-            //Apply vertices to actual mesh colliders
+            // Apply vertices to actual mesh colliders
             for (int i = 0; i < deformColliders.Length; i++) {
                 if (damagedCols[i]) {
                     tempCols[i].vertices = colVertices[i].verts;
@@ -417,7 +417,7 @@ namespace RVP
         }
 
         public void Repair() {
-            //Fix damaged parts
+            // Fix damaged parts
             for (int i = 0; i < damageParts.Length; i++) {
                 if (damageParts[i].GetComponent<Motor>()) {
                     damageParts[i].GetComponent<Motor>().health = 1;
@@ -428,7 +428,7 @@ namespace RVP
                 }
             }
 
-            //Restore deformed meshes
+            // Restore deformed meshes
             for (int i = 0; i < deformMeshes.Length; i++) {
                 for (int j = 0; j < meshVertices[i].verts.Length; j++) {
                     meshVertices[i].verts[j] = meshVertices[i].initialVerts[j];
@@ -438,7 +438,7 @@ namespace RVP
                 tempMeshes[i].RecalculateNormals();
                 tempMeshes[i].RecalculateBounds();
 
-                //Fix shattered parts
+                // Fix shattered parts
                 ShatterPart fixedShatter = deformMeshes[i].GetComponent<ShatterPart>();
                 if (fixedShatter) {
                     fixedShatter.shattered = false;
@@ -452,7 +452,7 @@ namespace RVP
                 }
             }
 
-            //Restore deformed mesh colliders
+            // Restore deformed mesh colliders
             for (int i = 0; i < deformColliders.Length; i++) {
                 for (int j = 0; j < colVertices[i].verts.Length; j++) {
                     colVertices[i].verts[j] = colVertices[i].initialVerts[j];
@@ -463,7 +463,7 @@ namespace RVP
                 deformColliders[i].sharedMesh = tempCols[i];
             }
 
-            //Fix displaced parts
+            // Fix displaced parts
             Suspension fixedSus;
             Transform curDisplacePart;
             for (int i = 0; i < displaceParts.Length; i++) {
@@ -492,20 +492,20 @@ namespace RVP
                 }
             }
 
-            //Fix wheels
+            // Fix wheels
             foreach (Wheel curWheel in vp.wheels) {
                 curWheel.Reattach();
                 curWheel.FixTire();
                 curWheel.damage = 0;
             }
 
-            //Fix hover wheels
+            // Fix hover wheels
             foreach (HoverWheel curHoverWheel in vp.hoverWheels) {
                 curHoverWheel.Reattach();
             }
         }
 
-        //Draw collisionIgnoreHeight gizmos
+        // Draw collisionIgnoreHeight gizmos
         void OnDrawGizmosSelected() {
             Vector3 startPoint = transform.TransformPoint(Vector3.up * collisionIgnoreHeight);
             Gizmos.color = Color.red;
@@ -515,7 +515,7 @@ namespace RVP
             Gizmos.DrawRay(startPoint, -transform.right);
         }
 
-        //Destroy loose parts
+        // Destroy loose parts
         void OnDestroy() {
             foreach (Transform curPart in displaceParts) {
                 if (curPart) {
@@ -530,10 +530,10 @@ namespace RVP
         }
     }
 
-    //Class for easier mesh data manipulation
+    // Class for easier mesh data manipulation
     class meshVerts
     {
-        public Vector3[] verts;//Current mesh vertices
-        public Vector3[] initialVerts;//Original mesh vertices
+        public Vector3[] verts; // Current mesh vertices
+        public Vector3[] initialVerts; // Original mesh vertices
     }
 }

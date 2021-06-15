@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Effects/Tire Mark Creator", 0)]
 
-    //Class for creating tire marks
+    // Class for creating tire marks
     public class TireMarkCreate : MonoBehaviour
     {
         Transform tr;
@@ -24,14 +24,14 @@ namespace RVP
         Vector3 rightPointPrev;
 
         bool creatingMark;
-        bool continueMark;//Continue making mark after current one ends
-        GameObject curMark;//Current mark
+        bool continueMark; // Continue making mark after current one ends
+        GameObject curMark; // Current mark
         Transform curMarkTr;
         int curEdge;
-        float gapDelay;//Gap between segments
+        float gapDelay; // Gap between segments
 
-        int curSurface = -1;//Current surface type
-        int prevSurface = -1;//Previous surface type
+        int curSurface = -1; // Current surface type
+        int prevSurface = -1; // Previous surface type
 
         bool popped = false;
         bool poppedPrev = false;
@@ -69,7 +69,7 @@ namespace RVP
         }
 
         void Update() {
-            //Check for continuous marking
+            // Check for continuous marking
             if (w.grounded) {
                 alwaysScrape = GroundSurfaceMaster.surfaceTypesStatic[w.contactPoint.surfaceType].alwaysScrape ? slipThreshold + Mathf.Min(0.5f, Mathf.Abs(w.rawRPM * 0.001f)) : 0;
             }
@@ -77,7 +77,7 @@ namespace RVP
                 alwaysScrape = 0;
             }
 
-            //Create mark
+            // Create mark
             if (w.grounded && (Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip)) > slipThreshold || alwaysScrape > 0) && w.connected) {
                 prevSurface = curSurface;
                 curSurface = w.grounded ? w.contactPoint.surfaceType : -1;
@@ -93,7 +93,7 @@ namespace RVP
                     EndMark();
                 }
 
-                //Calculate segment points
+                // Calculate segment points
                 if (curMark) {
                     Vector3 pointDir = Quaternion.AngleAxis(90, w.contactPoint.normal) * tr.right * (w.popped ? w.rimWidth : w.tireWidth);
                     leftPoint = curMarkTr.InverseTransformPoint(w.contactPoint.point + pointDir * w.suspensionParent.flippedSideFactor * Mathf.Sign(w.rawRPM) + w.contactPoint.normal * GlobalControl.tireMarkHeightStatic);
@@ -104,7 +104,7 @@ namespace RVP
                 EndMark();
             }
 
-            //Update mark if it's short enough, otherwise end it
+            // Update mark if it's short enough, otherwise end it
             if (curEdge < GlobalControl.tireMarkLengthStatic && creatingMark) {
                 UpdateMark();
             }
@@ -112,7 +112,7 @@ namespace RVP
                 EndMark();
             }
 
-            //Set particle emission rates
+            // Set particle emission rates
             ParticleSystem.EmissionModule em;
             for (int i = 0; i < debrisParticles.Length; i++) {
                 if (w.connected) {
@@ -153,7 +153,7 @@ namespace RVP
             }
         }
 
-        //Start creating a mark
+        // Start creating a mark
         void StartMark() {
             creatingMark = true;
             curMark = new GameObject("Tire Mark");
@@ -162,7 +162,7 @@ namespace RVP
             curMark.AddComponent<TireMark>();
             MeshRenderer tempRend = curMark.AddComponent<MeshRenderer>();
 
-            //Set material based on whether the tire is popped
+            // Set material based on whether the tire is popped
             if (w.popped) {
                 tempRend.material = rimMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, rimMarkMaterials.Length - 1)];
             }
@@ -201,7 +201,7 @@ namespace RVP
             gapDelay = GlobalControl.tireMarkGapStatic;
         }
 
-        //Update mark currently being generated
+        // Update mark currently being generated
         void UpdateMark() {
             if (gapDelay == 0) {
                 float alpha = (curEdge < GlobalControl.tireMarkLengthStatic - 2 && curEdge > 5 ? 1 : 0) *
@@ -258,7 +258,7 @@ namespace RVP
             }
         }
 
-        //Stop making mark
+        // Stop making mark
         void EndMark() {
             creatingMark = false;
             leftPointPrev = verts[Mathf.RoundToInt(verts.Length * 0.5f)];
@@ -273,7 +273,7 @@ namespace RVP
             mesh = null;
         }
 
-        //Clean up mark if destroyed while creating
+        // Clean up mark if destroyed while creating
         void OnDestroy() {
             if (creatingMark && curMark) {
                 EndMark();
@@ -284,7 +284,7 @@ namespace RVP
         }
     }
 
-    //Class for tire mark instances
+    // Class for tire mark instances
     public class TireMark : MonoBehaviour
     {
         [System.NonSerialized]
@@ -296,7 +296,7 @@ namespace RVP
         [System.NonSerialized]
         public Color[] colors;
 
-        //Fade the tire mark and then destroy it
+        // Fade the tire mark and then destroy it
         void Update() {
             if (fading) {
                 if (alpha <= 0) {

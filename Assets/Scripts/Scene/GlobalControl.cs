@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Scene Controllers/Global Control", 0)]
 
-    //Global controller class
+    // Global controller class
     public class GlobalControl : MonoBehaviour
     {
         [Tooltip("Reload the scene with the 'Restart' button in the input manager")]
@@ -32,7 +32,7 @@ namespace RVP
         public PhysicMaterial frictionlessMat;
         public static PhysicMaterial frictionlessMatStatic;
 
-        public static Vector3 worldUpDir;//Global up direction, opposite of normalized gravity direction
+        public static Vector3 worldUpDir; // Global up direction, opposite of normalized gravity direction
 
         [Tooltip("Maximum segments per tire mark")]
         public int tireMarkLength;
@@ -52,7 +52,7 @@ namespace RVP
 
         void Start() {
             initialFixedTime = Time.fixedDeltaTime;
-            //Set static variables
+            // Set static variables
             wheelCastMaskStatic = wheelCastMask;
             groundMaskStatic = groundMask;
             damageMaskStatic = damageMask;
@@ -65,7 +65,7 @@ namespace RVP
         }
 
         void Update() {
-            //Quickly restart scene with a button press
+            // Quickly restart scene with a button press
             if (quickRestart) {
                 if (Input.GetButtonDown("Restart")) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -76,7 +76,7 @@ namespace RVP
         }
 
         void FixedUpdate() {
-            //Set global up direction
+            // Set global up direction
             worldUpDir = Physics.gravity.sqrMagnitude == 0 ? Vector3.up : -Physics.gravity.normalized;
         }
     }

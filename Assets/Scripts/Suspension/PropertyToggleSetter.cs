@@ -5,7 +5,7 @@ namespace RVP
 {
     [AddComponentMenu("RVP/Suspension/Suspension Property Setter", 3)]
 
-    //Class for cycling through suspension properties
+    // Class for cycling through suspension properties
     public class PropertyToggleSetter : MonoBehaviour
     {
         [Tooltip("Steering Controller")]
@@ -28,7 +28,7 @@ namespace RVP
             }
         }
 
-        //Change the current preset
+        // Change the current preset
         public void ChangePreset(int preset) {
             currentPreset = preset % (presets.Length);
 
@@ -48,7 +48,7 @@ namespace RVP
         }
     }
 
-    //Preset class
+    // Preset class
     [System.Serializable]
     public class PropertyTogglePreset
     {
@@ -60,7 +60,7 @@ namespace RVP
         public IndividualPreset[] wheels;
     }
 
-    //Class for toggling the properties of SuspensionPropertyToggle instances
+    // Class for toggling the properties of SuspensionPropertyToggle instances
     [System.Serializable]
     public class IndividualPreset
     {

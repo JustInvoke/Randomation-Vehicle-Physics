@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Demo Scripts/Vehicle Menu", 0)]
 
-    //Class for the menu in the demo
+    // Class for the menu in the demo
     public class VehicleMenu : MonoBehaviour
     {
         public CameraControl cam;
@@ -29,7 +29,7 @@ namespace RVP
             chaseCarSpawnTime = Mathf.Max(0, chaseCarSpawnTime - Time.deltaTime);
         }
 
-        //Spawns a vehicle from the vehicles array at the index
+        // Spawns a vehicle from the vehicles array at the index
         public void SpawnVehicle(int vehicle) {
             newVehicle = Instantiate(vehicles[vehicle], spawnPoint, Quaternion.LookRotation(spawnRot, GlobalControl.worldUpDir)) as GameObject;
             cam.target = newVehicle.transform;
@@ -61,7 +61,7 @@ namespace RVP
             }
         }
 
-        //Spawns a chasing vehicle
+        // Spawns a chasing vehicle
         public void SpawnChaseVehicle() {
             if (chaseCarSpawnTime == 0) {
                 chaseCarSpawnTime = 1;
@@ -70,7 +70,7 @@ namespace RVP
             }
         }
 
-        //Spawns a damageable chasing vehicle
+        // Spawns a damageable chasing vehicle
         public void SpawnChaseVehicleDamage() {
             if (chaseCarSpawnTime == 0) {
                 chaseCarSpawnTime = 1;

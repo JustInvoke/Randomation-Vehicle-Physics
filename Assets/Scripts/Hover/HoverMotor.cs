@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Hover/Hover Motor", 0)]
 
-    //Motor subclass for hovering vehicles
+    // Motor subclass for hovering vehicles
     public class HoverMotor : Motor
     {
         [Header("Performance")]
@@ -18,11 +18,11 @@ namespace RVP
         public override void FixedUpdate() {
             base.FixedUpdate();
 
-            //Get proper input
+            // Get proper input
             float actualAccel = vp.brakeIsReverse ? vp.accelInput - vp.brakeInput : vp.accelInput;
             actualInput = inputCurve.Evaluate(Mathf.Abs(actualAccel)) * Mathf.Sign(actualAccel);
 
-            //Set hover wheel speeds and forces
+            // Set hover wheel speeds and forces
             foreach (HoverWheel curWheel in wheels) {
                 if (ignition) {
                     float boostEval = boostPowerCurve.Evaluate(Mathf.Abs(vp.localVelocity.z));
@@ -39,7 +39,7 @@ namespace RVP
         }
 
         public override void Update() {
-            //Set engine pitch
+            // Set engine pitch
             if (snd && ignition) {
                 targetPitch = Mathf.Max(Mathf.Abs(actualInput), Mathf.Abs(vp.steerInput) * 0.5f) * (1 - forceCurve.Evaluate(Mathf.Abs(vp.localVelocity.z)));
             }

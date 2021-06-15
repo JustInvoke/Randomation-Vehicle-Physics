@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Effects/Vehicle Light", 3)]
 
-    //Class for individual vehicle lights
+    // Class for individual vehicle lights
     public class VehicleLight : MonoBehaviour
     {
         Renderer rend;
@@ -42,19 +42,19 @@ namespace RVP
                 shattered = shatter.shattered;
             }
 
-            //Configure shared light
+            // Configure shared light
             if (sharedLight && sharer) {
                 sharedLight.enabled = on && sharer.on && !shattered && !sharer.shattered;
             }
 
-            //Configure target light
+            // Configure target light
             if (targetLight) {
                 if (sharedLight && sharer) {
                     targetLight.enabled = !shattered && on && !sharedLight.enabled;
                 }
             }
 
-            //Shatter logic
+            // Shatter logic
             if (rend) {
                 if (shattered) {
                     if (shatter.brokenMaterial) {

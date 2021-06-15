@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Demo Scripts/Vehicle HUD", 1)]
 
-    //Class for the HUD in the demo
+    // Class for the HUD in the demo
     public class VehicleHud : MonoBehaviour
     {
         public GameObject targetVehicle;

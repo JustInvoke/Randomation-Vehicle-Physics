@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Effects/Tire Screech Audio", 1)]
 
-    //Class for playing tire screech sounds
+    // Class for playing tire screech sounds
     public class TireScreech : MonoBehaviour
     {
         AudioSource snd;
@@ -21,7 +21,7 @@ namespace RVP
             vp = transform.GetTopmostParentComponent<VehicleParent>();
             wheels = new Wheel[vp.wheels.Length];
 
-            //Get wheels and average slip threshold
+            // Get wheels and average slip threshold
             for (int i = 0; i < vp.wheels.Length; i++) {
                 wheels[i] = vp.wheels[i];
                 if (vp.wheels[i].GetComponent<TireMarkCreate>()) {
@@ -60,12 +60,12 @@ namespace RVP
                 }
             }
 
-            //Set audio clip based on number of wheels popped
+            // Set audio clip based on number of wheels popped
             if (surfaceType != null) {
                 snd.clip = allPopped ? surfaceType.rimSnd : (nonePopped ? surfaceType.tireSnd : surfaceType.tireRimSnd);
             }
 
-            //Set sound volume and pitch
+            // Set sound volume and pitch
             if (screechAmount > 0) {
                 if (!snd.isPlaying) {
                     snd.Play();

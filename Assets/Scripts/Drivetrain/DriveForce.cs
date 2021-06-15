@@ -5,7 +5,7 @@ namespace RVP
 {
     [AddComponentMenu("RVP/Drivetrain/Drive Force", 3)]
 
-    //The class for RPMs and torque sent through the drivetrain
+    // The class for RPMs and torque sent through the drivetrain
     public class DriveForce : MonoBehaviour
     {
         [System.NonSerialized]
@@ -13,9 +13,9 @@ namespace RVP
         [System.NonSerialized]
         public float torque;
         [System.NonSerialized]
-        public AnimationCurve curve;//Torque curve
+        public AnimationCurve curve; // Torque curve
         [System.NonSerialized]
-        public float feedbackRPM;//RPM sent back through the drivetrain
+        public float feedbackRPM; // RPM sent back through the drivetrain
         [System.NonSerialized]
         public bool active = true;
 
@@ -25,7 +25,7 @@ namespace RVP
             curve = from.curve;
         }
 
-        //Same as previous, but with torqueFactor multiplier for torque
+        // Same as previous, but with torqueFactor multiplier for torque
         public void SetDrive(DriveForce from, float torqueFactor) {
             rpm = from.rpm;
             torque = from.torque * torqueFactor;

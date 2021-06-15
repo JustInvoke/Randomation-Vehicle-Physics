@@ -5,10 +5,10 @@ using System;
 
 namespace RVP
 {
-    //Class with extra mesh functions
+    // Class with extra mesh functions
     public class MeshUtil
     {
-        //Mesh tangent calculation by hemik1 using info from http://answers.unity3d.com/questions/7789/calculating-tangents-vector4.html
+        // Mesh tangent calculation by hemik1 using info from http: // answers.unity3d.com/questions/7789/calculating-tangents-vector4.html
         public static void CalculateMeshTangents(Mesh mesh) {
             Vector3[] normals = mesh.normals;
             int[] triangles = mesh.triangles;
@@ -100,7 +100,7 @@ namespace RVP
                 try {
                     n = normals[a];
                 }
-                catch// (Exception e) 
+                catch // (Exception e) 
                 {
                     Debug.LogError("OUT OF RANGE: index " + a + ", length " + normals.Length);
                 }

@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Effects/Light Controller", 2)]
 
-    //Class for controlling vehicle lights
+    // Class for controlling vehicle lights
     public class LightController : MonoBehaviour
     {
         VehicleParent vp;
@@ -35,7 +35,7 @@ namespace RVP
         void Start() {
             vp = GetComponent<VehicleParent>();
 
-            //Get transmission for using reverse lights
+            // Get transmission for using reverse lights
             if (transmission) {
                 if (transmission is GearboxTransmission) {
                     gearTrans = transmission as GearboxTransmission;
@@ -47,7 +47,7 @@ namespace RVP
         }
 
         void Update() {
-            //Activate blinkers
+            // Activate blinkers
             if (leftBlinkersOn || rightBlinkersOn) {
                 if (blinkerSwitchTime == 0) {
                     blinkerIntervalOn = !blinkerIntervalOn;
@@ -62,7 +62,7 @@ namespace RVP
                 blinkerSwitchTime = 0;
             }
 
-            //Activate reverse lights
+            // Activate reverse lights
             if (gearTrans) {
                 reverseLightsOn = gearTrans.curGearRatio < 0;
             }
@@ -70,7 +70,7 @@ namespace RVP
                 reverseLightsOn = conTrans.reversing;
             }
 
-            //Activate brake lights
+            // Activate brake lights
             if (vp.accelAxisIsBrake) {
                 brakelightsOn = vp.accelInput != 0 && Mathf.Sign(vp.accelInput) != Mathf.Sign(vp.localVelocity.z) && Mathf.Abs(vp.localVelocity.z) > 1;
             }
@@ -90,14 +90,14 @@ namespace RVP
             SetLights(ReverseLights, reverseLightsOn);
         }
 
-        //Set if lights are on or off based on the condition
+        // Set if lights are on or off based on the condition
         void SetLights(VehicleLight[] lights, bool condition) {
             foreach (VehicleLight curLight in lights) {
                 curLight.on = condition;
             }
         }
 
-        //Set if lights are on or off based on the first condition, and half on based on the second condition (see halfOn tooltip in VehicleLight)
+        // Set if lights are on or off based on the first condition, and half on based on the second condition (see halfOn tooltip in VehicleLight)
         void SetLights(VehicleLight[] lights, bool condition, bool halfCondition) {
             foreach (VehicleLight curLight in lights) {
                 curLight.on = condition;

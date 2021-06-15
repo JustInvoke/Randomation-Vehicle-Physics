@@ -5,7 +5,7 @@ namespace RVP
 {
     [RequireComponent(typeof(DriveForce))]
 
-    //Class for transmissions
+    // Class for transmissions
     public abstract class Transmission : MonoBehaviour
     {
         [Range(0, 1)]
@@ -35,11 +35,11 @@ namespace RVP
         }
 
         protected void SetOutputDrives(float ratio) {
-            //Distribute drive to wheels
+            // Distribute drive to wheels
             if (outputDrives.Length > 0) {
                 int enabledDrives = 0;
 
-                //Check for which outputs are enabled
+                // Check for which outputs are enabled
                 foreach (DriveForce curOutput in outputDrives) {
                     if (curOutput.active) {
                         enabledDrives++;
@@ -61,7 +61,7 @@ namespace RVP
         }
 
         public void ResetMaxRPM() {
-            maxRPM = -1;//Setting this to -1 triggers derived classes to recalculate things
+            maxRPM = -1; // Setting this to -1 triggers derived classes to recalculate things
         }
     }
 }

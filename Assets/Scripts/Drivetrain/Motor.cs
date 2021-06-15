@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace RVP
 {
-    //Class for engines
+    // Class for engines
     public abstract class Motor : MonoBehaviour
     {
         protected VehicleParent vp;
@@ -12,7 +12,7 @@ namespace RVP
 
         [Tooltip("Throttle curve, x-axis = input, y-axis = output")]
         public AnimationCurve inputCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        protected float actualInput;//Input after applying the input curve
+        protected float actualInput; // Input after applying the input curve
 
         protected AudioSource snd;
 
@@ -39,7 +39,7 @@ namespace RVP
         public float maxBoost = 1;
         public float boostBurnRate = 0.01f;
         public AudioSource boostLoopSnd;
-        AudioSource boostSnd;//AudioSource for boostStart and boostEnd
+        AudioSource boostSnd; // AudioSource for boostStart and boostEnd
         public AudioClip boostStart;
         public AudioClip boostEnd;
         public ParticleSystem[] boostParticles;
@@ -57,13 +57,13 @@ namespace RVP
         public virtual void Start() {
             vp = transform.GetTopmostParentComponent<VehicleParent>();
 
-            //Get engine sound
+            // Get engine sound
             snd = GetComponent<AudioSource>();
             if (snd) {
                 snd.pitch = minPitch;
             }
 
-            //Get boost sound
+            // Get boost sound
             if (boostLoopSnd) {
                 GameObject newBoost = Instantiate(boostLoopSnd.gameObject, boostLoopSnd.transform.position, boostLoopSnd.transform.rotation) as GameObject;
                 boostSnd = newBoost.GetComponent<AudioSource>();
@@ -81,7 +81,7 @@ namespace RVP
         public virtual void FixedUpdate() {
             health = Mathf.Clamp01(health);
 
-            //Boost logic
+            // Boost logic
             boost = Mathf.Clamp(boosting ? boost - boostBurnRate * Time.timeScale * 0.05f * TimeMaster.inverseFixedTimeFactor : boost, 0, maxBoost);
             boostPrev = boosting;
 
@@ -122,7 +122,7 @@ namespace RVP
         }
 
         public virtual void Update() {
-            //Set engine sound properties
+            // Set engine sound properties
             if (!ignition) {
                 targetPitch = 0;
             }
@@ -138,7 +138,7 @@ namespace RVP
                 }
             }
 
-            //Play boost particles
+            // Play boost particles
             if (boostParticles.Length > 0) {
                 foreach (ParticleSystem curBoost in boostParticles) {
                     if (boosting && curBoost.isStopped) {
@@ -150,7 +150,7 @@ namespace RVP
                 }
             }
 
-            //Adjusting smoke particles based on damage
+            // Adjusting smoke particles based on damage
             if (smoke) {
                 ParticleSystem.EmissionModule em = smoke.emission;
                 em.rateOverTime = new ParticleSystem.MinMaxCurve(health < 0.7f ? initialSmokeEmission * (1 - health) : 0);

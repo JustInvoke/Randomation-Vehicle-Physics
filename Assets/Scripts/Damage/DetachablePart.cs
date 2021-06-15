@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Damage/Detachable Part", 1)]
 
-    //Class for parts that can detach
+    // Class for parts that can detach
     public class DetachablePart : MonoBehaviour
     {
         Transform tr;
@@ -49,7 +49,7 @@ namespace RVP
 
         void Update() {
             if (hinge) {
-                //Destory hinge if displaced too far from original position
+                // Destory hinge if displaced too far from original position
                 if ((initialAnchor - displacedAnchor).sqrMagnitude > 0.1f) {
                     Destroy(hinge);
                 }
@@ -70,7 +70,7 @@ namespace RVP
                     rb.velocity = parentBody.GetPointVelocity(tr.position);
                     rb.angularVelocity = parentBody.angularVelocity;
 
-                    //Pick a random hinge joint to use
+                    // Pick a random hinge joint to use
                     if (makeJoint && joints.Length > 0) {
                         PartJoint chosenJoint = joints[Random.Range(0, joints.Length)];
                         initialAnchor = chosenJoint.hingeAnchor;
@@ -125,7 +125,7 @@ namespace RVP
             }
         }
 
-        //Draw joint gizmos
+        // Draw joint gizmos
         void OnDrawGizmosSelected() {
             if (!tr) {
                 tr = transform;
@@ -141,7 +141,7 @@ namespace RVP
         }
     }
 
-    //Class for storing hinge joint information in the joints list
+    // Class for storing hinge joint information in the joints list
     [System.Serializable]
     public class PartJoint
     {

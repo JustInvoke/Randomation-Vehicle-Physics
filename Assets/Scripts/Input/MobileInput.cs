@@ -6,10 +6,10 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Input/Mobile Input Setter", 1)]
 
-    //Class for setting mobile input
+    // Class for setting mobile input
     public class MobileInput : MonoBehaviour
     {
-        //Orientation the screen is locked at
+        // Orientation the screen is locked at
         public ScreenOrientation screenRot = ScreenOrientation.LandscapeLeft;
 
         [System.NonSerialized]
@@ -23,7 +23,7 @@ namespace RVP
         [System.NonSerialized]
         public bool boost;
 
-        //Set screen orientation
+        // Set screen orientation
         void Start() {
             Screen.autorotateToPortrait = screenRot == ScreenOrientation.Portrait || screenRot == ScreenOrientation.AutoRotation;
             Screen.autorotateToPortraitUpsideDown = screenRot == ScreenOrientation.PortraitUpsideDown || screenRot == ScreenOrientation.AutoRotation;
@@ -32,7 +32,7 @@ namespace RVP
             Screen.orientation = screenRot;
         }
 
-        //Input setting functions that can be linked to buttons
+        // Input setting functions that can be linked to buttons
         public void SetAccel(float f) {
             accel = Mathf.Clamp01(f);
         }

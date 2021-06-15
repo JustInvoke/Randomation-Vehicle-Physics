@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Suspension/Suspension Part", 1)]
 
-    //Class for moving suspension parts
+    // Class for moving suspension parts
     public class SuspensionPart : MonoBehaviour
     {
         Transform tr;
@@ -24,7 +24,7 @@ namespace RVP
         public Vector3 connectPoint;
         [System.NonSerialized]
         public Vector3 initialConnectPoint;
-        Vector3 localConnectPoint;//Transformed connect point
+        Vector3 localConnectPoint; // Transformed connect point
 
         [Tooltip("Rotate to point at target?")]
         public bool rotate = true;
@@ -42,19 +42,19 @@ namespace RVP
         [Tooltip("Does this part connect to a solid axle?")]
         public bool solidAxleConnector;
 
-        //Wheels for solid axles
+        // Wheels for solid axles
         public Wheel wheel1;
         public Wheel wheel2;
         Vector3 wheelConnect1;
         Vector3 wheelConnect2;
 
-        Vector3 parentUpDir; //Parent's up direction
+        Vector3 parentUpDir; // Parent's up direction
 
         void Start() {
             tr = transform;
             initialConnectPoint = connectPoint;
 
-            //Get the wheel
+            // Get the wheel
             if (suspension) {
                 suspension.movingParts.Add(this);
 
@@ -63,7 +63,7 @@ namespace RVP
                 }
             }
 
-            //Get the initial distance from the target to use when stretching
+            // Get the initial distance from the target to use when stretching
             if (connectObj && !isHub && Application.isPlaying) {
                 initialDist = Mathf.Max(Vector3.Distance(tr.position, connectObj.TransformPoint(connectPoint)), 0.01f);
                 initialScale = tr.localScale;
@@ -74,7 +74,7 @@ namespace RVP
             if (!Application.isPlaying) {
                 tr = transform;
 
-                //Get the wheel
+                // Get the wheel
                 if (suspension) {
                     if (suspension.wheel) {
                         wheel = suspension.wheel;
@@ -84,7 +84,7 @@ namespace RVP
 
             if (tr) {
                 if (!solidAxle && ((suspension && !solidAxleConnector) || solidAxleConnector)) {
-                    //Transformations for hubs
+                    // Transformations for hubs
                     if (isHub && wheel && !solidAxleConnector) {
                         if (wheel.rim) {
                             tr.position = wheel.rim.position;
@@ -95,24 +95,24 @@ namespace RVP
                     else if (!isHub && connectObj) {
                         localConnectPoint = connectObj.TransformPoint(connectPoint);
 
-                        //Rotate to look at connection point
+                        // Rotate to look at connection point
                         if (rotate) {
                             tr.rotation = Quaternion.LookRotation((localConnectPoint - tr.position).normalized, (solidAxleConnector ? tr.parent.forward : suspension.upDir));
 
-                            //Don't set localEulerAngles if connected to a solid axle
+                            // Don't set localEulerAngles if connected to a solid axle
                             if (!solidAxleConnector) {
                                 tr.localEulerAngles = new Vector3(tr.localEulerAngles.x, tr.localEulerAngles.y, -suspension.casterAngle * suspension.flippedSideFactor);
                             }
                         }
 
-                        //Stretch like a spring if stretch is true
+                        // Stretch like a spring if stretch is true
                         if (stretch && Application.isPlaying) {
                             tr.localScale = new Vector3(tr.localScale.x, tr.localScale.y, initialScale.z * (Vector3.Distance(tr.position, localConnectPoint) / initialDist));
                         }
                     }
                 }
                 else if (solidAxle && wheel1 && wheel2) {
-                    //Transformations for solid axles
+                    // Transformations for solid axles
                     if (wheel1.rim && wheel2.rim && wheel1.suspensionParent && wheel2.suspensionParent) {
                         parentUpDir = tr.parent.up;
                         wheelConnect1 = wheel1.rim.TransformPoint(0, 0, -wheel1.suspensionParent.pivotOffset);
@@ -134,7 +134,7 @@ namespace RVP
 
             Gizmos.color = Color.green;
 
-            //Visualize connections
+            // Visualize connections
             if (!isHub && connectObj && !solidAxle) {
                 localConnectPoint = connectObj.TransformPoint(connectPoint);
                 Gizmos.DrawLine(tr.position, localConnectPoint);

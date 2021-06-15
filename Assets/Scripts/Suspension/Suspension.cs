@@ -9,7 +9,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Suspension/Suspension", 0)]
 
-    //Class for the suspensions
+    // Class for the suspensions
     public class Suspension : MonoBehaviour
     {
         [System.NonSerialized]
@@ -17,7 +17,7 @@ namespace RVP
         Rigidbody rb;
         VehicleParent vp;
 
-        //Variables for inverting certain values on opposite sides of the vehicle
+        // Variables for inverting certain values on opposite sides of the vehicle
         [System.NonSerialized]
         public bool flippedSide;
         [System.NonSerialized]
@@ -26,7 +26,7 @@ namespace RVP
         public Quaternion initialRotation;
 
         public Wheel wheel;
-        CapsuleCollider compressCol;//The hard collider
+        CapsuleCollider compressCol; // The hard collider
 
         [Tooltip("Generate a capsule collider for hard compressions")]
         public bool generateHardCollider = true;
@@ -35,7 +35,7 @@ namespace RVP
         public float hardColliderRadiusFactor = 1;
         float hardColliderRadiusFactorPrev;
         float setHardColliderRadiusFactor;
-        Transform compressTr;//Transform component of the hard collider
+        Transform compressTr; // Transform component of the hard collider
 
         [Header("Brakes and Steering")]
         public float brakeForce;
@@ -89,7 +89,7 @@ namespace RVP
         [Range(0, 1)]
         public float targetCompression;
         [System.NonSerialized]
-        public float penetration;//How deep the ground is interesecting with the wheel's tire
+        public float penetration; // How deep the ground is interesecting with the wheel's tire
         public float springForce;
 
         [Tooltip("Force of the curve depending on it's compression, x-axis = compression, y-axis = force")]
@@ -114,19 +114,19 @@ namespace RVP
         public bool leaningForce;
 
         [System.NonSerialized]
-        public Vector3 maxCompressPoint;//Position of the wheel when the suspension is compressed all the way
+        public Vector3 maxCompressPoint; // Position of the wheel when the suspension is compressed all the way
         [System.NonSerialized]
         public Vector3 springDirection;
         [System.NonSerialized]
-        public Vector3 upDir;//Local up direction
+        public Vector3 upDir; // Local up direction
         [System.NonSerialized]
-        public Vector3 forwardDir;//Local forward direction
+        public Vector3 forwardDir; // Local forward direction
 
         [System.NonSerialized]
-        public DriveForce targetDrive;//The drive being passed into the wheel
+        public DriveForce targetDrive; // The drive being passed into the wheel
 
         [System.NonSerialized]
-        public SuspensionPropertyToggle properties;//Property toggler
+        public SuspensionPropertyToggle properties; // Property toggler
         [System.NonSerialized]
         public bool steerEnabled = true;
         [System.NonSerialized]
@@ -165,7 +165,7 @@ namespace RVP
             if (Application.isPlaying) {
                 GetCamber();
 
-                //Generate the hard collider
+                // Generate the hard collider
                 if (generateHardCollider) {
                     GameObject cap = new GameObject("Compress Collider");
                     cap.layer = GlobalControl.ignoreWheelCastLayer;
@@ -213,7 +213,7 @@ namespace RVP
                 ApplySuspensionForce();
             }
 
-            //Set hard collider size if it is changed during play mode
+            // Set hard collider size if it is changed during play mode
             if (generateHardCollider) {
                 setHardColliderRadiusFactor = hardColliderRadiusFactor;
 
@@ -233,7 +233,7 @@ namespace RVP
                 hardColliderRadiusFactorPrev = setHardColliderRadiusFactor;
             }
 
-            //Set the drive of the wheel
+            // Set the drive of the wheel
             if (wheel.connected) {
                 if (wheel.targetDrive) {
                     targetDrive.active = driveEnabled;
@@ -253,17 +253,17 @@ namespace RVP
                 GetSpringVectors();
             }
 
-            //Set steer angle for the wheel
+            // Set steer angle for the wheel
             steerDegrees = Mathf.Abs(steerAngle) * (steerAngle > 0 ? steerRangeMax : steerRangeMin);
         }
 
-        //Apply suspension forces to support vehicles
+        // Apply suspension forces to support vehicles
         void ApplySuspensionForce() {
             if (wheel.grounded && wheel.connected) {
-                //Get the local vertical velocity
+                // Get the local vertical velocity
                 float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
 
-                //Apply the suspension force
+                // Apply the suspension force
                 if (suspensionDistance > 0 && targetCompression > 0) {
                     Vector3 appliedSuspensionForce = (leaningForce ? Vector3.Lerp(upDir, vp.norm.forward, Mathf.Abs(Mathf.Pow(Vector3.Dot(vp.norm.forward, vp.upDir), 5))) : vp.norm.forward) *
                         springForce * (Mathf.Pow(springForceCurve.Evaluate(1 - compression), Mathf.Max(1, springExponent)) - (1 - targetCompression) - springDampening * Mathf.Clamp(travelVel, -1, 1));
@@ -273,7 +273,7 @@ namespace RVP
                         applyForceAtGroundContact ? wheel.contactPoint.point : wheel.tr.position,
                         vp.suspensionForceMode);
 
-                    //If wheel is resting on a rigidbody, apply opposing force to it
+                    // If wheel is resting on a rigidbody, apply opposing force to it
                     if (wheel.contactPoint.col.attachedRigidbody) {
                         wheel.contactPoint.col.attachedRigidbody.AddForceAtPosition(
                             -appliedSuspensionForce,
@@ -282,7 +282,7 @@ namespace RVP
                     }
                 }
 
-                //Apply hard contact force
+                // Apply hard contact force
                 if (compression == 0 && !generateHardCollider && applyHardContactForce) {
                     rb.AddForceAtPosition(
                         -vp.norm.TransformDirection(0, 0, Mathf.Clamp(travelVel, -hardContactSensitivity * TimeMaster.fixedTimeFactor, 0) + penetration) * hardContactForce * Mathf.Clamp01(TimeMaster.fixedTimeFactor),
@@ -292,7 +292,7 @@ namespace RVP
             }
         }
 
-        //Calculate the direction of the spring
+        // Calculate the direction of the spring
         void GetSpringVectors() {
             if (!Application.isPlaying) {
                 tr = transform;
@@ -308,7 +308,7 @@ namespace RVP
             springDirection = tr.TransformDirection(casterDir, Mathf.Max(Mathf.Abs(casterDir), Mathf.Abs(sideDir)) - 1, sideDir).normalized;
         }
 
-        //Calculate the camber angle
+        // Calculate the camber angle
         void GetCamber() {
             if (solidAxleCamber && oppositeWheel && wheel.connected) {
                 if (oppositeWheel.wheel.rim && wheel.rim) {
@@ -321,7 +321,7 @@ namespace RVP
             }
         }
 
-        //Update the toggleable properties
+        // Update the toggleable properties
         public void UpdateProperties() {
             if (properties) {
                 foreach (SuspensionToggledProperty curProperty in properties.properties) {
@@ -349,7 +349,7 @@ namespace RVP
             }
         }
 
-        //Visualize steer range
+        // Visualize steer range
         void OnDrawGizmosSelected() {
             if (!tr) {
                 tr = transform;

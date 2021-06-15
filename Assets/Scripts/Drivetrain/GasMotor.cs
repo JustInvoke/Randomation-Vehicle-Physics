@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Drivetrain/Gas Motor", 0)]
 
-    //Motor subclass for internal combustion engines
+    // Motor subclass for internal combustion engines
     public class GasMotor : Motor
     {
         [Header("Performance")]
@@ -43,14 +43,14 @@ namespace RVP
         public override void Start() {
             base.Start();
             targetDrive = GetComponent<DriveForce>();
-            //Get maximum possible RPM
+            // Get maximum possible RPM
             GetMaxRPM();
         }
 
         public override void FixedUpdate() {
             base.FixedUpdate();
 
-            //Calculate proper input
+            // Calculate proper input
             actualAccel = Mathf.Lerp(vp.brakeIsReverse && vp.reversing && vp.accelInput <= 0 ? vp.brakeInput : vp.accelInput, Mathf.Max(vp.accelInput, vp.burnout), vp.burnout);
             float accelGet = canReverse ? actualAccel : Mathf.Clamp01(actualAccel);
             actualInput = inputCurve.Evaluate(Mathf.Abs(accelGet)) * Mathf.Sign(accelGet);
@@ -58,9 +58,9 @@ namespace RVP
 
             if (ignition) {
                 float boostEval = boostPowerCurve.Evaluate(Mathf.Abs(vp.localVelocity.z));
-                //Set RPM
+                // Set RPM
                 targetDrive.rpm = Mathf.Lerp(targetDrive.rpm, actualInput * maxRPM * 1000 * (boosting ? 1 + boostEval : 1), (1 - inertia) * Time.timeScale);
-                //Set torque
+                // Set torque
                 if (targetDrive.feedbackRPM > targetDrive.rpm) {
                     targetDrive.torque = 0;
                 }
@@ -68,7 +68,7 @@ namespace RVP
                     targetDrive.torque = torqueCurve.Evaluate(targetDrive.feedbackRPM * 0.001f - (boosting ? boostEval : 0)) * Mathf.Lerp(targetDrive.torque, power * Mathf.Abs(System.Math.Sign(actualInput)), (1 - inertia) * Time.timeScale) * (boosting ? 1 + boostEval : 1) * health;
                 }
 
-                //Send RPM and torque through drivetrain
+                // Send RPM and torque through drivetrain
                 if (outputDrives.Length > 0) {
                     float torqueFactor = Mathf.Pow(1f / outputDrives.Length, driveDividePower);
                     float tempRPM = 0;
@@ -89,7 +89,7 @@ namespace RVP
                 }
             }
             else {
-                //If turned off, set RPM and torque to 0 and distribute it through drivetrain
+                // If turned off, set RPM and torque to 0 and distribute it through drivetrain
                 targetDrive.rpm = 0;
                 targetDrive.torque = 0;
                 targetDrive.feedbackRPM = 0;
@@ -104,7 +104,7 @@ namespace RVP
         }
 
         public override void Update() {
-            //Set audio pitch
+            // Set audio pitch
             if (snd && ignition) {
                 airPitch = vp.groundedWheels > 0 || actualAccel != 0 ? 1 : Mathf.Lerp(airPitch, 0, 0.5f * Time.deltaTime);
                 pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ?
@@ -118,7 +118,7 @@ namespace RVP
             base.Update();
         }
 
-        //Calculates the max RPM and propagates its effects
+        // Calculates the max RPM and propagates its effects
         public void GetMaxRPM() {
             maxRPM = torqueCurve.keys[torqueCurve.length - 1].time;
 

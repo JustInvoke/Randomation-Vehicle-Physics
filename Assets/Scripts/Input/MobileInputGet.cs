@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Input/Mobile Input Getter", 2)]
 
-    //Class for getting mobile input
+    // Class for getting mobile input
     public class MobileInputGet : MonoBehaviour
     {
         VehicleParent vp;
@@ -36,7 +36,7 @@ namespace RVP
                 vp.SetBoost(setter.boost);
 
                 if (useAccelerometer) {
-                    //Accelerometer input
+                    // Accelerometer input
                     vp.SetSteer((Input.acceleration.x + accelerationDelta.x * deltaFactor) * steerFactor);
                     vp.SetYaw(Input.acceleration.x * flipFactor);
                     vp.SetPitch(-Input.acceleration.z * flipFactor);

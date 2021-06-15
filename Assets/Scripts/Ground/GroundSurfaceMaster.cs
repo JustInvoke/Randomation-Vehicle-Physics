@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Ground Surface/Ground Surface Master", 0)]
 
-    //Class managing surface types
+    // Class managing surface types
     public class GroundSurfaceMaster : MonoBehaviour
     {
         public GroundSurface[] surfaceTypes;
@@ -17,7 +17,7 @@ namespace RVP
         }
     }
 
-    //Class for individual surface types
+    // Class for individual surface types
     [System.Serializable]
     public class GroundSurface
     {

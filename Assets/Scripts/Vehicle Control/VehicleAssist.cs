@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Vehicle Controllers/Vehicle Assist", 1)]
 
-    //Class for assisting vehicle performance
+    // Class for assisting vehicle performance
     public class VehicleAssist : MonoBehaviour
     {
         Transform tr;
@@ -117,12 +117,12 @@ namespace RVP
             }
         }
 
-        //Apply assist for steering and drifting
+        // Apply assist for steering and drifting
         void ApplySpinAssist() {
-            //Get desired rotation speed
+            // Get desired rotation speed
             float targetTurnSpeed = 0;
 
-            //Auto steer drift
+            // Auto steer drift
             if (autoSteerDrift) {
                 int steerSign = 0;
                 if (vp.steerInput != 0) {
@@ -152,14 +152,14 @@ namespace RVP
             }
         }
 
-        //Apply downforce
+        // Apply downforce
         void ApplyDownforce() {
             if (vp.groundedWheels > 0 || applyDownforceInAir) {
                 rb.AddRelativeForce(
                     new Vector3(0, downforceCurve.Evaluate(Mathf.Abs(vp.localVelocity.z)) * -downforce * (applyDownforceInAir ? 1 : groundedFactor) * (invertDownforceInReverse ? Mathf.Sign(vp.localVelocity.z) : 1), 0),
                     ForceMode.Acceleration);
 
-                //Reverse downforce
+                // Reverse downforce
                 if (invertDownforceInReverse && vp.localVelocity.z < 0) {
                     rb.AddRelativeTorque(
                         new Vector3(downforceCurve.Evaluate(Mathf.Abs(vp.localVelocity.z)) * downforce * (applyDownforceInAir ? 1 : groundedFactor), 0, 0),
@@ -168,11 +168,11 @@ namespace RVP
             }
         }
 
-        //Assist with rolling back over if upside down or on side
+        // Assist with rolling back over if upside down or on side
         void RollOver() {
             RaycastHit rollHit;
 
-            //Check if rolled over
+            // Check if rolled over
             if (vp.groundedWheels == 0 && vp.velMag < rollSpeedThreshold && vp.upDot < 0.8 && rollCheckDistance > 0) {
                 if (Physics.Raycast(tr.position, vp.upDir, out rollHit, rollCheckDistance, GlobalControl.groundMaskStatic)
                     || Physics.Raycast(tr.position, vp.rightDir, out rollHit, rollCheckDistance, GlobalControl.groundMaskStatic)
@@ -187,7 +187,7 @@ namespace RVP
                 rolledOver = false;
             }
 
-            //Apply roll over force
+            // Apply roll over force
             if (rolledOver) {
                 if (steerRollOver && vp.steerInput != 0) {
                     rb.AddRelativeTorque(
@@ -202,7 +202,7 @@ namespace RVP
             }
         }
 
-        //Assist for accelerating while drifting
+        // Assist for accelerating while drifting
         void ApplyDriftPush() {
             float pushFactor = (vp.accelAxisIsBrake ? vp.accelInput : vp.accelInput - vp.brakeInput) * Mathf.Abs(vp.localVelocity.x) * driftPush * groundedFactor * (1 - Mathf.Abs(Vector3.Dot(vp.forwardDir, rb.velocity.normalized)));
 

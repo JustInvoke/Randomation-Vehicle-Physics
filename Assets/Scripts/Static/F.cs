@@ -4,10 +4,10 @@ using System.Collections;
 namespace RVP
 {
 
-    //Static class with extra functions
+    // Static class with extra functions
     public static class F
     {
-        //Returns the number with the greatest absolute value
+        // Returns the number with the greatest absolute value
         public static float MaxAbs(params float[] nums) {
             float result = 0;
 
@@ -20,7 +20,7 @@ namespace RVP
             return result;
         }
 
-        //Returns the topmost parent of a Transform with a certain component
+        // Returns the topmost parent of a Transform with a certain component
         public static T GetTopmostParentComponent<T>(this Transform tr) where T : Component {
             T getting = null;
 
@@ -36,7 +36,7 @@ namespace RVP
         }
 
 #if UNITY_EDITOR
-        //Returns whether the given object is part of a prefab (meant to be used with selected objects in the inspector)
+        // Returns whether the given object is part of a prefab (meant to be used with selected objects in the inspector)
         public static bool IsPrefab(Object componentOrGameObject) {
             return UnityEditor.Selection.assetGUIDs.Length > 0
                 && UnityEditor.PrefabUtility.GetPrefabAssetType(componentOrGameObject) != UnityEditor.PrefabAssetType.NotAPrefab

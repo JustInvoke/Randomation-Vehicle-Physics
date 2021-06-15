@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Stunt/Stunt Manager", 0)]
 
-    //Class for managing stunts
+    // Class for managing stunts
     public class StuntManager : MonoBehaviour
     {
         public float driftScoreRate;
@@ -29,7 +29,7 @@ namespace RVP
         public static Stunt[] stuntsStatic;
 
         void Start() {
-            //Set static variables
+            // Set static variables
             driftScoreRateStatic = driftScoreRate;
             driftConnectDelayStatic = driftConnectDelay;
             driftBoostAddStatic = driftBoostAdd;
@@ -39,22 +39,22 @@ namespace RVP
         }
     }
 
-    //Stunt class
+    // Stunt class
     [System.Serializable]
     public class Stunt
     {
         public string name;
-        public Vector3 rotationAxis;//Local rotation axis of the stunt
+        public Vector3 rotationAxis; // Local rotation axis of the stunt
         [Range(0, 1)]
-        public float precision = 0.8f;//Limit for the dot product between the rotation axis and the stunt axis
+        public float precision = 0.8f; // Limit for the dot product between the rotation axis and the stunt axis
         public float scoreRate;
-        public float multiplier = 1;//Multiplier for when the stunt is performed more than once in the same jump
+        public float multiplier = 1; // Multiplier for when the stunt is performed more than once in the same jump
         public float angleThreshold;
         [System.NonSerialized]
-        public float progress;//How much rotation has happened during the stunt in radians?
+        public float progress; // How much rotation has happened during the stunt in radians?
         public float boostAdd;
 
-        //Use this to duplicate a stunt
+        // Use this to duplicate a stunt
         public Stunt(Stunt oldStunt) {
             name = oldStunt.name;
             rotationAxis = oldStunt.rotationAxis;

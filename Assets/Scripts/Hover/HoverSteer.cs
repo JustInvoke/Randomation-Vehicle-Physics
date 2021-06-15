@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Hover/Hover Steer", 2)]
 
-    //Class for steering hover vehicles
+    // Class for steering hover vehicles
     public class HoverSteer : MonoBehaviour
     {
         Transform tr;
@@ -34,7 +34,7 @@ namespace RVP
         }
 
         void FixedUpdate() {
-            //Set steering of hover wheels
+            // Set steering of hover wheels
             float rbSpeed = vp.localVelocity.z / steerCurveStretch;
             float steerLimit = steerCurve.Evaluate(Mathf.Abs(rbSpeed));
             steerAmount = vp.steerInput * steerLimit;
@@ -45,7 +45,7 @@ namespace RVP
         }
 
         void Update() {
-            //Set visual rotation
+            // Set visual rotation
             if (rotate) {
                 steerRot = Mathf.Lerp(steerRot, steerAmount * maxDegreesRotation + rotationOffset, steerRate * 0.1f * Time.timeScale);
                 tr.localEulerAngles = new Vector3(tr.localEulerAngles.x, tr.localEulerAngles.y, steerRot);

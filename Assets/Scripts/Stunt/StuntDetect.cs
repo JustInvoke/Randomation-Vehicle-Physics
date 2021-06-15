@@ -8,7 +8,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Stunt/Stunt Detector", 1)]
 
-    //Class for detecting stunts
+    // Class for detecting stunts
     public class StuntDetect : MonoBehaviour
     {
         Transform tr;
@@ -22,7 +22,7 @@ namespace RVP
         bool drifting;
         float driftDist;
         float driftScore;
-        float endDriftTime;//Time during which drifting counts even if the vehicle is not actually drifting
+        float endDriftTime; // Time during which drifting counts even if the vehicle is not actually drifting
         float jumpDist;
         float jumpTime;
         Vector3 jumpStart;
@@ -31,11 +31,11 @@ namespace RVP
         public bool detectJump = true;
         public bool detectFlips = true;
 
-        string driftString;//String indicating drift distance
-        string jumpString;//String indicating jump distance
-        string flipString;//String indicating flips
+        string driftString; // String indicating drift distance
+        string jumpString; // String indicating jump distance
+        string flipString; // String indicating flips
         [System.NonSerialized]
-        public string stuntString;//String containing all stunts
+        public string stuntString; // String containing all stunts
 
         public Motor engine;
 
@@ -46,7 +46,7 @@ namespace RVP
         }
 
         void FixedUpdate() {
-            //Detect drifts
+            // Detect drifts
             if (detectDrift && !vp.crashing) {
                 DetectDrift();
             }
@@ -57,7 +57,7 @@ namespace RVP
                 driftString = "";
             }
 
-            //Detect jumps
+            // Detect jumps
             if (detectJump && !vp.crashing) {
                 DetectJump();
             }
@@ -67,7 +67,7 @@ namespace RVP
                 jumpString = "";
             }
 
-            //Detect flips
+            // Detect flips
             if (detectFlips && !vp.crashing) {
                 DetectFlips();
             }
@@ -76,11 +76,11 @@ namespace RVP
                 flipString = "";
             }
 
-            //Combine strings into final stunt string
+            // Combine strings into final stunt string
             stuntString = vp.crashing ? "Crashed" : driftString + jumpString + (string.IsNullOrEmpty(flipString) || string.IsNullOrEmpty(jumpString) ? "" : " + ") + flipString;
         }
 
-        //Logic for detecting and tracking drift
+        // Logic for detecting and tracking drift
         void DetectDrift() {
             endDriftTime = vp.groundedWheels > 0 ? (Mathf.Abs(vp.localVelocity.x) > 5 ? StuntManager.driftConnectDelayStatic : Mathf.Max(0, endDriftTime - Time.timeScale * TimeMaster.inverseFixedTimeFactor)) : 0;
             drifting = endDriftTime > 0;
@@ -102,7 +102,7 @@ namespace RVP
             }
         }
 
-        //Logic for detecting and tracking jumps
+        // Logic for detecting and tracking jumps
         void DetectJump() {
             if (vp.groundedWheels == 0) {
                 jumpDist = Vector3.Distance(jumpStart, tr.position);
@@ -127,10 +127,10 @@ namespace RVP
             }
         }
 
-        //Logic for detecting and tracking flips
+        // Logic for detecting and tracking flips
         void DetectFlips() {
             if (vp.groundedWheels == 0) {
-                //Check to see if vehicle is performing a stunt and add it to the stunts list
+                // Check to see if vehicle is performing a stunt and add it to the stunts list
                 foreach (Stunt curStunt in StuntManager.stuntsStatic) {
                     if (Vector3.Dot(vp.localAngularVel.normalized, curStunt.rotationAxis) >= curStunt.precision) {
                         bool stuntExists = false;
@@ -148,7 +148,7 @@ namespace RVP
                     }
                 }
 
-                //Check the progress of stunts and compile the flip string listing all stunts
+                // Check the progress of stunts and compile the flip string listing all stunts
                 foreach (Stunt curStunt2 in stunts) {
                     if (Vector3.Dot(vp.localAngularVel.normalized, curStunt2.rotationAxis) >= curStunt2.precision) {
                         curStunt2.progress += rb.angularVelocity.magnitude * Time.fixedDeltaTime;
@@ -179,11 +179,11 @@ namespace RVP
                 }
             }
             else {
-                //Add stunt points to the score
+                // Add stunt points to the score
                 foreach (Stunt curStunt in stunts) {
                     score += curStunt.progress * Mathf.Rad2Deg * curStunt.scoreRate * Mathf.FloorToInt((curStunt.progress * Mathf.Rad2Deg) / curStunt.angleThreshold) * curStunt.multiplier;
 
-                    //Add boost to the engine
+                    // Add boost to the engine
                     if (engine) {
                         engine.boost += curStunt.progress * Mathf.Rad2Deg * curStunt.boostAdd * curStunt.multiplier * 0.01f;
                     }

@@ -4,11 +4,11 @@ using System.Collections;
 namespace RVP
 {
 
-    //Static class with extra gizmo drawing functions
+    // Static class with extra gizmo drawing functions
     public static class GizmosExtra
     {
-        //Draws a wire cylinder like DrawWireCube and DrawWireSphere
-        //pos = position, dir = direction of the caps, radius = radius, height = height or length
+        // Draws a wire cylinder like DrawWireCube and DrawWireSphere
+        // pos = position, dir = direction of the caps, radius = radius, height = height or length
         public static void DrawWireCylinder(Vector3 pos, Vector3 dir, float radius, float height) {
             float halfHeight = height * 0.5f;
             Quaternion quat = Quaternion.LookRotation(dir, new Vector3(-dir.y, dir.x, 0));

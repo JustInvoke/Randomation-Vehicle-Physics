@@ -8,7 +8,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Ground Surface/Terrain Surface", 2)]
 
-    //Class for associating terrain textures with ground surface types
+    // Class for associating terrain textures with ground surface types
     public class TerrainSurface : MonoBehaviour
     {
         Transform tr;
@@ -23,7 +23,7 @@ namespace RVP
             if (GetComponent<Terrain>().terrainData) {
                 terDat = GetComponent<Terrain>().terrainData;
 
-                //Set frictions for each surface type
+                // Set frictions for each surface type
                 if (Application.isPlaying) {
                     UpdateAlphamaps();
                     frictions = new float[surfaceTypes.Length];
@@ -50,12 +50,12 @@ namespace RVP
             }
         }
 
-        //Updates the terrain alphamaps
+        // Updates the terrain alphamaps
         public void UpdateAlphamaps() {
             terrainAlphamap = terDat.GetAlphamaps(0, 0, terDat.alphamapWidth, terDat.alphamapHeight);
         }
 
-        //Calculate the number of surface types based on the terrain layers
+        // Calculate the number of surface types based on the terrain layers
         void ChangeSurfaceTypesLength() {
             int[] tempVals = surfaceTypes;
 
@@ -71,7 +71,7 @@ namespace RVP
             }
         }
 
-        //Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
+        // Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
         public int GetDominantSurfaceTypeAtPoint(Vector3 pos) {
             if (surfaceTypes.Length == 0) { return 0; }
 
@@ -93,7 +93,7 @@ namespace RVP
             return surfaceTypes[maxIndex];
         }
 
-        //Gets the friction of the indicated surface type
+        // Gets the friction of the indicated surface type
         public float GetFriction(int sType) {
             float returnedFriction = 1;
 

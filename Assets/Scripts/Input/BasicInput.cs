@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Input/Basic Input", 0)]
 
-    //Class for setting the input with the input manager
+    // Class for setting the input with the input manager
     public class BasicInput : MonoBehaviour
     {
         VehicleParent vp;
@@ -27,7 +27,7 @@ namespace RVP
         }
 
         void Update() {
-            //Get single-frame input presses
+            // Get single-frame input presses
             if (!string.IsNullOrEmpty(upshiftButton)) {
                 if (Input.GetButtonDown(upshiftButton)) {
                     vp.PressUpshift();
@@ -42,7 +42,7 @@ namespace RVP
         }
 
         void FixedUpdate() {
-            //Get constant inputs
+            // Get constant inputs
             if (!string.IsNullOrEmpty(accelAxis)) {
                 vp.SetAccel(Input.GetAxis(accelAxis));
             }

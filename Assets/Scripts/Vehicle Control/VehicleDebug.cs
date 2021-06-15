@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Vehicle Controllers/Vehicle Debug", 3)]
 
-    //Class for easily resetting vehicles
+    // Class for easily resetting vehicles
     public class VehicleDebug : MonoBehaviour
     {
         public Vector3 spawnPos;
@@ -25,7 +25,7 @@ namespace RVP
             }
         }
 
-        //This waits for the next fixed update before resetting the rotation of the vehicle
+        // This waits for the next fixed update before resetting the rotation of the vehicle
         IEnumerator ResetRotation() {
             if (GetComponent<VehicleDamage>()) {
                 GetComponent<VehicleDamage>().Repair();
@@ -38,7 +38,7 @@ namespace RVP
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         }
 
-        //This waits for the next fixed update before resetting the position of the vehicle
+        // This waits for the next fixed update before resetting the position of the vehicle
         IEnumerator ResetPosition() {
             if (GetComponent<VehicleDamage>()) {
                 GetComponent<VehicleDamage>().Repair();

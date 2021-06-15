@@ -7,7 +7,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Damage/Shatter Part", 2)]
 
-    //Class for parts that shatter
+    // Class for parts that shatter
     public class ShatterPart : MonoBehaviour
     {
         [System.NonSerialized]
@@ -31,6 +31,7 @@ namespace RVP
             }
         }
 
+        // Shatter the part
         public void Shatter() {
             if (!shattered) {
                 shattered = true;

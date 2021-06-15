@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Drivetrain/Transmission/Gearbox Transmission", 0)]
 
-    //Transmission subclass for gearboxes
+    // Transmission subclass for gearboxes
     public class GearboxTransmission : Transmission
     {
         public Gear[] gears;
@@ -15,7 +15,7 @@ namespace RVP
         public int currentGear;
         int firstGear;
         [System.NonSerialized]
-        public float curGearRatio;//Ratio of the current gear
+        public float curGearRatio; // Ratio of the current gear
 
         public bool skipNeutral;
 
@@ -27,10 +27,10 @@ namespace RVP
         [System.NonSerialized]
         public float shiftTime;
 
-        Gear upperGear;//Next gear above current
-        Gear lowerGear;//Next gear below current
-        float upshiftDifference;//RPM difference between current gear and upper gear
-        float downshiftDifference;//RPM difference between current gear and lower gear
+        Gear upperGear; // Next gear above current
+        Gear lowerGear; // Next gear below current
+        float upshiftDifference; // RPM difference between current gear and upper gear
+        float downshiftDifference; // RPM difference between current gear and lower gear
 
         [Tooltip("Multiplier for comparisons in automatic shifting calculations, should be 2 in most cases")]
         public float shiftThreshold;
@@ -40,12 +40,12 @@ namespace RVP
 
             currentGear = Mathf.Clamp(startGear, 0, gears.Length - 1);
 
-            //Get gear number 1 (first one above neutral)
+            // Get gear number 1 (first one above neutral)
             GetFirstGear();
         }
 
         void Update() {
-            //Check for manual shift button presses
+            // Check for manual shift button presses
             if (!automatic) {
                 if (vp.upshiftPressed && currentGear < gears.Length - 1) {
                     Shift(1);
@@ -62,7 +62,7 @@ namespace RVP
             shiftTime = Mathf.Max(0, shiftTime - Time.timeScale * TimeMaster.inverseFixedTimeFactor);
             curGearRatio = gears[currentGear].ratio;
 
-            //Calculate upperGear and lowerGear
+            // Calculate upperGear and lowerGear
             float actualFeedbackRPM = targetDrive.feedbackRPM / Mathf.Abs(curGearRatio);
             int upGearOffset = 1;
             int downGearOffset = 1;
@@ -78,7 +78,7 @@ namespace RVP
             upperGear = gears[Mathf.Min(gears.Length - 1, currentGear + upGearOffset)];
             lowerGear = gears[Mathf.Max(0, currentGear - downGearOffset)];
 
-            //Perform RPM calculations
+            // Perform RPM calculations
             if (maxRPM == -1) {
                 maxRPM = targetDrive.curve.keys[targetDrive.curve.length - 1].time;
 
@@ -87,7 +87,7 @@ namespace RVP
                 }
             }
 
-            //Set RPMs and torque of output
+            // Set RPMs and torque of output
             newDrive.curve = targetDrive.curve;
 
             if (curGearRatio == 0 || shiftTime > 0) {
@@ -99,7 +99,7 @@ namespace RVP
                 newDrive.torque = Mathf.Abs(curGearRatio) * targetDrive.torque;
             }
 
-            //Perform automatic shifting
+            // Perform automatic shifting
             upshiftDifference = gears[currentGear].maxRPM - upperGear.minRPM;
             downshiftDifference = lowerGear.maxRPM - gears[currentGear].minRPM;
 
@@ -121,7 +121,7 @@ namespace RVP
                     }
                 }
                 else if (currentGear != firstGear) {
-                    //Shift into first gear if skid steering or burning out
+                    // Shift into first gear if skid steering or burning out
                     ShiftToGear(firstGear);
                 }
             }
@@ -129,7 +129,7 @@ namespace RVP
             SetOutputDrives(curGearRatio);
         }
 
-        //Shift gears by the number entered
+        // Shift gears by the number entered
         public void Shift(int dir) {
             if (health > 0) {
                 shiftTime = shiftDelay;
@@ -143,7 +143,7 @@ namespace RVP
             }
         }
 
-        //Shift straight to the gear specified
+        // Shift straight to the gear specified
         public void ShiftToGear(int gear) {
             if (health > 0) {
                 shiftTime = shiftDelay;
@@ -151,7 +151,7 @@ namespace RVP
             }
         }
 
-        //Caculate ideal RPM ranges for each gear (works most of the time)
+        // Caculate ideal RPM ranges for each gear (works most of the time)
         public void CalculateRpmRanges() {
             bool cantCalc = false;
             if (!Application.isPlaying) {
@@ -206,7 +206,7 @@ namespace RVP
             }
         }
 
-        //Returns the first gear (first gear above neutral)
+        // Returns the first gear (first gear above neutral)
         public void GetFirstGear() {
             for (int i = 0; i < gears.Length; i++) {
                 if (gears[i].ratio == 0) {
@@ -217,7 +217,7 @@ namespace RVP
         }
     }
 
-    //Gear class
+    // Gear class
     [System.Serializable]
     public class Gear
     {

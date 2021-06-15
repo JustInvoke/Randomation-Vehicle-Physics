@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/AI/Vehicle Waypoint", 1)]
 
-    //Class for vehicle waypoints
+    // Class for vehicle waypoints
     public class VehicleWaypoint : MonoBehaviour
     {
         public VehicleWaypoint nextPoint;
@@ -17,11 +17,11 @@ namespace RVP
         public float speed = 1;
 
         void OnDrawGizmos() {
-            //Visualize waypoint
+            // Visualize waypoint
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, radius);
 
-            //Draw line to next point
+            // Draw line to next point
             if (nextPoint) {
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawLine(transform.position, nextPoint.transform.position);

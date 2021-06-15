@@ -8,7 +8,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Drivetrain/Wheel", 1)]
 
-    //Class for the wheel
+    // Class for the wheel
     public class Wheel : MonoBehaviour
     {
         [System.NonSerialized]
@@ -25,8 +25,8 @@ namespace RVP
 
         [Tooltip("Generate a sphere collider to represent the wheel for side collisions")]
         public bool generateHardCollider = true;
-        SphereCollider sphereCol;//Hard collider
-        Transform sphereColTr;//Hard collider transform
+        SphereCollider sphereCol; // Hard collider
+        Transform sphereColTr; // Hard collider transform
 
         [Header("Rotation")]
 
@@ -142,27 +142,27 @@ namespace RVP
         [System.NonSerialized]
         public DriveForce targetDrive;
         [System.NonSerialized]
-        public float rawRPM;//RPM based purely on velocity
+        public float rawRPM; // RPM based purely on velocity
         [System.NonSerialized]
         public WheelContact contactPoint = new WheelContact();
         [System.NonSerialized]
-        public bool getContact = true;//Should the wheel try to get contact info?
+        public bool getContact = true; // Should the wheel try to get contact info?
         [System.NonSerialized]
         public bool grounded;
         float airTime;
         [System.NonSerialized]
         public float travelDist;
-        Vector3 upDir;//Up direction
+        Vector3 upDir; // Up direction
         float circumference;
 
         [System.NonSerialized]
-        public Vector3 contactVelocity;//Velocity of contact point
+        public Vector3 contactVelocity; // Velocity of contact point
         float actualEbrake;
         float actualTargetRPM;
         float actualTorque;
 
         [System.NonSerialized]
-        public Vector3 forceApplicationPoint;//Point at which friction forces are applied
+        public Vector3 forceApplicationPoint; // Point at which friction forces are applied
 
         [Tooltip("Apply friction forces at ground point")]
         public bool applyForceAtGroundContact;
@@ -186,8 +186,8 @@ namespace RVP
         [System.NonSerialized]
         public bool connected = true;
 
-        public Mesh tireMeshLoose;//Tire mesh for detached wheel collider
-        public Mesh rimMeshLoose;//Rim mesh for detached wheel collider
+        public Mesh tireMeshLoose; // Tire mesh for detached wheel collider
+        public Mesh rimMeshLoose; // Rim mesh for detached wheel collider
         GameObject detachedWheel;
         GameObject detachedTire;
         MeshCollider detachedCol;
@@ -207,17 +207,17 @@ namespace RVP
             initialTirePressure = tirePressure;
 
             if (tr.childCount > 0) {
-                //Get rim
+                // Get rim
                 rim = tr.GetChild(0);
 
-                //Set up rim glow material
+                // Set up rim glow material
                 if (rimGlow > 0 && Application.isPlaying) {
                     rimMat = new Material(rim.GetComponent<MeshRenderer>().sharedMaterial);
                     rimMat.EnableKeyword("_EMISSION");
                     rim.GetComponent<MeshRenderer>().material = rimMat;
                 }
 
-                //Create detached wheel
+                // Create detached wheel
                 if (canDetach) {
                     detachedWheel = new GameObject(vp.transform.name + "'s Detached Wheel");
                     detachedWheel.layer = LayerMask.NameToLayer("Detachable Part");
@@ -231,7 +231,7 @@ namespace RVP
                     detachedBody.mass = mass;
                 }
 
-                //Get tire
+                // Get tire
                 if (rim.childCount > 0) {
                     tire = rim.GetChild(0);
                     if (deformAmount > 0 && Application.isPlaying) {
@@ -239,7 +239,7 @@ namespace RVP
                         tire.GetComponent<MeshRenderer>().material = tireMat;
                     }
 
-                    //Create detached tire
+                    // Create detached tire
                     if (canDetach) {
                         detachedTire = new GameObject("Detached Tire");
                         detachedTire.transform.parent = detachedWheel.transform;
@@ -253,7 +253,7 @@ namespace RVP
                 }
 
                 if (Application.isPlaying) {
-                    //Generate hard collider
+                    // Generate hard collider
                     if (generateHardCollider) {
                         GameObject sphereColNew = new GameObject("Rim Collider");
                         sphereColNew.layer = GlobalControl.ignoreWheelCastLayer;
@@ -282,7 +282,7 @@ namespace RVP
             circumference = Mathf.PI * actualRadius * 2;
             localVel = rb.GetPointVelocity(forceApplicationPoint);
 
-            //Get proper inputs
+            // Get proper inputs
             actualEbrake = suspensionParent.ebrakeEnabled ? suspensionParent.ebrakeForce : 0;
             actualTargetRPM = targetDrive.rpm * (suspensionParent.driveInverted ? -1 : 1);
             actualTorque = suspensionParent.driveEnabled ? Mathf.Lerp(targetDrive.torque, Mathf.Abs(vp.accelInput), vp.burnout) : 0;
@@ -307,13 +307,13 @@ namespace RVP
                 targetDrive.feedbackRPM = 0;
             }
 
-            //Get travel distance
+            // Get travel distance
             travelDist = suspensionParent.compression < travelDist || grounded ? suspensionParent.compression : Mathf.Lerp(travelDist, suspensionParent.compression, suspensionParent.extendSpeed * Time.fixedDeltaTime);
 
             PositionWheel();
 
             if (connected) {
-                //Update hard collider size upon changed radius or width
+                // Update hard collider size upon changed radius or width
                 if (generateHardCollider) {
                     setRimWidth = rimWidth;
                     setRimRadius = rimRadius;
@@ -342,12 +342,12 @@ namespace RVP
                 GetSlip();
                 ApplyFriction();
 
-                //Burnout spinning
+                // Burnout spinning
                 if (vp.burnout > 0 && targetDrive.rpm != 0 && actualEbrake * vp.ebrakeInput == 0 && connected && grounded) {
                     rb.AddForceAtPosition(suspensionParent.forwardDir * -suspensionParent.flippedSideFactor * (vp.steerInput * vp.burnoutSpin * currentRPM * Mathf.Min(0.1f, targetDrive.torque) * 0.001f) * vp.burnout * (popped ? 0.5f : 1) * contactPoint.surfaceFriction, suspensionParent.tr.position, vp.wheelForceMode);
                 }
 
-                //Popping logic
+                // Popping logic
                 setPopped = popped;
 
                 if (poppedPrev != setPopped) {
@@ -363,7 +363,7 @@ namespace RVP
 
                 poppedPrev = setPopped;
 
-                //Air leak logic
+                // Air leak logic
                 if (airLeakTime >= 0) {
                     tirePressure = Mathf.Clamp01(tirePressure - Time.fixedDeltaTime * 0.5f);
 
@@ -391,10 +391,10 @@ namespace RVP
                 PositionWheel();
             }
             else {
-                //Update tire and rim materials
+                // Update tire and rim materials
                 if (deformAmount > 0 && tireMat && connected) {
                     if (tireMat.HasProperty("_DeformNormal")) {
-                        //Deform tire (requires deform shader)
+                        // Deform tire (requires deform shader)
                         Vector3 deformNormal = grounded ? contactPoint.normal * Mathf.Max(-suspensionParent.penetration * (1 - suspensionParent.compression) * 10, 1 - tirePressure) * deformAmount : Vector3.zero;
                         tireMat.SetVector("_DeformNormal", new Vector4(deformNormal.x, deformNormal.y, deformNormal.z, 0));
                     }
@@ -402,7 +402,7 @@ namespace RVP
 
                 if (rimMat) {
                     if (rimMat.HasProperty("_EmissionColor")) {
-                        //Make the rim glow
+                        // Make the rim glow
                         float targetGlow = connected && GroundSurfaceMaster.surfaceTypesStatic[contactPoint.surfaceType].leaveSparks ? Mathf.Abs(F.MaxAbs(forwardSlip, sidewaysSlip)) : 0;
                         glowAmount = popped ? Mathf.Lerp(glowAmount, targetGlow, (targetGlow > glowAmount ? 2 : 0.2f) * Time.deltaTime) : 0;
                         glowColor = new Color(glowAmount, glowAmount * 0.5f, 0);
@@ -412,7 +412,7 @@ namespace RVP
             }
         }
 
-        //Use raycasting to find the current contact point for the wheel
+        // Use raycasting to find the current contact point for the wheel
         void GetWheelContact() {
             float castDist = Mathf.Max(suspensionParent.suspensionDistance * Mathf.Max(0.001f, suspensionParent.targetCompression) + actualRadius, 0.001f);
             RaycastHit[] wheelHits = Physics.RaycastAll(suspensionParent.maxCompressPoint, suspensionParent.springDirection, castDist, GlobalControl.wheelCastMaskStatic);
@@ -422,7 +422,7 @@ namespace RVP
             float hitDist = Mathf.Infinity;
 
             if (connected) {
-                //Loop through raycast hits to find closest one
+                // Loop through raycast hits to find closest one
                 for (int i = 0; i < wheelHits.Length; i++) {
                     if (!wheelHits[i].transform.IsChildOf(vp.tr) && wheelHits[i].distance < hitDist) {
                         hitIndex = i;
@@ -435,7 +435,7 @@ namespace RVP
                 validHit = false;
             }
 
-            //Set contact point variables
+            // Set contact point variables
             if (validHit) {
                 hit = wheelHits[hitIndex];
 
@@ -494,7 +494,7 @@ namespace RVP
             }
         }
 
-        //Calculate what the RPM of the wheel would be based purely on its velocity
+        // Calculate what the RPM of the wheel would be based purely on its velocity
         void GetRawRPM() {
             if (grounded) {
                 rawRPM = (contactPoint.relativeVelocity.x / circumference) * (Mathf.PI * 100) * -suspensionParent.flippedSideFactor;
@@ -504,7 +504,7 @@ namespace RVP
             }
         }
 
-        //Calculate the current slip amount
+        // Calculate the current slip amount
         void GetSlip() {
             if (grounded) {
                 sidewaysSlip = (contactPoint.relativeVelocity.z * 0.1f) / sidewaysCurveStretch;
@@ -516,7 +516,7 @@ namespace RVP
             }
         }
 
-        //Apply actual forces to rigidbody based on wheel simulation
+        // Apply actual forces to rigidbody based on wheel simulation
         void ApplyFriction() {
             if (grounded) {
                 float forwardSlipFactor = (int)slipDependence == 0 || (int)slipDependence == 1 ? forwardSlip - sidewaysSlip : forwardSlip;
@@ -534,19 +534,19 @@ namespace RVP
                 frictionForce = Vector3.Lerp(frictionForce, targetForce * targetForceMultiplier, 1 - frictionSmoothness);
                 rb.AddForceAtPosition(frictionForce, forceApplicationPoint, vp.wheelForceMode);
 
-                //If resting on a rigidbody, apply opposing force to it
+                // If resting on a rigidbody, apply opposing force to it
                 if (contactPoint.col.attachedRigidbody) {
                     contactPoint.col.attachedRigidbody.AddForceAtPosition(-frictionForce, contactPoint.point, vp.wheelForceMode);
                 }
             }
         }
 
-        //Do torque and RPM calculations/simulation
+        // Do torque and RPM calculations/simulation
         void ApplyDrive() {
             float brakeForce = 0;
             float brakeCheckValue = suspensionParent.skidSteerBrake ? vp.localAngularVel.y : vp.localVelocity.z;
 
-            //Set brake force
+            // Set brake force
             if (vp.brakeIsReverse) {
                 if (brakeCheckValue > 0) {
                     brakeForce = suspensionParent.brakeForce * vp.brakeInput;
@@ -565,7 +565,7 @@ namespace RVP
                 brakeForce *= (1 - vp.burnout);
             }
 
-            //Set final RPM
+            // Set final RPM
             if (!suspensionParent.jammed && connected) {
                 bool validTorque = (!(Mathf.Approximately(actualTorque, 0) && Mathf.Abs(actualTargetRPM) < 0.01f) && !Mathf.Approximately(actualTargetRPM, 0)) || brakeForce + actualEbrake * vp.ebrakeInput > 0;
 
@@ -583,13 +583,13 @@ namespace RVP
             }
         }
 
-        //Extra method for evaluating torque to make the ApplyDrive method more readable
+        // Extra method for evaluating torque to make the ApplyDrive method more readable
         float EvaluateTorque(float t) {
             float torque = Mathf.Lerp(rpmBiasCurve.Evaluate(t), t, rawRPM / (rpmBiasCurveLimit * Mathf.Sign(actualTargetRPM)));
             return torque;
         }
 
-        //Visual wheel positioning
+        // Visual wheel positioning
         void PositionWheel() {
             if (suspensionParent) {
                 rim.position = suspensionParent.maxCompressPoint + suspensionParent.springDirection * suspensionParent.suspensionDistance * (Application.isPlaying ? travelDist : suspensionParent.targetCompression) +
@@ -603,7 +603,7 @@ namespace RVP
             }
         }
 
-        //Visual wheel rotation
+        // Visual wheel rotation
         void RotateWheel() {
             if (tr && suspensionParent) {
                 float ackermannVal = Mathf.Sign(suspensionParent.steerAngle) == suspensionParent.flippedSideFactor ? 1 + suspensionParent.ackermannFactor : 1 - suspensionParent.ackermannFactor;
@@ -628,7 +628,7 @@ namespace RVP
             }
         }
 
-        //Begin deflating the tire/leaking air
+        // Begin deflating the tire/leaking air
         public void Deflate() {
             airLeakTime = 0;
 
@@ -644,7 +644,7 @@ namespace RVP
             airLeakTime = -1;
         }
 
-        //Detach the wheel from the vehicle
+        // Detach the wheel from the vehicle
         public void Detach() {
             if (connected && canDetach) {
                 connected = false;
@@ -673,7 +673,7 @@ namespace RVP
             }
         }
 
-        //Automatically sets wheel dimensions based on rim/tire meshes
+        // Automatically sets wheel dimensions based on rim/tire meshes
         public void GetWheelDimensions(float radiusMargin, float widthMargin) {
             Mesh rimMesh = null;
             Mesh tireMesh = null;
@@ -739,7 +739,7 @@ namespace RVP
             }
         }
 
-        //Attach the wheel back onto its vehicle if detached
+        // Attach the wheel back onto its vehicle if detached
         public void Reattach() {
             if (!connected) {
                 connected = true;
@@ -753,15 +753,15 @@ namespace RVP
             }
         }
 
-        //visualize wheel
+        // visualize wheel
         void OnDrawGizmosSelected() {
             tr = transform;
 
             if (tr.childCount > 0) {
-                //Rim is the first child of this object
+                // Rim is the first child of this object
                 rim = tr.GetChild(0);
 
-                //Tire mesh should be first child of rim
+                // Tire mesh should be first child of rim
                 if (rim.childCount > 0) {
                     tire = rim.GetChild(0);
                 }
@@ -787,7 +787,7 @@ namespace RVP
             GizmosExtra.DrawWireCylinder(rim.position, rim.forward, rimRadius, rimWidth * 2);
         }
 
-        //Destroy detached wheel
+        // Destroy detached wheel
         void OnDestroy() {
             if (Application.isPlaying) {
                 if (detachedWheel) {
@@ -798,16 +798,16 @@ namespace RVP
     }
 
 
-    //Contact point class
+    // Contact point class
     public class WheelContact
     {
-        public bool grounded;//Is the contact point grounded?
-        public Collider col;//The collider of the contact point
-        public Vector3 point;//The position of the contact point
-        public Vector3 normal;//The normal of the contact point
-        public Vector3 relativeVelocity;//Relative velocity between the wheel and the contact point object
-        public float distance;//Distance from the suspension to the contact point minus the wheel radius
-        public float surfaceFriction;//Friction of the contact surface
-        public int surfaceType;//The surface type identified by the surface types array of GroundSurfaceMaster
+        public bool grounded; // Is the contact point grounded?
+        public Collider col; // The collider of the contact point
+        public Vector3 point; // The position of the contact point
+        public Vector3 normal; // The normal of the contact point
+        public Vector3 relativeVelocity; // Relative velocity between the wheel and the contact point object
+        public float distance; // Distance from the suspension to the contact point minus the wheel radius
+        public float surfaceFriction; // Friction of the contact surface
+        public int surfaceType; // The surface type identified by the surface types array of GroundSurfaceMaster
     }
 }

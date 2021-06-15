@@ -6,7 +6,7 @@ namespace RVP
     [DisallowMultipleComponent]
     [AddComponentMenu("RVP/Drivetrain/Transmission/Continuous Transmission", 1)]
 
-    //Transmission subclass for continuously variable transmission
+    // Transmission subclass for continuously variable transmission
     public class ContinuousTransmission : Transmission
     {
         [Tooltip("Lerp value between min ratio and max ratio")]
@@ -26,18 +26,18 @@ namespace RVP
         void FixedUpdate() {
             health = Mathf.Clamp01(health);
 
-            //Set max RPM possible
+            // Set max RPM possible
             if (maxRPM == -1) {
                 maxRPM = targetDrive.curve.keys[targetDrive.curve.length - 1].time * 1000;
             }
 
             if (health > 0) {
                 if (automatic && vp.groundedWheels > 0) {
-                    //Automatically set the target ratio
+                    // Automatically set the target ratio
                     targetRatio = (1 - vp.burnout) * Mathf.Clamp01(Mathf.Abs(targetDrive.feedbackRPM) / Mathf.Max(0.01f, maxRPM * Mathf.Abs(currentRatio)));
                 }
                 else if (!automatic) {
-                    //Manually set the target ratio
+                    // Manually set the target ratio
                     targetRatio = Mathf.Clamp01(targetRatio + (vp.upshiftHold - vp.downshiftHold) * manualShiftRate * Time.deltaTime);
                 }
             }

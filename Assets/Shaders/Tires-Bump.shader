@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-
 Shader "Tires Bumped"
 {
 	Properties
@@ -56,7 +54,7 @@ Shader "Tires Bumped"
 		sampler2D _DeformMap;
 		float4 _DeformNormal;
 				    
-		//The deformation
+		// The deformation
 		void vert (inout appdata_full v)
 		{
 			float4 tex = tex2Dlod (_DeformMap, float4(v.texcoord.xy,0,0));
