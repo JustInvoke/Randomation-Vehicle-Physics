@@ -34,12 +34,10 @@ namespace RVP
         [System.NonSerialized]
         public Vector3 displacedAnchor;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
 
-            if (tr.parent)
-            {
+            if (tr.parent) {
                 initialParent = tr.parent;
                 initialLocalPos = tr.localPosition;
                 initialLocalRot = tr.localRotation;
@@ -49,22 +47,17 @@ namespace RVP
             initialPos = tr.localPosition;
         }
 
-        void Update()
-        {
-            if (hinge)
-            {
+        void Update() {
+            if (hinge) {
                 //Destory hinge if displaced too far from original position
-                if ((initialAnchor - displacedAnchor).sqrMagnitude > 0.1f)
-                {
+                if ((initialAnchor - displacedAnchor).sqrMagnitude > 0.1f) {
                     Destroy(hinge);
                 }
             }
         }
 
-        public void Detach(bool makeJoint)
-        {
-            if (!detached)
-            {
+        public void Detach(bool makeJoint) {
+            if (!detached) {
                 detached = true;
                 tr.parent = null;
                 rb = gameObject.AddComponent<Rigidbody>();
@@ -72,15 +65,13 @@ namespace RVP
                 rb.drag = drag;
                 rb.angularDrag = angularDrag;
 
-                if (parentBody)
-                {
+                if (parentBody) {
                     parentBody.mass -= mass;
                     rb.velocity = parentBody.GetPointVelocity(tr.position);
                     rb.angularVelocity = parentBody.angularVelocity;
 
                     //Pick a random hinge joint to use
-                    if (makeJoint && joints.Length > 0)
-                    {
+                    if (makeJoint && joints.Length > 0) {
                         PartJoint chosenJoint = joints[Random.Range(0, joints.Length)];
                         initialAnchor = chosenJoint.hingeAnchor;
                         displacedAnchor = initialAnchor;
@@ -113,45 +104,36 @@ namespace RVP
             }
         }
 
-        public void Reattach()
-        {
-            if (detached)
-            {
+        public void Reattach() {
+            if (detached) {
                 detached = false;
                 tr.parent = initialParent;
                 tr.localPosition = initialLocalPos;
                 tr.localRotation = initialLocalRot;
 
-                if (parentBody)
-                {
+                if (parentBody) {
                     parentBody.mass += mass;
                 }
 
-                if (hinge)
-                {
+                if (hinge) {
                     Destroy(hinge);
                 }
 
-                if (rb)
-                {
+                if (rb) {
                     Destroy(rb);
                 }
             }
         }
 
         //Draw joint gizmos
-        void OnDrawGizmosSelected()
-        {
-            if (!tr)
-            {
+        void OnDrawGizmosSelected() {
+            if (!tr) {
                 tr = transform;
             }
 
-            if (looseForce >= 0 && joints.Length > 0)
-            {
+            if (looseForce >= 0 && joints.Length > 0) {
                 Gizmos.color = Color.red;
-                foreach (PartJoint curJoint in joints)
-                {
+                foreach (PartJoint curJoint in joints) {
                     Gizmos.DrawRay(tr.TransformPoint(curJoint.hingeAnchor), tr.TransformDirection(curJoint.hingeAxis).normalized * 0.2f);
                     Gizmos.DrawWireSphere(tr.TransformPoint(curJoint.hingeAnchor), 0.02f);
                 }

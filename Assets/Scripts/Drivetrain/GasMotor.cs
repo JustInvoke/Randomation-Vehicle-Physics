@@ -40,16 +40,14 @@ namespace RVP
         [Tooltip("Increase sound pitch between shifts")]
         public bool pitchIncreaseBetweenShift;
 
-        public override void Start()
-        {
+        public override void Start() {
             base.Start();
             targetDrive = GetComponent<DriveForce>();
             //Get maximum possible RPM
             GetMaxRPM();
         }
 
-        public override void FixedUpdate()
-        {
+        public override void FixedUpdate() {
             base.FixedUpdate();
 
             //Calculate proper input
@@ -58,29 +56,24 @@ namespace RVP
             actualInput = inputCurve.Evaluate(Mathf.Abs(accelGet)) * Mathf.Sign(accelGet);
             targetDrive.curve = torqueCurve;
 
-            if (ignition)
-            {
+            if (ignition) {
                 float boostEval = boostPowerCurve.Evaluate(Mathf.Abs(vp.localVelocity.z));
                 //Set RPM
                 targetDrive.rpm = Mathf.Lerp(targetDrive.rpm, actualInput * maxRPM * 1000 * (boosting ? 1 + boostEval : 1), (1 - inertia) * Time.timeScale);
                 //Set torque
-                if (targetDrive.feedbackRPM > targetDrive.rpm)
-                {
+                if (targetDrive.feedbackRPM > targetDrive.rpm) {
                     targetDrive.torque = 0;
                 }
-                else
-                {
+                else {
                     targetDrive.torque = torqueCurve.Evaluate(targetDrive.feedbackRPM * 0.001f - (boosting ? boostEval : 0)) * Mathf.Lerp(targetDrive.torque, power * Mathf.Abs(System.Math.Sign(actualInput)), (1 - inertia) * Time.timeScale) * (boosting ? 1 + boostEval : 1) * health;
                 }
 
                 //Send RPM and torque through drivetrain
-                if (outputDrives.Length > 0)
-                {
+                if (outputDrives.Length > 0) {
                     float torqueFactor = Mathf.Pow(1f / outputDrives.Length, driveDividePower);
                     float tempRPM = 0;
 
-                    foreach (DriveForce curOutput in outputDrives)
-                    {
+                    foreach (DriveForce curOutput in outputDrives) {
                         tempRPM += curOutput.feedbackRPM;
                         curOutput.SetDrive(targetDrive, torqueFactor);
                     }
@@ -88,40 +81,33 @@ namespace RVP
                     targetDrive.feedbackRPM = tempRPM / outputDrives.Length;
                 }
 
-                if (transmission)
-                {
+                if (transmission) {
                     shifting = transmission.shiftTime > 0;
                 }
-                else
-                {
+                else {
                     shifting = false;
                 }
             }
-            else
-            {
+            else {
                 //If turned off, set RPM and torque to 0 and distribute it through drivetrain
                 targetDrive.rpm = 0;
                 targetDrive.torque = 0;
                 targetDrive.feedbackRPM = 0;
                 shifting = false;
 
-                if (outputDrives.Length > 0)
-                {
-                    foreach (DriveForce curOutput in outputDrives)
-                    {
+                if (outputDrives.Length > 0) {
+                    foreach (DriveForce curOutput in outputDrives) {
                         curOutput.SetDrive(targetDrive);
                     }
                 }
             }
         }
 
-        public override void Update()
-        {
+        public override void Update() {
             //Set audio pitch
-            if (snd && ignition)
-            {
+            if (snd && ignition) {
                 airPitch = vp.groundedWheels > 0 || actualAccel != 0 ? 1 : Mathf.Lerp(airPitch, 0, 0.5f * Time.deltaTime);
-                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ? 
+                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ?
                     (pitchIncreaseBetweenShift ?
                         Mathf.Sin((transmission.shiftTime / transmission.shiftDelay) * Mathf.PI) :
                         Mathf.Min(transmission.shiftDelay, Mathf.Pow(transmission.shiftTime, 2)) / transmission.shiftDelay) :
@@ -133,18 +119,14 @@ namespace RVP
         }
 
         //Calculates the max RPM and propagates its effects
-        public void GetMaxRPM()
-        {
+        public void GetMaxRPM() {
             maxRPM = torqueCurve.keys[torqueCurve.length - 1].time;
 
-            if (outputDrives.Length > 0)
-            {
-                foreach (DriveForce curOutput in outputDrives)
-                {
+            if (outputDrives.Length > 0) {
+                foreach (DriveForce curOutput in outputDrives) {
                     curOutput.curve = targetDrive.curve;
 
-                    if (curOutput.GetComponent<Transmission>())
-                    {
+                    if (curOutput.GetComponent<Transmission>()) {
                         curOutput.GetComponent<Transmission>().ResetMaxRPM();
                     }
                 }

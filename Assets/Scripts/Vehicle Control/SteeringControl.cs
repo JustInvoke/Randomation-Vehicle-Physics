@@ -30,31 +30,26 @@ namespace RVP
         public float rotationOffset;
         float steerRot;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             vp = tr.GetTopmostParentComponent<VehicleParent>();
             steerRot = rotationOffset;
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             float rbSpeed = vp.localVelocity.z / steerCurveStretch;
             float steerLimit = limitSteer ? steerCurve.Evaluate(applyInReverse ? Mathf.Abs(rbSpeed) : rbSpeed) : 1;
             steerAmount = vp.steerInput * steerLimit;
 
             //Set steer angles in wheels
-            foreach (Suspension curSus in steeredWheels)
-            {
+            foreach (Suspension curSus in steeredWheels) {
                 curSus.steerAngle = Mathf.Lerp(curSus.steerAngle, steerAmount * curSus.steerFactor * (curSus.steerEnabled ? 1 : 0) * (curSus.steerInverted ? -1 : 1), steerRate * TimeMaster.inverseFixedTimeFactor * Time.timeScale);
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Visual steering wheel rotation
-            if (rotate)
-            {
+            if (rotate) {
                 steerRot = Mathf.Lerp(steerRot, steerAmount * maxDegreesRotation + rotationOffset, steerRate * Time.timeScale);
                 tr.localEulerAngles = new Vector3(tr.localEulerAngles.x, tr.localEulerAngles.y, steerRot);
             }

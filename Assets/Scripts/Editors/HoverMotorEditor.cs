@@ -14,50 +14,40 @@ namespace RVP
         static bool showButtons = true;
         float topSpeed = 0;
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             GUIStyle boldFoldout = new GUIStyle(EditorStyles.foldout);
             boldFoldout.fontStyle = FontStyle.Bold;
             HoverMotor targetScript = (HoverMotor)target;
             HoverMotor[] allTargets = new HoverMotor[targets.Length];
             isPrefab = F.IsPrefab(targetScript);
 
-            for (int i = 0; i < targets.Length; i++)
-            {
+            for (int i = 0; i < targets.Length; i++) {
                 Undo.RecordObject(targets[i], "Hover Motor Change");
                 allTargets[i] = targets[i] as HoverMotor;
             }
 
             topSpeed = targetScript.forceCurve.keys[targetScript.forceCurve.keys.Length - 1].time;
 
-            if (targetScript.wheels != null)
-            {
-                if (targetScript.wheels.Length == 0)
-                {
+            if (targetScript.wheels != null) {
+                if (targetScript.wheels.Length == 0) {
                     EditorGUILayout.HelpBox("No wheels are assigned.", MessageType.Warning);
                 }
-                else if (targets.Length == 1)
-                {
+                else if (targets.Length == 1) {
                     EditorGUILayout.LabelField("Top Speed (Estimate): " + (topSpeed * 2.23694f).ToString("0.00") + " mph || " + (topSpeed * 3.6f).ToString("0.00") + " km/h", EditorStyles.boldLabel);
                 }
             }
-            else
-            {
+            else {
                 EditorGUILayout.HelpBox("No wheels are assigned.", MessageType.Warning);
             }
 
             DrawDefaultInspector();
 
-            if (!isPrefab && targetScript.gameObject.activeInHierarchy)
-            {
+            if (!isPrefab && targetScript.gameObject.activeInHierarchy) {
                 showButtons = EditorGUILayout.Foldout(showButtons, "Quick Actions", boldFoldout);
                 EditorGUI.indentLevel++;
-                if (showButtons)
-                {
-                    if (GUILayout.Button("Get Wheels"))
-                    {
-                        foreach (HoverMotor curTarget in allTargets)
-                        {
+                if (showButtons) {
+                    if (GUILayout.Button("Get Wheels")) {
+                        foreach (HoverMotor curTarget in allTargets) {
                             curTarget.wheels = curTarget.transform.GetTopmostParentComponent<VehicleParent>().transform.GetComponentsInChildren<HoverWheel>();
                         }
                     }
@@ -65,8 +55,7 @@ namespace RVP
                 EditorGUI.indentLevel--;
             }
 
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorUtility.SetDirty(targetScript);
             }
         }

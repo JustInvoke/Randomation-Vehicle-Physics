@@ -14,24 +14,20 @@ namespace RVP
         float fpsUpdateTime;
         int frames;
 
-        void Update()
-        {
+        void Update() {
             fpsUpdateTime = Mathf.Max(0, fpsUpdateTime - Time.deltaTime);
 
-            if (fpsUpdateTime == 0)
-            {
+            if (fpsUpdateTime == 0) {
                 fpsText.text = "FPS: " + frames.ToString();
                 fpsUpdateTime = 1;
                 frames = 0;
             }
-            else
-            {
+            else {
                 frames++;
             }
         }
 
-        public void Restart()
-        {
+        public void Restart() {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Time.timeScale = 1;
         }

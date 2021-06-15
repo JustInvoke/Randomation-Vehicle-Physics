@@ -24,8 +24,7 @@ namespace RVP
         public bool boost;
 
         //Set screen orientation
-        void Start()
-        {
+        void Start() {
             Screen.autorotateToPortrait = screenRot == ScreenOrientation.Portrait || screenRot == ScreenOrientation.AutoRotation;
             Screen.autorotateToPortraitUpsideDown = screenRot == ScreenOrientation.PortraitUpsideDown || screenRot == ScreenOrientation.AutoRotation;
             Screen.autorotateToLandscapeRight = screenRot == ScreenOrientation.LandscapeRight || screenRot == ScreenOrientation.Landscape || screenRot == ScreenOrientation.AutoRotation;
@@ -34,28 +33,23 @@ namespace RVP
         }
 
         //Input setting functions that can be linked to buttons
-        public void SetAccel(float f)
-        {
+        public void SetAccel(float f) {
             accel = Mathf.Clamp01(f);
         }
 
-        public void SetBrake(float f)
-        {
+        public void SetBrake(float f) {
             brake = Mathf.Clamp01(f);
         }
 
-        public void SetSteer(float f)
-        {
+        public void SetSteer(float f) {
             steer = Mathf.Clamp(f, -1, 1);
         }
 
-        public void SetEbrake(float f)
-        {
+        public void SetEbrake(float f) {
             ebrake = Mathf.Clamp01(f);
         }
 
-        public void SetBoost(bool b)
-        {
+        public void SetBoost(bool b) {
             boost = b;
         }
     }

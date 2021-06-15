@@ -9,8 +9,7 @@ namespace RVP
     {
         //Draws a wire cylinder like DrawWireCube and DrawWireSphere
         //pos = position, dir = direction of the caps, radius = radius, height = height or length
-        public static void DrawWireCylinder(Vector3 pos, Vector3 dir, float radius, float height)
-        {
+        public static void DrawWireCylinder(Vector3 pos, Vector3 dir, float radius, float height) {
             float halfHeight = height * 0.5f;
             Quaternion quat = Quaternion.LookRotation(dir, new Vector3(-dir.y, dir.x, 0));
 
@@ -24,8 +23,7 @@ namespace RVP
             Vector3 circle1Point0;
             Vector3 circle1Point1;
 
-            for (float i = 0; i < 6.28f; i += 0.1f)
-            {
+            for (float i = 0; i < 6.28f; i += 0.1f) {
                 circle0Point0 = pos + quat * new Vector3(Mathf.Sin(i) * radius, Mathf.Cos(i) * radius, halfHeight);
                 circle0Point1 = pos + quat * new Vector3(Mathf.Sin(i + 0.1f) * radius, Mathf.Cos(i + 0.1f) * radius, halfHeight);
                 Gizmos.DrawLine(circle0Point0, circle0Point1);

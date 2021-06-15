@@ -54,121 +54,98 @@ namespace RVP
         float[] initialEmissionRates;
         ParticleSystem.MinMaxCurve zeroEmission = new ParticleSystem.MinMaxCurve(0);
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             w = GetComponent<Wheel>();
 
             initialEmissionRates = new float[debrisParticles.Length + 1];
-            for (int i = 0; i < debrisParticles.Length; i++)
-            {
+            for (int i = 0; i < debrisParticles.Length; i++) {
                 initialEmissionRates[i] = debrisParticles[i].emission.rateOverTime.constantMax;
             }
 
-            if (sparks)
-            {
+            if (sparks) {
                 initialEmissionRates[debrisParticles.Length] = sparks.emission.rateOverTime.constantMax;
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Check for continuous marking
-            if (w.grounded)
-            {
+            if (w.grounded) {
                 alwaysScrape = GroundSurfaceMaster.surfaceTypesStatic[w.contactPoint.surfaceType].alwaysScrape ? slipThreshold + Mathf.Min(0.5f, Mathf.Abs(w.rawRPM * 0.001f)) : 0;
             }
-            else
-            {
+            else {
                 alwaysScrape = 0;
             }
 
             //Create mark
-            if (w.grounded && (Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip)) > slipThreshold || alwaysScrape > 0) && w.connected)
-            {
+            if (w.grounded && (Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip)) > slipThreshold || alwaysScrape > 0) && w.connected) {
                 prevSurface = curSurface;
                 curSurface = w.grounded ? w.contactPoint.surfaceType : -1;
 
                 poppedPrev = popped;
                 popped = w.popped;
 
-                if (!creatingMark)
-                {
+                if (!creatingMark) {
                     prevSurface = curSurface;
                     StartMark();
                 }
-                else if (curSurface != prevSurface || popped != poppedPrev)
-                {
+                else if (curSurface != prevSurface || popped != poppedPrev) {
                     EndMark();
                 }
 
                 //Calculate segment points
-                if (curMark)
-                {
+                if (curMark) {
                     Vector3 pointDir = Quaternion.AngleAxis(90, w.contactPoint.normal) * tr.right * (w.popped ? w.rimWidth : w.tireWidth);
                     leftPoint = curMarkTr.InverseTransformPoint(w.contactPoint.point + pointDir * w.suspensionParent.flippedSideFactor * Mathf.Sign(w.rawRPM) + w.contactPoint.normal * GlobalControl.tireMarkHeightStatic);
                     rightPoint = curMarkTr.InverseTransformPoint(w.contactPoint.point - pointDir * w.suspensionParent.flippedSideFactor * Mathf.Sign(w.rawRPM) + w.contactPoint.normal * GlobalControl.tireMarkHeightStatic);
                 }
             }
-            else if (creatingMark)
-            {
+            else if (creatingMark) {
                 EndMark();
             }
 
             //Update mark if it's short enough, otherwise end it
-            if (curEdge < GlobalControl.tireMarkLengthStatic && creatingMark)
-            {
+            if (curEdge < GlobalControl.tireMarkLengthStatic && creatingMark) {
                 UpdateMark();
             }
-            else if (creatingMark)
-            {
+            else if (creatingMark) {
                 EndMark();
             }
 
             //Set particle emission rates
             ParticleSystem.EmissionModule em;
-            for (int i = 0; i < debrisParticles.Length; i++)
-            {
-                if (w.connected)
-                {
-                    if (i == w.contactPoint.surfaceType)
-                    {
-                        if (GroundSurfaceMaster.surfaceTypesStatic[w.contactPoint.surfaceType].leaveSparks && w.popped)
-                        {
+            for (int i = 0; i < debrisParticles.Length; i++) {
+                if (w.connected) {
+                    if (i == w.contactPoint.surfaceType) {
+                        if (GroundSurfaceMaster.surfaceTypesStatic[w.contactPoint.surfaceType].leaveSparks && w.popped) {
                             em = debrisParticles[i].emission;
                             em.rateOverTime = zeroEmission;
 
-                            if (sparks)
-                            {
+                            if (sparks) {
                                 em = sparks.emission;
                                 em.rateOverTime = new ParticleSystem.MinMaxCurve(initialEmissionRates[debrisParticles.Length] * Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold));
                             }
                         }
-                        else
-                        {
+                        else {
                             em = debrisParticles[i].emission;
                             em.rateOverTime = new ParticleSystem.MinMaxCurve(initialEmissionRates[i] * Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold));
 
-                            if (sparks)
-                            {
+                            if (sparks) {
                                 em = sparks.emission;
                                 em.rateOverTime = zeroEmission;
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         em = debrisParticles[i].emission;
                         em.rateOverTime = zeroEmission;
                     }
                 }
-                else
-                {
+                else {
                     em = debrisParticles[i].emission;
                     em.rateOverTime = zeroEmission;
 
-                    if (sparks)
-                    {
+                    if (sparks) {
                         em = sparks.emission;
                         em.rateOverTime = zeroEmission;
                     }
@@ -177,8 +154,7 @@ namespace RVP
         }
 
         //Start creating a mark
-        void StartMark()
-        {
+        void StartMark() {
             creatingMark = true;
             curMark = new GameObject("Tire Mark");
             curMarkTr = curMark.transform;
@@ -187,12 +163,10 @@ namespace RVP
             MeshRenderer tempRend = curMark.AddComponent<MeshRenderer>();
 
             //Set material based on whether the tire is popped
-            if (w.popped)
-            {
+            if (w.popped) {
                 tempRend.material = rimMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, rimMarkMaterials.Length - 1)];
             }
-            else
-            {
+            else {
                 tempRend.material = tireMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, tireMarkMaterials.Length - 1)];
             }
 
@@ -201,8 +175,7 @@ namespace RVP
             verts = new Vector3[GlobalControl.tireMarkLengthStatic * 2];
             tris = new int[GlobalControl.tireMarkLengthStatic * 3];
 
-            if (continueMark)
-            {
+            if (continueMark) {
                 verts[0] = leftPointPrev;
                 verts[1] = rightPointPrev;
 
@@ -229,10 +202,8 @@ namespace RVP
         }
 
         //Update mark currently being generated
-        void UpdateMark()
-        {
-            if (gapDelay == 0)
-            {
+        void UpdateMark() {
+            if (gapDelay == 0) {
                 float alpha = (curEdge < GlobalControl.tireMarkLengthStatic - 2 && curEdge > 5 ? 1 : 0) *
                     Random.Range(
                         Mathf.Clamp01(Mathf.Abs(F.MaxAbs(w.sidewaysSlip, w.forwardSlip, alwaysScrape)) - slipThreshold) * 0.9f,
@@ -243,8 +214,7 @@ namespace RVP
                 verts[curEdge] = leftPoint;
                 verts[curEdge + 1] = rightPoint;
 
-                for (int i = curEdge + 2; i < verts.Length; i++)
-                {
+                for (int i = curEdge + 2; i < verts.Length; i++) {
                     verts[i] = Mathf.Approximately(i * 0.5f, Mathf.Round(i * 0.5f)) ? leftPoint : rightPoint;
                     colors[i].a = 0;
                 }
@@ -269,14 +239,12 @@ namespace RVP
                 mesh.RecalculateBounds();
                 mesh.RecalculateNormals();
             }
-            else
-            {
+            else {
                 gapDelay = Mathf.Max(0, gapDelay - Time.deltaTime);
                 verts[curEdge] = leftPoint;
                 verts[curEdge + 1] = rightPoint;
 
-                for (int i = curEdge + 2; i < verts.Length; i++)
-                {
+                for (int i = curEdge + 2; i < verts.Length; i++) {
                     verts[i] = Mathf.Approximately(i * 0.5f, Mathf.Round(i * 0.5f)) ? leftPoint : rightPoint;
                     colors[i].a = 0;
                 }
@@ -285,15 +253,13 @@ namespace RVP
                 mesh.RecalculateBounds();
             }
 
-            if (calculateTangents)
-            {
+            if (calculateTangents) {
                 mesh.RecalculateTangents();
             }
         }
 
         //Stop making mark
-        void EndMark()
-        {
+        void EndMark() {
             creatingMark = false;
             leftPointPrev = verts[Mathf.RoundToInt(verts.Length * 0.5f)];
             rightPointPrev = verts[Mathf.RoundToInt(verts.Length * 0.5f + 1)];
@@ -308,14 +274,11 @@ namespace RVP
         }
 
         //Clean up mark if destroyed while creating
-        void OnDestroy()
-        {
-            if (creatingMark && curMark)
-            {
+        void OnDestroy() {
+            if (creatingMark && curMark) {
                 EndMark();
             }
-            else if (mesh != null)
-            {
+            else if (mesh != null) {
                 Destroy(mesh);
             }
         }
@@ -334,35 +297,27 @@ namespace RVP
         public Color[] colors;
 
         //Fade the tire mark and then destroy it
-        void Update()
-        {
-            if (fading)
-            {
-                if (alpha <= 0)
-                {
+        void Update() {
+            if (fading) {
+                if (alpha <= 0) {
                     Destroy(mesh);
                     Destroy(gameObject);
                 }
-                else
-                {
+                else {
                     alpha -= Time.deltaTime;
 
-                    for (int i = 0; i < colors.Length; i++)
-                    {
+                    for (int i = 0; i < colors.Length; i++) {
                         colors[i].a -= Time.deltaTime;
                     }
 
                     mesh.colors = colors;
                 }
             }
-            else
-            {
-                if (fadeTime > 0)
-                {
+            else {
+                if (fadeTime > 0) {
                     fadeTime = Mathf.Max(0, fadeTime - Time.deltaTime);
                 }
-                else if (fadeTime == 0)
-                {
+                else if (fadeTime == 0) {
                     fading = true;
                 }
             }

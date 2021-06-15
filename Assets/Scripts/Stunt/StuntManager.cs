@@ -28,8 +28,7 @@ namespace RVP
         public Stunt[] stunts;
         public static Stunt[] stuntsStatic;
 
-        void Start()
-        {
+        void Start() {
             //Set static variables
             driftScoreRateStatic = driftScoreRate;
             driftConnectDelayStatic = driftConnectDelay;
@@ -56,8 +55,7 @@ namespace RVP
         public float boostAdd;
 
         //Use this to duplicate a stunt
-        public Stunt(Stunt oldStunt)
-        {
+        public Stunt(Stunt oldStunt) {
             name = oldStunt.name;
             rotationAxis = oldStunt.rotationAxis;
             precision = oldStunt.precision;

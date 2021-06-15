@@ -42,32 +42,26 @@ namespace RVP
         [Tooltip("How much to lean when sliding sideways")]
         public float slideLeanFactor = 1;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             rb = GetComponent<Rigidbody>();
             vp = GetComponent<VehicleParent>();
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             //Apply endo limit
             actualPitchInput = vp.wheels.Length == 1 ? 0 : Mathf.Clamp(vp.pitchInput, -1, vp.velMag > endoSpeedThreshold ? 0 : 1);
 
-            if (vp.groundedWheels > 0)
-            {
-                if (leanFactor != Vector3.zero)
-                {
+            if (vp.groundedWheels > 0) {
+                if (leanFactor != Vector3.zero) {
                     ApplyLean();
                 }
             }
         }
 
         //Apply corrective balance forces
-        void ApplyLean()
-        {
-            if (vp.groundedWheels > 0)
-            {
+        void ApplyLean() {
+            if (vp.groundedWheels > 0) {
                 Vector3 inverseWorldUp;
                 inverseWorldUp = vp.norm.InverseTransformDirection(Vector3.Dot(vp.wheelNormalAverage, GlobalControl.worldUpDir) <= 0 ? vp.wheelNormalAverage : Vector3.Lerp(GlobalControl.worldUpDir, vp.wheelNormalAverage, Mathf.Abs(Vector3.Dot(vp.norm.up, GlobalControl.worldUpDir)) * 2));
                 Debug.DrawRay(tr.position, vp.norm.TransformDirection(inverseWorldUp), Color.white);
@@ -81,8 +75,7 @@ namespace RVP
                     Mathf.Pow(Mathf.Abs(actualPitchInput), pitchExponent) * Mathf.Sign(actualPitchInput) * leanFactor.x,
                     inverseWorldUp.z * (1 - Mathf.Abs(F.MaxAbs(actualPitchInput * leanFactor.x, vp.rollInput * leanFactor.z))));
             }
-            else
-            {
+            else {
                 targetLean = vp.upDir;
             }
 
@@ -106,8 +99,7 @@ namespace RVP
                 ForceMode.Acceleration);
 
             //Turn vehicle during wheelies
-            if (vp.groundedWheels == 1 && leanFactor.y > 0)
-            {
+            if (vp.groundedWheels == 1 && leanFactor.y > 0) {
                 rb.AddTorque(vp.norm.TransformDirection(
                     new Vector3(0, 0, vp.steerInput * leanFactor.y - vp.norm.InverseTransformDirection(rb.angularVelocity).z)
                     ), ForceMode.Acceleration);

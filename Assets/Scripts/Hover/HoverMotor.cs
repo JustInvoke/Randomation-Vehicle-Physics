@@ -15,8 +15,7 @@ namespace RVP
         public AnimationCurve forceCurve = AnimationCurve.EaseInOut(0, 1, 50, 0);
         public HoverWheel[] wheels;
 
-        public override void FixedUpdate()
-        {
+        public override void FixedUpdate() {
             base.FixedUpdate();
 
             //Get proper input
@@ -24,16 +23,13 @@ namespace RVP
             actualInput = inputCurve.Evaluate(Mathf.Abs(actualAccel)) * Mathf.Sign(actualAccel);
 
             //Set hover wheel speeds and forces
-            foreach (HoverWheel curWheel in wheels)
-            {
-                if (ignition)
-                {
+            foreach (HoverWheel curWheel in wheels) {
+                if (ignition) {
                     float boostEval = boostPowerCurve.Evaluate(Mathf.Abs(vp.localVelocity.z));
                     curWheel.targetSpeed = actualInput * forceCurve.keys[forceCurve.keys.Length - 1].time * (boosting ? 1 + boostEval : 1);
                     curWheel.targetForce = Mathf.Abs(actualInput) * forceCurve.Evaluate(Mathf.Abs(vp.localVelocity.z) - (boosting ? boostEval : 0)) * power * (boosting ? 1 + boostEval : 1) * health;
                 }
-                else
-                {
+                else {
                     curWheel.targetSpeed = 0;
                     curWheel.targetForce = 0;
                 }
@@ -42,11 +38,9 @@ namespace RVP
             }
         }
 
-        public override void Update()
-        {
+        public override void Update() {
             //Set engine pitch
-            if (snd && ignition)
-            {
+            if (snd && ignition) {
                 targetPitch = Mathf.Max(Mathf.Abs(actualInput), Mathf.Abs(vp.steerInput) * 0.5f) * (1 - forceCurve.Evaluate(Mathf.Abs(vp.localVelocity.z)));
             }
 

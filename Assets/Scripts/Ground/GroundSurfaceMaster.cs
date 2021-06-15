@@ -12,8 +12,7 @@ namespace RVP
         public GroundSurface[] surfaceTypes;
         public static GroundSurface[] surfaceTypesStatic;
 
-        void Start()
-        {
+        void Start() {
             surfaceTypesStatic = surfaceTypes;
         }
     }

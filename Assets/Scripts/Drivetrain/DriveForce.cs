@@ -19,16 +19,14 @@ namespace RVP
         [System.NonSerialized]
         public bool active = true;
 
-        public void SetDrive(DriveForce from)
-        {
+        public void SetDrive(DriveForce from) {
             rpm = from.rpm;
             torque = from.torque;
             curve = from.curve;
         }
 
         //Same as previous, but with torqueFactor multiplier for torque
-        public void SetDrive(DriveForce from, float torqueFactor)
-        {
+        public void SetDrive(DriveForce from, float torqueFactor) {
             rpm = from.rpm;
             torque = from.torque * torqueFactor;
             curve = from.curve;

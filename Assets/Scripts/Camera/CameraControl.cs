@@ -36,25 +36,21 @@ namespace RVP
         [Tooltip("Mask for which objects will be checked in between the camera and target vehicle")]
         public LayerMask castMask;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             cam = GetComponent<Camera>();
             Initialize();
         }
 
-        public void Initialize()
-        {
+        public void Initialize() {
             //lookObj is an object used to help position and rotate the camera
-            if (!lookObj)
-            {
+            if (!lookObj) {
                 GameObject lookTemp = new GameObject("Camera Looker");
                 lookObj = lookTemp.transform;
             }
 
             //Set variables based on target vehicle's properties
-            if (target)
-            {
+            if (target) {
                 vp = target.GetComponent<VehicleParent>();
                 distance += vp.cameraDistanceChange;
                 height += vp.cameraHeightChange;
@@ -68,16 +64,12 @@ namespace RVP
             GetComponent<AudioListener>().velocityUpdateMode = AudioVelocityUpdateMode.Fixed;
         }
 
-        void FixedUpdate()
-        {
-            if (target && targetBody && target.gameObject.activeSelf)
-            {
-                if (vp.groundedWheels > 0)
-                {
+        void FixedUpdate() {
+            if (target && targetBody && target.gameObject.activeSelf) {
+                if (vp.groundedWheels > 0) {
                     targetForward = stayFlat ? new Vector3(vp.norm.up.x, 0, vp.norm.up.z) : vp.norm.up;
                 }
-                /*else
-                {
+                /*else {
                     targetForward = targetBody.velocity.normalized;
                 }*/
 
@@ -87,12 +79,10 @@ namespace RVP
 
                 //Determine the upwards direction of the camera
                 RaycastHit hit;
-                if (Physics.Raycast(target.position, -targetUp, out hit, 1, castMask) && !stayFlat)
-                {
+                if (Physics.Raycast(target.position, -targetUp, out hit, 1, castMask) && !stayFlat) {
                     upLook = Vector3.Lerp(upLook, (Vector3.Dot(hit.normal, targetUp) > 0.5 ? hit.normal : targetUp), 0.05f * TimeMaster.inverseFixedTimeFactor);
                 }
-                else
-                {
+                else {
                     upLook = Vector3.Lerp(upLook, targetUp, 0.05f * TimeMaster.inverseFixedTimeFactor);
                 }
 
@@ -105,12 +95,10 @@ namespace RVP
                 Vector3 localOffset = lookObj.TransformPoint(-lookDirActual * distance - lookDirActual * Mathf.Min(targetBody.velocity.magnitude * 0.05f, 2) + Vector3.up * height);
 
                 //Check if there is an object between the camera and target vehicle and move the camera in front of it
-                if (Physics.Linecast(target.position, localOffset, out hit, castMask))
-                {
+                if (Physics.Linecast(target.position, localOffset, out hit, castMask)) {
                     tr.position = hit.point + (target.position - localOffset).normalized * (cam.nearClipPlane + 0.1f);
                 }
-                else
-                {
+                else {
                     tr.position = localOffset;
                 }
 
@@ -119,17 +107,14 @@ namespace RVP
         }
 
         //function for setting the rotation input of the camera
-        public void SetInput(float x, float y)
-        {
+        public void SetInput(float x, float y) {
             xInput = x;
             yInput = y;
         }
 
         //Destroy lookObj
-        void OnDestroy()
-        {
-            if (lookObj)
-            {
+        void OnDestroy() {
+            if (lookObj) {
                 Destroy(lookObj.gameObject);
             }
         }

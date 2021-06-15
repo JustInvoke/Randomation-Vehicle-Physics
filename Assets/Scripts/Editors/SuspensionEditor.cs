@@ -13,54 +13,43 @@ namespace RVP
         bool isPrefab = false;
         static bool showButtons = true;
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             GUIStyle boldFoldout = new GUIStyle(EditorStyles.foldout);
             boldFoldout.fontStyle = FontStyle.Bold;
             Suspension targetScript = (Suspension)target;
             Suspension[] allTargets = new Suspension[targets.Length];
             isPrefab = F.IsPrefab(targetScript);
 
-            for (int i = 0; i < targets.Length; i++)
-            {
+            for (int i = 0; i < targets.Length; i++) {
                 Undo.RecordObject(targets[i], "Suspension Change");
                 allTargets[i] = targets[i] as Suspension;
             }
 
-            if (!targetScript.wheel)
-            {
+            if (!targetScript.wheel) {
                 EditorGUILayout.HelpBox("Wheel must be assigned.", MessageType.Error);
             }
 
             DrawDefaultInspector();
 
-            if (!isPrefab && targetScript.gameObject.activeInHierarchy)
-            {
+            if (!isPrefab && targetScript.gameObject.activeInHierarchy) {
                 showButtons = EditorGUILayout.Foldout(showButtons, "Quick Actions", boldFoldout);
                 EditorGUI.indentLevel++;
-                if (showButtons)
-                {
-                    if (GUILayout.Button("Get Wheel"))
-                    {
-                        foreach (Suspension curTarget in allTargets)
-                        {
+                if (showButtons) {
+                    if (GUILayout.Button("Get Wheel")) {
+                        foreach (Suspension curTarget in allTargets) {
                             curTarget.wheel = curTarget.transform.GetComponentInChildren<Wheel>();
                         }
                     }
 
-                    if (GUILayout.Button("Get Opposite Wheel"))
-                    {
-                        foreach (Suspension curTarget in allTargets)
-                        {
+                    if (GUILayout.Button("Get Opposite Wheel")) {
+                        foreach (Suspension curTarget in allTargets) {
                             VehicleParent vp = curTarget.transform.GetTopmostParentComponent<VehicleParent>();
                             Suspension closestOne = null;
                             float closeDist = Mathf.Infinity;
 
-                            foreach (Wheel curWheel in vp.wheels)
-                            {
+                            foreach (Wheel curWheel in vp.wheels) {
                                 float curDist = Vector2.Distance(new Vector2(curTarget.transform.localPosition.y, curTarget.transform.localPosition.z), new Vector2(curWheel.transform.parent.localPosition.y, curWheel.transform.parent.localPosition.z));
-                                if (Mathf.Sign(curTarget.transform.localPosition.x) != Mathf.Sign(curWheel.transform.parent.localPosition.x) && curDist < closeDist)
-                                {
+                                if (Mathf.Sign(curTarget.transform.localPosition.x) != Mathf.Sign(curWheel.transform.parent.localPosition.x) && curDist < closeDist) {
                                     closeDist = curDist;
                                     closestOne = curWheel.transform.parent.GetComponent<Suspension>();
                                 }
@@ -73,8 +62,7 @@ namespace RVP
                 EditorGUI.indentLevel--;
             }
 
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorUtility.SetDirty(targetScript);
             }
         }

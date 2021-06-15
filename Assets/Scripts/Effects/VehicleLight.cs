@@ -28,55 +28,43 @@ namespace RVP
         [System.NonSerialized]
         public bool shattered;
 
-        void Start()
-        {
+        void Start() {
             rend = GetComponent<Renderer>();
-            if (rend)
-            {
+            if (rend) {
                 offMaterial = rend.sharedMaterial;
             }
 
             shatter = GetComponent<ShatterPart>();
         }
 
-        void Update()
-        {
-            if (shatter)
-            {
+        void Update() {
+            if (shatter) {
                 shattered = shatter.shattered;
             }
 
             //Configure shared light
-            if (sharedLight && sharer)
-            {
+            if (sharedLight && sharer) {
                 sharedLight.enabled = on && sharer.on && !shattered && !sharer.shattered;
             }
 
             //Configure target light
-            if (targetLight)
-            {
-                if (sharedLight && sharer)
-                {
+            if (targetLight) {
+                if (sharedLight && sharer) {
                     targetLight.enabled = !shattered && on && !sharedLight.enabled;
                 }
             }
 
             //Shatter logic
-            if (rend)
-            {
-                if (shattered)
-                {
-                    if (shatter.brokenMaterial)
-                    {
+            if (rend) {
+                if (shattered) {
+                    if (shatter.brokenMaterial) {
                         rend.sharedMaterial = shatter.brokenMaterial;
                     }
-                    else
-                    {
+                    else {
                         rend.sharedMaterial = on || halfOn ? onMaterial : offMaterial;
                     }
                 }
-                else
-                {
+                else {
                     rend.sharedMaterial = on || halfOn ? onMaterial : offMaterial;
                 }
             }

@@ -18,27 +18,21 @@ namespace RVP
         [System.NonSerialized]
         public float[] frictions;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
-            if (GetComponent<Terrain>().terrainData)
-            {
+            if (GetComponent<Terrain>().terrainData) {
                 terDat = GetComponent<Terrain>().terrainData;
 
                 //Set frictions for each surface type
-                if (Application.isPlaying)
-                {
+                if (Application.isPlaying) {
                     UpdateAlphamaps();
                     frictions = new float[surfaceTypes.Length];
 
-                    for (int i = 0; i < frictions.Length; i++)
-                    {
-                        if (GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].useColliderFriction)
-                        {
+                    for (int i = 0; i < frictions.Length; i++) {
+                        if (GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].useColliderFriction) {
                             frictions[i] = GetComponent<Collider>().material.dynamicFriction * 2;
                         }
-                        else
-                        {
+                        else {
                             frictions[i] = GroundSurfaceMaster.surfaceTypesStatic[surfaceTypes[i]].friction;
                         }
                     }
@@ -46,14 +40,10 @@ namespace RVP
             }
         }
 
-        void Update()
-        {
-            if (!Application.isPlaying)
-            {
-                if (terDat)
-                {
-                    if (surfaceTypes.Length != terDat.terrainLayers.Length)
-                    {
+        void Update() {
+            if (!Application.isPlaying) {
+                if (terDat) {
+                    if (surfaceTypes.Length != terDat.terrainLayers.Length) {
                         ChangeSurfaceTypesLength();
                     }
                 }
@@ -61,34 +51,28 @@ namespace RVP
         }
 
         //Updates the terrain alphamaps
-        public void UpdateAlphamaps()
-        {
+        public void UpdateAlphamaps() {
             terrainAlphamap = terDat.GetAlphamaps(0, 0, terDat.alphamapWidth, terDat.alphamapHeight);
         }
 
         //Calculate the number of surface types based on the terrain layers
-        void ChangeSurfaceTypesLength()
-        {
+        void ChangeSurfaceTypesLength() {
             int[] tempVals = surfaceTypes;
 
             surfaceTypes = new int[terDat.terrainLayers.Length];
 
-            for (int i = 0; i < surfaceTypes.Length; i++)
-            {
-                if (i >= tempVals.Length)
-                {
+            for (int i = 0; i < surfaceTypes.Length; i++) {
+                if (i >= tempVals.Length) {
                     break;
                 }
-                else
-                {
+                else {
                     surfaceTypes[i] = tempVals[i];
                 }
             }
         }
 
         //Returns index of dominant surface type at point on terrain, relative to surface types array in GroundSurfaceMaster
-        public int GetDominantSurfaceTypeAtPoint(Vector3 pos)
-        {
+        public int GetDominantSurfaceTypeAtPoint(Vector3 pos) {
             if (surfaceTypes.Length == 0) { return 0; }
 
             Vector2 coord = new Vector2(Mathf.Clamp01((pos.z - tr.position.z) / terDat.size.z), Mathf.Clamp01((pos.x - tr.position.x) / terDat.size.x));
@@ -97,12 +81,10 @@ namespace RVP
             int maxIndex = 0;
             float curVal = 0;
 
-            for (int i = 0; i < terrainAlphamap.GetLength(2); i++)
-            {
+            for (int i = 0; i < terrainAlphamap.GetLength(2); i++) {
                 curVal = terrainAlphamap[Mathf.FloorToInt(coord.x * (terDat.alphamapWidth - 1)), Mathf.FloorToInt(coord.y * (terDat.alphamapHeight - 1)), i];
 
-                if (curVal > maxVal)
-                {
+                if (curVal > maxVal) {
                     maxVal = curVal;
                     maxIndex = i;
                 }
@@ -112,14 +94,11 @@ namespace RVP
         }
 
         //Gets the friction of the indicated surface type
-        public float GetFriction(int sType)
-        {
+        public float GetFriction(int sType) {
             float returnedFriction = 1;
 
-            for (int i = 0; i < surfaceTypes.Length; i++)
-            {
-                if (sType == surfaceTypes[i])
-                {
+            for (int i = 0; i < surfaceTypes.Length; i++) {
+                if (sType == surfaceTypes[i]) {
                     returnedFriction = frictions[i];
                     break;
                 }

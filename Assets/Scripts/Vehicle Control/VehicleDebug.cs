@@ -15,24 +15,19 @@ namespace RVP
         [Tooltip("Y position below which the vehicle will be reset")]
         public float fallLimit = -10;
 
-        void Update()
-        {
-            if (Input.GetButtonDown("Reset Rotation"))
-            {
+        void Update() {
+            if (Input.GetButtonDown("Reset Rotation")) {
                 StartCoroutine(ResetRotation());
             }
 
-            if (Input.GetButtonDown("Reset Position") || transform.position.y < fallLimit)
-            {
+            if (Input.GetButtonDown("Reset Position") || transform.position.y < fallLimit) {
                 StartCoroutine(ResetPosition());
             }
         }
 
         //This waits for the next fixed update before resetting the rotation of the vehicle
-        IEnumerator ResetRotation()
-        {
-            if (GetComponent<VehicleDamage>())
-            {
+        IEnumerator ResetRotation() {
+            if (GetComponent<VehicleDamage>()) {
                 GetComponent<VehicleDamage>().Repair();
             }
 
@@ -44,10 +39,8 @@ namespace RVP
         }
 
         //This waits for the next fixed update before resetting the position of the vehicle
-        IEnumerator ResetPosition()
-        {
-            if (GetComponent<VehicleDamage>())
-            {
+        IEnumerator ResetPosition() {
+            if (GetComponent<VehicleDamage>()) {
                 GetComponent<VehicleDamage>().Repair();
             }
 

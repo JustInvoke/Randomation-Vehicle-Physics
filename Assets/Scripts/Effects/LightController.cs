@@ -32,68 +32,53 @@ namespace RVP
         public VehicleLight[] LeftBlinkers;
         public VehicleLight[] ReverseLights;
 
-        void Start()
-        {
+        void Start() {
             vp = GetComponent<VehicleParent>();
 
             //Get transmission for using reverse lights
-            if (transmission)
-            {
-                if (transmission is GearboxTransmission)
-                {
+            if (transmission) {
+                if (transmission is GearboxTransmission) {
                     gearTrans = transmission as GearboxTransmission;
                 }
-                else if (transmission is ContinuousTransmission)
-                {
+                else if (transmission is ContinuousTransmission) {
                     conTrans = transmission as ContinuousTransmission;
                 }
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Activate blinkers
-            if (leftBlinkersOn || rightBlinkersOn)
-            {
-                if (blinkerSwitchTime == 0)
-                {
+            if (leftBlinkersOn || rightBlinkersOn) {
+                if (blinkerSwitchTime == 0) {
                     blinkerIntervalOn = !blinkerIntervalOn;
                     blinkerSwitchTime = blinkerInterval;
                 }
-                else
-                {
+                else {
                     blinkerSwitchTime = Mathf.Max(0, blinkerSwitchTime - Time.deltaTime);
                 }
             }
-            else
-            {
+            else {
                 blinkerIntervalOn = false;
                 blinkerSwitchTime = 0;
             }
 
             //Activate reverse lights
-            if (gearTrans)
-            {
+            if (gearTrans) {
                 reverseLightsOn = gearTrans.curGearRatio < 0;
             }
-            else if (conTrans)
-            {
+            else if (conTrans) {
                 reverseLightsOn = conTrans.reversing;
             }
 
             //Activate brake lights
-            if (vp.accelAxisIsBrake)
-            {
+            if (vp.accelAxisIsBrake) {
                 brakelightsOn = vp.accelInput != 0 && Mathf.Sign(vp.accelInput) != Mathf.Sign(vp.localVelocity.z) && Mathf.Abs(vp.localVelocity.z) > 1;
             }
-            else
-            {
-                if (!vp.brakeIsReverse)
-                {
+            else {
+                if (!vp.brakeIsReverse) {
                     brakelightsOn = (vp.burnout > 0 && vp.brakeInput > 0) || vp.brakeInput > 0;
                 }
-                else
-                {
+                else {
                     brakelightsOn = (vp.burnout > 0 && vp.brakeInput > 0) || ((vp.brakeInput > 0 && vp.localVelocity.z > 1) || (vp.accelInput > 0 && vp.localVelocity.z < -1));
                 }
             }
@@ -106,19 +91,15 @@ namespace RVP
         }
 
         //Set if lights are on or off based on the condition
-        void SetLights(VehicleLight[] lights, bool condition)
-        {
-            foreach (VehicleLight curLight in lights)
-            {
+        void SetLights(VehicleLight[] lights, bool condition) {
+            foreach (VehicleLight curLight in lights) {
                 curLight.on = condition;
             }
         }
 
         //Set if lights are on or off based on the first condition, and half on based on the second condition (see halfOn tooltip in VehicleLight)
-        void SetLights(VehicleLight[] lights, bool condition, bool halfCondition)
-        {
-            foreach (VehicleLight curLight in lights)
-            {
+        void SetLights(VehicleLight[] lights, bool condition, bool halfCondition) {
+            foreach (VehicleLight curLight in lights) {
                 curLight.on = condition;
                 curLight.halfOn = halfCondition;
             }

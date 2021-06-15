@@ -21,16 +21,13 @@ namespace RVP
         Vector3 accelerationPrev;
         Vector3 accelerationDelta;
 
-        void Start()
-        {
+        void Start() {
             vp = GetComponent<VehicleParent>();
             setter = FindObjectOfType<MobileInput>();
         }
 
-        void FixedUpdate()
-        {
-            if (setter)
-            {
+        void FixedUpdate() {
+            if (setter) {
                 accelerationDelta = Input.acceleration - accelerationPrev;
                 accelerationPrev = Input.acceleration;
                 vp.SetAccel(setter.accel);
@@ -38,15 +35,13 @@ namespace RVP
                 vp.SetEbrake(setter.ebrake);
                 vp.SetBoost(setter.boost);
 
-                if (useAccelerometer)
-                {
+                if (useAccelerometer) {
                     //Accelerometer input
                     vp.SetSteer((Input.acceleration.x + accelerationDelta.x * deltaFactor) * steerFactor);
                     vp.SetYaw(Input.acceleration.x * flipFactor);
                     vp.SetPitch(-Input.acceleration.z * flipFactor);
                 }
-                else
-                {
+                else {
                     vp.SetSteer(setter.steer);
                 }
             }

@@ -36,56 +36,46 @@ namespace RVP
         [Tooltip("How quickly the vehicle will dive in the direction it's soaring")]
         public float diveFactor;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             rb = GetComponent<Rigidbody>();
             vp = GetComponent<VehicleParent>();
         }
 
-        void FixedUpdate()
-        {
-            if (vp.groundedWheels == 0 && (!vp.crashing || (vp.crashing && !disableDuringCrash)))
-            {
+        void FixedUpdate() {
+            if (vp.groundedWheels == 0 && (!vp.crashing || (vp.crashing && !disableDuringCrash))) {
                 velDir = Quaternion.LookRotation(GlobalControl.worldUpDir, rb.velocity);
 
-                if (flipPower != Vector3.zero)
-                {
+                if (flipPower != Vector3.zero) {
                     ApplyFlip();
                 }
 
-                if (stopFlip)
-                {
+                if (stopFlip) {
                     ApplyStopFlip();
                 }
 
-                if (rotationCorrection != Vector3.zero)
-                {
+                if (rotationCorrection != Vector3.zero) {
                     ApplyRotationCorrection();
                 }
 
-                if (diveFactor > 0)
-                {
+                if (diveFactor > 0) {
                     Dive();
                 }
             }
         }
 
         //Apply flip forces
-        void ApplyFlip()
-        {
+        void ApplyFlip() {
             Vector3 flipTorque;
 
-            if (freeSpinFlip)
-            {
+            if (freeSpinFlip) {
                 flipTorque = new Vector3(
                     vp.pitchInput * flipPower.x,
                     vp.yawInput * flipPower.y,
                     vp.rollInput * flipPower.z
                     );
             }
-            else
-            {
+            else {
                 flipTorque = new Vector3(
                     vp.pitchInput != 0 && Mathf.Abs(vp.localAngularVel.x) > 1 && System.Math.Sign(vp.pitchInput * Mathf.Sign(flipPower.x)) != System.Math.Sign(vp.localAngularVel.x) ? -vp.localAngularVel.x * Mathf.Abs(flipPower.x) : vp.pitchInput * flipPower.x - vp.localAngularVel.x * (1 - Mathf.Abs(vp.pitchInput)) * Mathf.Abs(flipPower.x),
                     vp.yawInput != 0 && Mathf.Abs(vp.localAngularVel.y) > 1 && System.Math.Sign(vp.yawInput * Mathf.Sign(flipPower.y)) != System.Math.Sign(vp.localAngularVel.y) ? -vp.localAngularVel.y * Mathf.Abs(flipPower.y) : vp.yawInput * flipPower.y - vp.localAngularVel.y * (1 - Mathf.Abs(vp.yawInput)) * Mathf.Abs(flipPower.y),
@@ -97,8 +87,7 @@ namespace RVP
         }
 
         //Counteract flipping with forces
-        void ApplyStopFlip()
-        {
+        void ApplyStopFlip() {
             Vector3 stopFlipFactor = Vector3.zero;
 
             stopFlipFactor.x = vp.pitchInput * flipPower.x == 0 ? Mathf.Pow(Mathf.Clamp01(vp.upDot), Mathf.Clamp(10 - Mathf.Abs(vp.localAngularVel.x), 2, 10)) * 10 : 0;
@@ -109,20 +98,16 @@ namespace RVP
         }
 
         //Apply forces to align vehicle with normal of ground surface that it will land on
-        void ApplyRotationCorrection()
-        {
+        void ApplyRotationCorrection() {
             float actualForwardDot = vp.forwardDot;
             float actualRightDot = vp.rightDot;
             float actualUpDot = vp.upDot;
 
-            if (groundCheckDistance > 0)
-            {
+            if (groundCheckDistance > 0) {
                 RaycastHit groundHit;
 
-                if (Physics.Raycast(tr.position, (-GlobalControl.worldUpDir + rb.velocity).normalized, out groundHit, groundCheckDistance, GlobalControl.groundMaskStatic))
-                {
-                    if (Vector3.Dot(groundHit.normal, GlobalControl.worldUpDir) >= groundSteepnessLimit)
-                    {
+                if (Physics.Raycast(tr.position, (-GlobalControl.worldUpDir + rb.velocity).normalized, out groundHit, groundCheckDistance, GlobalControl.groundMaskStatic)) {
+                    if (Vector3.Dot(groundHit.normal, GlobalControl.worldUpDir) >= groundSteepnessLimit) {
                         actualForwardDot = Vector3.Dot(vp.forwardDir, groundHit.normal);
                         actualRightDot = Vector3.Dot(vp.rightDir, groundHit.normal);
                         actualUpDot = Vector3.Dot(vp.upDir, groundHit.normal);
@@ -138,8 +123,7 @@ namespace RVP
         }
 
         //Apply diving force
-        void Dive()
-        {
+        void Dive() {
             rb.AddTorque(velDir * Vector3.left * Mathf.Clamp01(vp.velMag * 0.01f) * Mathf.Clamp01(vp.upDot) * diveFactor, ForceMode.Acceleration);
         }
     }

@@ -13,34 +13,27 @@ namespace RVP
         public SuspensionToggledProperty[] properties;
         Suspension sus;
 
-        void Start()
-        {
+        void Start() {
             sus = GetComponent<Suspension>();
         }
 
         //Toggle a property in the properties array at index
-        public void ToggleProperty(int index)
-        {
-            if (properties.Length - 1 >= index)
-            {
+        public void ToggleProperty(int index) {
+            if (properties.Length - 1 >= index) {
                 properties[index].toggled = !properties[index].toggled;
 
-                if (sus)
-                {
+                if (sus) {
                     sus.UpdateProperties();
                 }
             }
         }
 
         //Set a property in the properties array at index to the value
-        public void SetProperty(int index, bool value)
-        {
-            if (properties.Length - 1 >= index)
-            {
+        public void SetProperty(int index, bool value) {
+            if (properties.Length - 1 >= index) {
                 properties[index].toggled = value;
 
-                if (sus)
-                {
+                if (sus) {
                     sus.UpdateProperties();
                 }
             }
@@ -51,7 +44,7 @@ namespace RVP
     [System.Serializable]
     public class SuspensionToggledProperty
     {
-        public enum Properties { steerEnable, steerInvert, driveEnable, driveInvert, ebrakeEnable, skidSteerBrake }//The type of property
+        public enum Properties { steerEnable, steerInvert, driveEnable, driveInvert, ebrakeEnable, skidSteerBrake } //The type of property
         //steerEnable = enable steering
         //steerInvert = invert steering
         //driveEnable = enable driving

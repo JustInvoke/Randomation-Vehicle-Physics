@@ -54,20 +54,17 @@ namespace RVP
         public ParticleSystem smoke;
         float initialSmokeEmission;
 
-        public virtual void Start()
-        {
+        public virtual void Start() {
             vp = transform.GetTopmostParentComponent<VehicleParent>();
 
             //Get engine sound
             snd = GetComponent<AudioSource>();
-            if (snd)
-            {
+            if (snd) {
                 snd.pitch = minPitch;
             }
 
             //Get boost sound
-            if (boostLoopSnd)
-            {
+            if (boostLoopSnd) {
                 GameObject newBoost = Instantiate(boostLoopSnd.gameObject, boostLoopSnd.transform.position, boostLoopSnd.transform.rotation) as GameObject;
                 boostSnd = newBoost.GetComponent<AudioSource>();
                 boostSnd.transform.parent = boostLoopSnd.transform;
@@ -76,107 +73,85 @@ namespace RVP
                 boostSnd.loop = false;
             }
 
-            if (smoke)
-            {
+            if (smoke) {
                 initialSmokeEmission = smoke.emission.rateOverTime.constantMax;
             }
         }
 
-        public virtual void FixedUpdate()
-        {
+        public virtual void FixedUpdate() {
             health = Mathf.Clamp01(health);
 
             //Boost logic
             boost = Mathf.Clamp(boosting ? boost - boostBurnRate * Time.timeScale * 0.05f * TimeMaster.inverseFixedTimeFactor : boost, 0, maxBoost);
             boostPrev = boosting;
 
-            if (canBoost && ignition && health > 0 && !vp.crashing && boost > 0 && (vp.hover ? vp.accelInput != 0 || Mathf.Abs(vp.localVelocity.z) > 1 : vp.accelInput > 0 || vp.localVelocity.z > 1))
-            {
-                if (((boostReleased && !boosting) || boosting) && vp.boostButton)
-                {
+            if (canBoost && ignition && health > 0 && !vp.crashing && boost > 0 && (vp.hover ? vp.accelInput != 0 || Mathf.Abs(vp.localVelocity.z) > 1 : vp.accelInput > 0 || vp.localVelocity.z > 1)) {
+                if (((boostReleased && !boosting) || boosting) && vp.boostButton) {
                     boosting = true;
                     boostReleased = false;
                 }
-                else
-                {
+                else {
                     boosting = false;
                 }
             }
-            else
-            {
+            else {
                 boosting = false;
             }
 
-            if (!vp.boostButton)
-            {
+            if (!vp.boostButton) {
                 boostReleased = true;
             }
 
-            if (boostLoopSnd && boostSnd)
-            {
-                if (boosting && !boostLoopSnd.isPlaying)
-                {
+            if (boostLoopSnd && boostSnd) {
+                if (boosting && !boostLoopSnd.isPlaying) {
                     boostLoopSnd.Play();
                 }
-                else if (!boosting && boostLoopSnd.isPlaying)
-                {
+                else if (!boosting && boostLoopSnd.isPlaying) {
                     boostLoopSnd.Stop();
                 }
 
-                if (boosting && !boostPrev)
-                {
+                if (boosting && !boostPrev) {
                     boostSnd.clip = boostStart;
                     boostSnd.Play();
                 }
-                else if (!boosting && boostPrev)
-                {
+                else if (!boosting && boostPrev) {
                     boostSnd.clip = boostEnd;
                     boostSnd.Play();
                 }
             }
         }
 
-        public virtual void Update()
-        {
+        public virtual void Update() {
             //Set engine sound properties
-            if (!ignition)
-            {
+            if (!ignition) {
                 targetPitch = 0;
             }
 
-            if (snd)
-            {
-                if (ignition && health > 0)
-                {
+            if (snd) {
+                if (ignition && health > 0) {
                     snd.enabled = true;
                     snd.pitch = Mathf.Lerp(snd.pitch, Mathf.Lerp(minPitch, maxPitch, targetPitch), 20 * Time.deltaTime) + Mathf.Sin(Time.time * 200 * (1 - health)) * (1 - health) * 0.1f * damagePitchWiggle;
                     snd.volume = Mathf.Lerp(snd.volume, 0.3f + targetPitch * 0.7f, 20 * Time.deltaTime);
                 }
-                else
-                {
+                else {
                     snd.enabled = false;
                 }
             }
 
             //Play boost particles
-            if (boostParticles.Length > 0)
-            {
-                foreach (ParticleSystem curBoost in boostParticles)
-                {
-                    if (boosting && curBoost.isStopped)
-                    {
+            if (boostParticles.Length > 0) {
+                foreach (ParticleSystem curBoost in boostParticles) {
+                    if (boosting && curBoost.isStopped) {
                         curBoost.Play();
                     }
-                    else if (!boosting && curBoost.isPlaying)
-                    {
+                    else if (!boosting && curBoost.isPlaying) {
                         curBoost.Stop();
                     }
                 }
             }
 
             //Adjusting smoke particles based on damage
-            if (smoke)
-            {
+            if (smoke) {
                 ParticleSystem.EmissionModule em = smoke.emission;
                 em.rateOverTime = new ParticleSystem.MinMaxCurve(health < 0.7f ? initialSmokeEmission * (1 - health) : 0);
             }

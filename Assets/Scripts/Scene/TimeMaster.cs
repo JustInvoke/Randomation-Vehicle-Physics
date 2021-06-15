@@ -10,35 +10,30 @@ namespace RVP
     //Class for managing time
     public class TimeMaster : MonoBehaviour
     {
-        float initialFixedTime;//Intial Time.fixedDeltaTime
+        float initialFixedTime; //Intial Time.fixedDeltaTime
 
         [Tooltip("Master audio mixer")]
         public AudioMixer masterMixer;
         public bool destroyOnLoad;
-        public static float fixedTimeFactor;//Multiplier for certain variables to change consistently over varying time steps
+        public static float fixedTimeFactor; //Multiplier for certain variables to change consistently over varying time steps
         public static float inverseFixedTimeFactor;
 
-        void Awake()
-        {
+        void Awake() {
             initialFixedTime = Time.fixedDeltaTime;
 
-            if (!destroyOnLoad)
-            {
+            if (!destroyOnLoad) {
                 DontDestroyOnLoad(gameObject);
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Set the pitch of all audio to the time scale
-            if (masterMixer)
-            {
+            if (masterMixer) {
                 masterMixer.SetFloat("MasterPitch", Time.timeScale);
             }
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             //Set the fixed update rate based on time scale
             Time.fixedDeltaTime = Time.timeScale * initialFixedTime;
             fixedTimeFactor = 0.01f / initialFixedTime;

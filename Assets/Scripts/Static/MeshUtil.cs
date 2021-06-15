@@ -9,8 +9,7 @@ namespace RVP
     public class MeshUtil
     {
         //Mesh tangent calculation by hemik1 using info from http://answers.unity3d.com/questions/7789/calculating-tangents-vector4.html
-        public static void CalculateMeshTangents(Mesh mesh)
-        {
+        public static void CalculateMeshTangents(Mesh mesh) {
             Vector3[] normals = mesh.normals;
             int[] triangles = mesh.triangles;
             Vector3[] vertices = mesh.vertices;
@@ -54,8 +53,7 @@ namespace RVP
             Vector3 sdir;
             Vector3 tdir;
 
-            for (int a = 0; a < triangleCount; a += 3)
-            {
+            for (int a = 0; a < triangleCount; a += 3) {
                 i1 = triangles[a];
                 i2 = triangles[a + 1];
                 i3 = triangles[a + 2];
@@ -98,10 +96,8 @@ namespace RVP
             Vector3 n = Vector3.zero;
             Vector3 t;
 
-            for (int a = 0; a < vertexCount; ++a)
-            {
-                try
-                {
+            for (int a = 0; a < vertexCount; ++a) {
+                try {
                     n = normals[a];
                 }
                 catch// (Exception e) 

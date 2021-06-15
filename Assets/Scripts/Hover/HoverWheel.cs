@@ -71,8 +71,7 @@ namespace RVP
         public Mesh wheelMeshLoose;//Mesh for detached wheel collider
         public PhysicMaterial detachedWheelMaterial;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             rb = tr.GetTopmostParentComponent<Rigidbody>();
             vp = tr.GetTopmostParentComponent<VehicleParent>();
@@ -80,8 +79,7 @@ namespace RVP
             canDetach = detachForce < Mathf.Infinity && Application.isPlaying;
             bufferDistance = Mathf.Min(hoverDistance, bufferDistance);
 
-            if (canDetach)
-            {
+            if (canDetach) {
                 detachedWheel = new GameObject(vp.transform.name + "'s Detached Wheel");
                 detachedWheel.layer = LayerMask.NameToLayer("Detachable Part");
                 detachFilter = detachedWheel.AddComponent<MeshFilter>();
@@ -96,42 +94,35 @@ namespace RVP
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Tilt the visual wheel
-            if (visualWheel && connected)
-            {
+            if (visualWheel && connected) {
                 TiltWheel();
             }
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             upDir = tr.up;
 
             //Get the contact point
-            if (getContact)
-            {
+            if (getContact) {
                 GetWheelContact();
             }
-            else if (grounded)
-            {
+            else if (grounded) {
                 contactPoint.point += rb.GetPointVelocity(tr.position) * Time.fixedDeltaTime;
             }
 
             compression = Mathf.Clamp01(contactPoint.distance / (hoverDistance));
 
             //Apply float and driving forces
-            if (grounded && doFloat && connected)
-            {
+            if (grounded && doFloat && connected) {
                 ApplyFloat();
                 ApplyFloatDrive();
             }
         }
 
         //Get the contact point of the wheel
-        void GetWheelContact()
-        {
+        void GetWheelContact() {
             RaycastHit hit = new RaycastHit();
             Vector3 localVel = rb.GetPointVelocity(tr.position);
             RaycastHit[] wheelHits = Physics.RaycastAll(tr.position, -upDir, hoverDistance, GlobalControl.wheelCastMaskStatic);
@@ -139,10 +130,8 @@ namespace RVP
             float hitDist = Mathf.Infinity;
 
             //Loop through contact points to get the closest one
-            foreach (RaycastHit curHit in wheelHits)
-            {
-                if (!curHit.transform.IsChildOf(vp.tr) && curHit.distance < hitDist)
-                {
+            foreach (RaycastHit curHit in wheelHits) {
+                if (!curHit.transform.IsChildOf(vp.tr) && curHit.distance < hitDist) {
                     hit = curHit;
                     hitDist = curHit.distance;
                     validHit = true;
@@ -150,10 +139,8 @@ namespace RVP
             }
 
             //Set contact point variables
-            if (validHit)
-            {
-                if (!hit.collider.transform.IsChildOf(vp.tr))
-                {
+            if (validHit) {
+                if (!hit.collider.transform.IsChildOf(vp.tr)) {
                     grounded = true;
                     contactPoint.distance = hit.distance;
                     contactPoint.point = hit.point + localVel * Time.fixedDeltaTime;
@@ -163,8 +150,7 @@ namespace RVP
                     contactPoint.col = hit.collider;
                 }
             }
-            else
-            {
+            else {
                 grounded = false;
                 contactPoint.distance = hoverDistance;
                 contactPoint.point = Vector3.zero;
@@ -176,10 +162,8 @@ namespace RVP
         }
 
         //Make the vehicle hover
-        void ApplyFloat()
-        {
-            if (grounded)
-            {
+        void ApplyFloat() {
+            if (grounded) {
                 //Get the vertical speed of the wheel
                 float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
 
@@ -187,8 +171,7 @@ namespace RVP
                     tr.position,
                     vp.suspensionForceMode);
 
-                if (contactPoint.distance < bufferDistance)
-                {
+                if (contactPoint.distance < bufferDistance) {
                     rb.AddForceAtPosition(-upDir * bufferFloatForce * floatForceCurve.Evaluate(contactPoint.distance / bufferDistance) * Mathf.Clamp(travelVel, -1, 0),
                         tr.position,
                         vp.suspensionForceMode);
@@ -197,8 +180,7 @@ namespace RVP
         }
 
         //Drive the vehicle
-        void ApplyFloatDrive()
-        {
+        void ApplyFloatDrive() {
             //Get proper brake force
             float actualBrake = (vp.localVelocity.z > 0 ? vp.brakeInput : Mathf.Clamp01(vp.accelInput)) * brakeForce + vp.ebrakeInput * ebrakeForce;
 
@@ -212,8 +194,7 @@ namespace RVP
         }
 
         //Tilt the visual wheel
-        void TiltWheel()
-        {
+        void TiltWheel() {
             float sideTilt = Mathf.Clamp(-steerRate * steerFactor * flippedSideFactor - Mathf.Clamp(contactPoint.relativeVelocity.z * 0.1f, -1, 1) * sideFriction, -1, 1);
             float actualBrake = (vp.localVelocity.z > 0 ? vp.brakeInput : Mathf.Clamp01(vp.accelInput)) * brakeForce + vp.ebrakeInput * ebrakeForce;
             float forwardTilt = Mathf.Clamp((Mathf.Clamp(targetSpeed, -1, 1) * targetForce - actualBrake * Mathf.Clamp(contactPoint.relativeVelocity.x * 0.1f, -1, 1) * flippedSideFactor) * flippedSideFactor, -1, 1);
@@ -224,10 +205,8 @@ namespace RVP
         }
 
         //Detach the wheel from the vehicle
-        public void Detach()
-        {
-            if (connected && canDetach)
-            {
+        public void Detach() {
+            if (connected && canDetach) {
                 connected = false;
                 detachedWheel.SetActive(true);
                 detachedWheel.transform.position = visualWheel.position;
@@ -244,10 +223,8 @@ namespace RVP
         }
 
         //Reattach the wheel to the vehicle if detached
-        public void Reattach()
-        {
-            if (!connected)
-            {
+        public void Reattach() {
+            if (!connected) {
                 connected = true;
                 detachedWheel.SetActive(false);
                 rb.mass += mass;
@@ -255,8 +232,7 @@ namespace RVP
             }
         }
 
-        void OnDrawGizmosSelected()
-        {
+        void OnDrawGizmosSelected() {
             tr = transform;
             //Draw a ray to show the distance of the "suspension"
             Gizmos.color = Color.white;
@@ -266,10 +242,8 @@ namespace RVP
         }
 
         //Destroy detached wheel
-        void OnDestroy()
-        {
-            if (detachedWheel)
-            {
+        void OnDestroy() {
+            if (detachedWheel) {
                 Destroy(detachedWheel);
             }
         }

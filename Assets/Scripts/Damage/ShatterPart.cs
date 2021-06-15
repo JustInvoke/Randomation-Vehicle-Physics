@@ -24,37 +24,29 @@ namespace RVP
         public ParticleSystem shatterParticles;
         public AudioSource shatterSnd;
 
-        void Start()
-        {
+        void Start() {
             rend = GetComponent<Renderer>();
-            if (rend)
-            {
+            if (rend) {
                 initialMat = rend.sharedMaterial;
             }
         }
 
-        public void Shatter()
-        {
-            if (!shattered)
-            {
+        public void Shatter() {
+            if (!shattered) {
                 shattered = true;
 
-                if (shatterParticles)
-                {
+                if (shatterParticles) {
                     shatterParticles.Play();
                 }
 
-                if (brokenMaterial)
-                {
+                if (brokenMaterial) {
                     rend.sharedMaterial = brokenMaterial;
                 }
-                else
-                {
+                else {
                     rend.enabled = false;
                 }
 
-                if (shatterSnd)
-                {
+                if (shatterSnd) {
                     shatterSnd.Play();
                 }
             }

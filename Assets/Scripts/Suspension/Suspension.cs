@@ -153,8 +153,7 @@ namespace RVP
         [System.NonSerialized]
         public bool jammed;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             rb = tr.GetTopmostParentComponent<Rigidbody>();
             vp = tr.GetTopmostParentComponent<VehicleParent>();
@@ -163,13 +162,11 @@ namespace RVP
             flippedSideFactor = flippedSide ? -1 : 1;
             initialRotation = tr.localRotation;
 
-            if (Application.isPlaying)
-            {
+            if (Application.isPlaying) {
                 GetCamber();
 
                 //Generate the hard collider
-                if (generateHardCollider)
-                {
+                if (generateHardCollider) {
                     GameObject cap = new GameObject("Compress Collider");
                     cap.layer = GlobalControl.ignoreWheelCastLayer;
                     compressTr = cap.transform;
@@ -188,15 +185,13 @@ namespace RVP
                 steerRangeMax = Mathf.Max(steerRangeMin, steerRangeMax);
 
                 properties = GetComponent<SuspensionPropertyToggle>();
-                if (properties)
-                {
+                if (properties) {
                     UpdateProperties();
                 }
             }
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             upDir = tr.up;
             forwardDir = tr.forward;
             targetCompression = 1;
@@ -205,37 +200,30 @@ namespace RVP
 
             GetSpringVectors();
 
-            if (wheel.connected)
-            {
+            if (wheel.connected) {
                 compression = Mathf.Min(targetCompression, suspensionDistance > 0 ? Mathf.Clamp01(wheel.contactPoint.distance / suspensionDistance) : 0);
                 penetration = Mathf.Min(0, wheel.contactPoint.distance);
             }
-            else
-            {
+            else {
                 compression = detachedCompression;
                 penetration = 0;
             }
 
-            if (targetCompression > 0)
-            {
+            if (targetCompression > 0) {
                 ApplySuspensionForce();
             }
 
             //Set hard collider size if it is changed during play mode
-            if (generateHardCollider)
-            {
+            if (generateHardCollider) {
                 setHardColliderRadiusFactor = hardColliderRadiusFactor;
 
-                if (hardColliderRadiusFactorPrev != setHardColliderRadiusFactor || wheel.updatedSize || wheel.updatedPopped)
-                {
-                    if (wheel.rimWidth > wheel.actualRadius)
-                    {
+                if (hardColliderRadiusFactorPrev != setHardColliderRadiusFactor || wheel.updatedSize || wheel.updatedPopped) {
+                    if (wheel.rimWidth > wheel.actualRadius) {
                         compressCol.direction = 2;
                         compressCol.radius = wheel.actualRadius * hardColliderRadiusFactor;
                         compressCol.height = wheel.rimWidth * 2;
                     }
-                    else
-                    {
+                    else {
                         compressCol.direction = 1;
                         compressCol.radius = wheel.rimWidth * hardColliderRadiusFactor;
                         compressCol.height = wheel.actualRadius * 2;
@@ -246,27 +234,22 @@ namespace RVP
             }
 
             //Set the drive of the wheel
-            if (wheel.connected)
-            {
-                if (wheel.targetDrive)
-                {
+            if (wheel.connected) {
+                if (wheel.targetDrive) {
                     targetDrive.active = driveEnabled;
                     targetDrive.feedbackRPM = wheel.targetDrive.feedbackRPM;
                     wheel.targetDrive.SetDrive(targetDrive);
                 }
             }
-            else
-            {
+            else {
                 targetDrive.feedbackRPM = targetDrive.rpm;
             }
         }
 
-        void Update()
-        {
+        void Update() {
             GetCamber();
 
-            if (!Application.isPlaying)
-            {
+            if (!Application.isPlaying) {
                 GetSpringVectors();
             }
 
@@ -275,17 +258,14 @@ namespace RVP
         }
 
         //Apply suspension forces to support vehicles
-        void ApplySuspensionForce()
-        {
-            if (wheel.grounded && wheel.connected)
-            {
+        void ApplySuspensionForce() {
+            if (wheel.grounded && wheel.connected) {
                 //Get the local vertical velocity
                 float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
 
                 //Apply the suspension force
-                if (suspensionDistance > 0 && targetCompression > 0)
-                {
-                    Vector3 appliedSuspensionForce = (leaningForce ? Vector3.Lerp(upDir, vp.norm.forward, Mathf.Abs(Mathf.Pow(Vector3.Dot(vp.norm.forward, vp.upDir), 5))) : vp.norm.forward) * 
+                if (suspensionDistance > 0 && targetCompression > 0) {
+                    Vector3 appliedSuspensionForce = (leaningForce ? Vector3.Lerp(upDir, vp.norm.forward, Mathf.Abs(Mathf.Pow(Vector3.Dot(vp.norm.forward, vp.upDir), 5))) : vp.norm.forward) *
                         springForce * (Mathf.Pow(springForceCurve.Evaluate(1 - compression), Mathf.Max(1, springExponent)) - (1 - targetCompression) - springDampening * Mathf.Clamp(travelVel, -1, 1));
 
                     rb.AddForceAtPosition(
@@ -294,8 +274,7 @@ namespace RVP
                         vp.suspensionForceMode);
 
                     //If wheel is resting on a rigidbody, apply opposing force to it
-                    if (wheel.contactPoint.col.attachedRigidbody)
-                    {
+                    if (wheel.contactPoint.col.attachedRigidbody) {
                         wheel.contactPoint.col.attachedRigidbody.AddForceAtPosition(
                             -appliedSuspensionForce,
                             wheel.contactPoint.point,
@@ -304,8 +283,7 @@ namespace RVP
                 }
 
                 //Apply hard contact force
-                if (compression == 0 && !generateHardCollider && applyHardContactForce)
-                {
+                if (compression == 0 && !generateHardCollider && applyHardContactForce) {
                     rb.AddForceAtPosition(
                         -vp.norm.TransformDirection(0, 0, Mathf.Clamp(travelVel, -hardContactSensitivity * TimeMaster.fixedTimeFactor, 0) + penetration) * hardContactForce * Mathf.Clamp01(TimeMaster.fixedTimeFactor),
                         applyForceAtGroundContact ? wheel.contactPoint.point : wheel.tr.position,
@@ -315,10 +293,8 @@ namespace RVP
         }
 
         //Calculate the direction of the spring
-        void GetSpringVectors()
-        {
-            if (!Application.isPlaying)
-            {
+        void GetSpringVectors() {
+            if (!Application.isPlaying) {
                 tr = transform;
                 flippedSide = Vector3.Dot(tr.forward, vp.transform.right) < 0;
                 flippedSideFactor = flippedSide ? -1 : 1;
@@ -333,31 +309,23 @@ namespace RVP
         }
 
         //Calculate the camber angle
-        void GetCamber()
-        {
-            if (solidAxleCamber && oppositeWheel && wheel.connected)
-            {
-                if (oppositeWheel.wheel.rim && wheel.rim)
-                {
+        void GetCamber() {
+            if (solidAxleCamber && oppositeWheel && wheel.connected) {
+                if (oppositeWheel.wheel.rim && wheel.rim) {
                     Vector3 axleDir = tr.InverseTransformDirection((oppositeWheel.wheel.rim.position - wheel.rim.position).normalized);
                     camberAngle = Mathf.Atan2(axleDir.z, axleDir.y) * Mathf.Rad2Deg + 90 + camberOffset;
                 }
             }
-            else
-            {
+            else {
                 camberAngle = camberCurve.Evaluate((Application.isPlaying && wheel.connected ? wheel.travelDist : targetCompression)) + camberOffset;
             }
         }
 
         //Update the toggleable properties
-        public void UpdateProperties()
-        {
-            if (properties)
-            {
-                foreach (SuspensionToggledProperty curProperty in properties.properties)
-                {
-                    switch ((int)curProperty.property)
-                    {
+        public void UpdateProperties() {
+            if (properties) {
+                foreach (SuspensionToggledProperty curProperty in properties.properties) {
+                    switch ((int)curProperty.property) {
                         case 0:
                             steerEnabled = curProperty.toggled;
                             break;
@@ -382,17 +350,13 @@ namespace RVP
         }
 
         //Visualize steer range
-        void OnDrawGizmosSelected()
-        {
-            if (!tr)
-            {
+        void OnDrawGizmosSelected() {
+            if (!tr) {
                 tr = transform;
             }
 
-            if (wheel)
-            {
-                if (wheel.rim)
-                {
+            if (wheel) {
+                if (wheel.rim) {
                     Vector3 wheelPoint = wheel.rim.position;
 
                     float camberSin = -Mathf.Sin(camberAngle * Mathf.Deg2Rad);

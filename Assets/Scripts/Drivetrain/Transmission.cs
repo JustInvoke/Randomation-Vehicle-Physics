@@ -28,25 +28,20 @@ namespace RVP
         [System.NonSerialized]
         public float maxRPM = -1;
 
-        public virtual void Start()
-        {
+        public virtual void Start() {
             vp = transform.GetTopmostParentComponent<VehicleParent>();
             targetDrive = GetComponent<DriveForce>();
             newDrive = gameObject.AddComponent<DriveForce>();
         }
 
-        protected void SetOutputDrives(float ratio)
-        {
+        protected void SetOutputDrives(float ratio) {
             //Distribute drive to wheels
-            if (outputDrives.Length > 0)
-            {
+            if (outputDrives.Length > 0) {
                 int enabledDrives = 0;
 
                 //Check for which outputs are enabled
-                foreach (DriveForce curOutput in outputDrives)
-                {
-                    if (curOutput.active)
-                    {
+                foreach (DriveForce curOutput in outputDrives) {
+                    if (curOutput.active) {
                         enabledDrives++;
                     }
                 }
@@ -54,10 +49,8 @@ namespace RVP
                 float torqueFactor = Mathf.Pow(1f / enabledDrives, driveDividePower);
                 float tempRPM = 0;
 
-                foreach (DriveForce curOutput in outputDrives)
-                {
-                    if (curOutput.active)
-                    {
+                foreach (DriveForce curOutput in outputDrives) {
+                    if (curOutput.active) {
                         tempRPM += skidSteerDrive ? Mathf.Abs(curOutput.feedbackRPM) : curOutput.feedbackRPM;
                         curOutput.SetDrive(newDrive, torqueFactor);
                     }
@@ -67,8 +60,7 @@ namespace RVP
             }
         }
 
-        public void ResetMaxRPM()
-        {
+        public void ResetMaxRPM() {
             maxRPM = -1;//Setting this to -1 triggers derived classes to recalculate things
         }
     }

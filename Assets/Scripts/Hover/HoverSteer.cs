@@ -28,30 +28,25 @@ namespace RVP
         public float rotationOffset;
         float steerRot;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             vp = tr.GetTopmostParentComponent<VehicleParent>();
         }
 
-        void FixedUpdate()
-        {
+        void FixedUpdate() {
             //Set steering of hover wheels
             float rbSpeed = vp.localVelocity.z / steerCurveStretch;
             float steerLimit = steerCurve.Evaluate(Mathf.Abs(rbSpeed));
             steerAmount = vp.steerInput * steerLimit;
 
-            foreach (HoverWheel curWheel in steeredWheels)
-            {
+            foreach (HoverWheel curWheel in steeredWheels) {
                 curWheel.steerRate = steerAmount * steerRate;
             }
         }
 
-        void Update()
-        {
+        void Update() {
             //Set visual rotation
-            if (rotate)
-            {
+            if (rotate) {
                 steerRot = Mathf.Lerp(steerRot, steerAmount * maxDegreesRotation + rotationOffset, steerRate * 0.1f * Time.timeScale);
                 tr.localEulerAngles = new Vector3(tr.localEulerAngles.x, tr.localEulerAngles.y, steerRot);
             }

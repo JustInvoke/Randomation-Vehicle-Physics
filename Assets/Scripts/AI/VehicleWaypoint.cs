@@ -16,15 +16,13 @@ namespace RVP
         [Range(0, 1)]
         public float speed = 1;
 
-        void OnDrawGizmos()
-        {
+        void OnDrawGizmos() {
             //Visualize waypoint
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, radius);
 
             //Draw line to next point
-            if (nextPoint)
-            {
+            if (nextPoint) {
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawLine(transform.position, nextPoint.transform.position);
             }

@@ -57,8 +57,7 @@ namespace RVP
         public float rollResetTime = 3;
         float rolledOverTime;
 
-        void Start()
-        {
+        void Start() {
             tr = transform;
             rb = GetComponent<Rigidbody>();
             vp = GetComponent<VehicleParent>();
@@ -68,12 +67,9 @@ namespace RVP
             InitializeTarget();
         }
 
-        void FixedUpdate()
-        {
-            if (target)
-            {
-                if (target != targetPrev)
-                {
+        void FixedUpdate() {
+            if (target) {
+                if (target != targetPrev) {
                     InitializeTarget();
                 }
 
@@ -84,24 +80,20 @@ namespace RVP
                 //Can I see the target?
                 targetVisible = !Physics.Linecast(tr.position, target.position, viewBlockMask);
 
-                if (targetVisible || targetIsWaypoint)
-                {
+                if (targetVisible || targetIsWaypoint) {
                     targetPoint = targetBody ? target.position + targetBody.velocity : target.position;
                 }
 
-                if (targetIsWaypoint)
-                {
+                if (targetIsWaypoint) {
                     //if vehicle is close enough to target waypoint, switch to the next one
-                    if ((tr.position - target.position).sqrMagnitude <= targetWaypoint.radius * targetWaypoint.radius)
-                    {
+                    if ((tr.position - target.position).sqrMagnitude <= targetWaypoint.radius * targetWaypoint.radius) {
                         target = targetWaypoint.nextPoint.transform;
                         targetWaypoint = targetWaypoint.nextPoint;
                         prevSpeed = speed;
                         speed = Mathf.Clamp01(targetWaypoint.speed * initialSpeed);
                         brakeTime = prevSpeed / speed;
 
-                        if (brakeTime <= 1)
-                        {
+                        if (brakeTime <= 1) {
                             brakeTime = 0;
                         }
                     }
@@ -117,87 +109,69 @@ namespace RVP
                 //Attempt to reverse if vehicle is stuck
                 stoppedTime = Mathf.Abs(vp.localVelocity.z) < 1 && !close && vp.groundedWheels > 0 ? stoppedTime + Time.fixedDeltaTime : 0;
 
-                if (stoppedTime > stopTimeReverse && reverseTime == 0)
-                {
+                if (stoppedTime > stopTimeReverse && reverseTime == 0) {
                     reverseTime = reverseAttemptTime;
                     reverseAttempts++;
                 }
 
                 //Reset if reversed too many times
-                if (reverseAttempts > resetReverseCount && resetReverseCount >= 0)
-                {
+                if (reverseAttempts > resetReverseCount && resetReverseCount >= 0) {
                     StartCoroutine(ReverseReset());
                 }
 
                 reverseTime = Mathf.Max(0, reverseTime - Time.fixedDeltaTime);
 
-                if (targetVelocity > 0)
-                {
+                if (targetVelocity > 0) {
                     speedLimit = Mathf.Clamp01(targetVelocity - vp.localVelocity.z);
                 }
-                else
-                {
+                else {
                     speedLimit = 1;
                 }
 
                 //Set accel input
-                if (!close && (lookDot > 0 || vp.localVelocity.z < 5) && vp.groundedWheels > 0 && reverseTime == 0)
-                {
+                if (!close && (lookDot > 0 || vp.localVelocity.z < 5) && vp.groundedWheels > 0 && reverseTime == 0) {
                     vp.SetAccel(speed * speedLimit);
                 }
-                else
-                {
+                else {
                     vp.SetAccel(0);
                 }
 
                 //Set brake input
-                if (reverseTime == 0 && brakeTime == 0 && !(close && vp.localVelocity.z > 0.1f))
-                {
-                    if (lookDot < 0.5f && lookDot > 0 && vp.localVelocity.z > 10)
-                    {
+                if (reverseTime == 0 && brakeTime == 0 && !(close && vp.localVelocity.z > 0.1f)) {
+                    if (lookDot < 0.5f && lookDot > 0 && vp.localVelocity.z > 10) {
                         vp.SetBrake(0.5f - lookDot);
                     }
-                    else
-                    {
+                    else {
                         vp.SetBrake(0);
                     }
                 }
-                else
-                {
-                    if (reverseTime > 0)
-                    {
+                else {
+                    if (reverseTime > 0) {
                         vp.SetBrake(1);
                     }
-                    else
-                    {
-                        if (brakeTime > 0)
-                        {
+                    else {
+                        if (brakeTime > 0) {
                             vp.SetBrake(brakeTime * 0.2f);
                         }
-                        else
-                        {
+                        else {
                             vp.SetBrake(1 - Mathf.Clamp01(Vector3.Distance(tr.position, target.position) / Mathf.Max(0.01f, followDistance)));
                         }
                     }
                 }
 
                 //Set steer input
-                if (reverseTime == 0)
-                {
+                if (reverseTime == 0) {
                     vp.SetSteer(Mathf.Abs(Mathf.Pow(steerDot, (tr.position - target.position).sqrMagnitude > 20 ? 1 : 2)) * Mathf.Sign(steerDot));
                 }
-                else
-                {
+                else {
                     vp.SetSteer(-Mathf.Sign(steerDot) * (close ? 0 : 1));
                 }
 
                 //Set ebrake input
-                if ((close && vp.localVelocity.z <= 0.1f) || (lookDot <= 0 && vp.velMag > 20))
-                {
+                if ((close && vp.localVelocity.z <= 0.1f) || (lookDot <= 0 && vp.velMag > 20)) {
                     vp.SetEbrake(1);
                 }
-                else
-                {
+                else {
                     vp.SetEbrake(0);
                 }
             }
@@ -205,14 +179,12 @@ namespace RVP
             rolledOverTime = va.rolledOver ? rolledOverTime + Time.fixedDeltaTime : 0;
 
             //Reset if stuck rolled over
-            if (rolledOverTime > rollResetTime && rollResetTime >= 0)
-            {
+            if (rolledOverTime > rollResetTime && rollResetTime >= 0) {
                 StartCoroutine(ResetRotation());
             }
         }
 
-        IEnumerator ReverseReset()
-        {
+        IEnumerator ReverseReset() {
             reverseAttempts = 0;
             reverseTime = 0;
             yield return new WaitForFixedUpdate();
@@ -222,8 +194,7 @@ namespace RVP
             rb.angularVelocity = Vector3.zero;
         }
 
-        IEnumerator ResetRotation()
-        {
+        IEnumerator ResetRotation() {
             yield return new WaitForFixedUpdate();
             tr.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             tr.Translate(Vector3.up, Space.World);
@@ -231,17 +202,14 @@ namespace RVP
             rb.angularVelocity = Vector3.zero;
         }
 
-        public void InitializeTarget()
-        {
-            if (target)
-            {
+        public void InitializeTarget() {
+            if (target) {
                 //if target is a vehicle
                 targetBody = target.GetTopmostParentComponent<Rigidbody>();
 
                 //if target is a waypoint
                 targetWaypoint = target.GetComponent<VehicleWaypoint>();
-                if (targetWaypoint)
-                {
+                if (targetWaypoint) {
                     prevSpeed = targetWaypoint.speed;
                 }
             }

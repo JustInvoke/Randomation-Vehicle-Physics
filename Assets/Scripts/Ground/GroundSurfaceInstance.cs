@@ -15,15 +15,12 @@ namespace RVP
         [System.NonSerialized]
         public float friction;
 
-        void Start()
-        {
+        void Start() {
             //Set friction
-            if (GroundSurfaceMaster.surfaceTypesStatic[surfaceType].useColliderFriction)
-            {
+            if (GroundSurfaceMaster.surfaceTypesStatic[surfaceType].useColliderFriction) {
                 friction = GetComponent<Collider>().material.dynamicFriction * 2;
             }
-            else
-            {
+            else {
                 friction = GroundSurfaceMaster.surfaceTypesStatic[surfaceType].friction;
             }
         }

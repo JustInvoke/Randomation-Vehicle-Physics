@@ -20,36 +20,28 @@ namespace RVP
         [Tooltip("Input manager button which increments the preset")]
         public string changeButton;
 
-        void Update()
-        {
-            if (!string.IsNullOrEmpty(changeButton))
-            {
-                if (Input.GetButtonDown(changeButton))
-                {
+        void Update() {
+            if (!string.IsNullOrEmpty(changeButton)) {
+                if (Input.GetButtonDown(changeButton)) {
                     ChangePreset(currentPreset + 1);
                 }
             }
         }
 
         //Change the current preset
-        public void ChangePreset(int preset)
-        {
+        public void ChangePreset(int preset) {
             currentPreset = preset % (presets.Length);
 
-            if (steerer)
-            {
+            if (steerer) {
                 steerer.limitSteer = presets[currentPreset].limitSteer;
             }
 
-            if (transmission)
-            {
+            if (transmission) {
                 transmission.skidSteerDrive = presets[currentPreset].skidSteerTransmission;
             }
 
-            for (int i = 0; i < suspensionProperties.Length; i++)
-            {
-                for (int j = 0; j < suspensionProperties[i].properties.Length; j++)
-                {
+            for (int i = 0; i < suspensionProperties.Length; i++) {
+                for (int j = 0; j < suspensionProperties[i].properties.Length; j++) {
                     suspensionProperties[i].SetProperty(j, presets[currentPreset].wheels[i].preset[j]);
                 }
             }
