@@ -164,10 +164,10 @@ namespace RVP
 
             // Set material based on whether the tire is popped
             if (w.popped) {
-                tempRend.material = rimMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, rimMarkMaterials.Length - 1)];
+                tempRend.sharedMaterial = rimMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, rimMarkMaterials.Length - 1)];
             }
             else {
-                tempRend.material = tireMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, tireMarkMaterials.Length - 1)];
+                tempRend.sharedMaterial = tireMarkMaterials[Mathf.Min(w.contactPoint.surfaceType, tireMarkMaterials.Length - 1)];
             }
 
             tempRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

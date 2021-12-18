@@ -214,7 +214,7 @@ namespace RVP
                 if (rimGlow > 0 && Application.isPlaying) {
                     rimMat = new Material(rim.GetComponent<MeshRenderer>().sharedMaterial);
                     rimMat.EnableKeyword("_EMISSION");
-                    rim.GetComponent<MeshRenderer>().material = rimMat;
+                    rim.GetComponent<MeshRenderer>().sharedMaterial = rimMat;
                 }
 
                 // Create detached wheel
@@ -236,7 +236,7 @@ namespace RVP
                     tire = rim.GetChild(0);
                     if (deformAmount > 0 && Application.isPlaying) {
                         tireMat = new Material(tire.GetComponent<MeshRenderer>().sharedMaterial);
-                        tire.GetComponent<MeshRenderer>().material = tireMat;
+                        tire.GetComponent<MeshRenderer>().sharedMaterial = tireMat;
                     }
 
                     // Create detached tire
@@ -263,7 +263,7 @@ namespace RVP
                         sphereColTr.localPosition = Vector3.zero;
                         sphereColTr.localRotation = Quaternion.identity;
                         sphereCol.radius = Mathf.Min(rimWidth * 0.5f, rimRadius * 0.5f);
-                        sphereCol.material = GlobalControl.frictionlessMatStatic;
+                        sphereCol.sharedMaterial = GlobalControl.frictionlessMatStatic;
                     }
 
                     if (canDetach) {
@@ -472,7 +472,7 @@ namespace RVP
                     contactPoint.surfaceFriction = curTerrain.GetFriction(contactPoint.surfaceType);
                 }
                 else {
-                    contactPoint.surfaceFriction = hit.collider.material.dynamicFriction * 2;
+                    contactPoint.surfaceFriction = hit.collider.sharedMaterial != null ? hit.collider.sharedMaterial.dynamicFriction * 2 : 1.0f;
                     contactPoint.surfaceType = 0;
                 }
 

@@ -18,7 +18,8 @@ namespace RVP
         void Start() {
             // Set friction
             if (GroundSurfaceMaster.surfaceTypesStatic[surfaceType].useColliderFriction) {
-                friction = GetComponent<Collider>().material.dynamicFriction * 2;
+                PhysicMaterial sharedMat = GetComponent<Collider>().sharedMaterial;
+                friction = sharedMat != null ? sharedMat.dynamicFriction * 2 : 1.0f;
             }
             else {
                 friction = GroundSurfaceMaster.surfaceTypesStatic[surfaceType].friction;
