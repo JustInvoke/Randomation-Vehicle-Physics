@@ -164,8 +164,14 @@ namespace RVP
         // Make the vehicle hover
         void ApplyFloat() {
             if (grounded) {
-                // Get the vertical speed of the wheel
-                float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
+                // Get velocity of ground to offset from local vertical velocity
+                Vector3 groundVel = Vector3.zero;
+                if (contactPoint.col.attachedRigidbody) {
+                    groundVel = contactPoint.col.attachedRigidbody.velocity;
+                }
+
+                // Get the vertical velocity of the wheel
+                float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position) - groundVel).z;
 
                 rb.AddForceAtPosition(upDir * floatForce * (Mathf.Pow(floatForceCurve.Evaluate(1 - compression), Mathf.Max(1, floatExponent)) - floatDampening * Mathf.Clamp(travelVel, -1, 1)),
                     tr.position,

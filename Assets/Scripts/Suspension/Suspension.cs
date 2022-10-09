@@ -260,8 +260,15 @@ namespace RVP
         // Apply suspension forces to support vehicles
         void ApplySuspensionForce() {
             if (wheel.grounded && wheel.connected) {
+                // Get velocity of ground to offset from local vertical velocity
+                Rigidbody groundBody = wheel.contactPoint.col.attachedRigidbody;
+                Vector3 groundVel = Vector3.zero;
+                if (groundBody) {
+                    groundVel = groundBody.velocity;
+                }
+
                 // Get the local vertical velocity
-                float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position)).z;
+                float travelVel = vp.norm.InverseTransformDirection(rb.GetPointVelocity(tr.position) - groundVel).z;
 
                 // Apply the suspension force
                 if (suspensionDistance > 0 && targetCompression > 0) {
@@ -274,8 +281,8 @@ namespace RVP
                         vp.suspensionForceMode);
 
                     // If wheel is resting on a rigidbody, apply opposing force to it
-                    if (wheel.contactPoint.col.attachedRigidbody) {
-                        wheel.contactPoint.col.attachedRigidbody.AddForceAtPosition(
+                    if (groundBody) {
+                        groundBody.AddForceAtPosition(
                             -appliedSuspensionForce,
                             wheel.contactPoint.point,
                             vp.suspensionForceMode);
