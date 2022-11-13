@@ -39,6 +39,8 @@ namespace RVP
 
         [Tooltip("Increase sound pitch between shifts")]
         public bool pitchIncreaseBetweenShift;
+        [Tooltip("Decrease sound pitch when the throttle is released")]
+        public bool pitchDecreaseWithoutThrottle = true;
 
         public override void Start() {
             base.Start();
@@ -107,7 +109,7 @@ namespace RVP
             // Set audio pitch
             if (snd && ignition) {
                 airPitch = vp.groundedWheels > 0 || actualAccel != 0 ? 1 : Mathf.Lerp(airPitch, 0, 0.5f * Time.deltaTime);
-                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 ? 1 : 0.5f) * (shifting ?
+                pitchFactor = (actualAccel != 0 || vp.groundedWheels == 0 || !pitchDecreaseWithoutThrottle ? 1 : 0.5f) * (shifting ?
                     (pitchIncreaseBetweenShift ?
                         Mathf.Sin((transmission.shiftTime / transmission.shiftDelay) * Mathf.PI) :
                         Mathf.Min(transmission.shiftDelay, Mathf.Pow(transmission.shiftTime, 2)) / transmission.shiftDelay) :
